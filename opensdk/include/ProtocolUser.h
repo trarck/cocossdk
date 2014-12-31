@@ -4,7 +4,6 @@
 #include "PluginProtocol.h"
 #include <map>
 #include <string>
-#include <functional>
 
 namespace opensdk {
 
@@ -30,8 +29,6 @@ class ProtocolUser : public PluginProtocol
 public:
     ProtocolUser();
     virtual ~ProtocolUser();
-
-    typedef std::function<void(int, std::string&)> ProtocolUserCallback;
 
     /**
     @brief config the application info
@@ -76,7 +73,7 @@ public:
      @deprecated
      @brief set login callback function
      */
-    CC_DEPRECATED_ATTRIBUTE inline void setActionListener(UserActionListener* listener)
+    inline void setActionListener(UserActionListener* listener)
     {
         _listener = listener;
     }
@@ -84,30 +81,13 @@ public:
      @deprecated
      @brief get login callback function
      */
-    CC_DEPRECATED_ATTRIBUTE inline UserActionListener* getActionListener()
+    inline UserActionListener* getActionListener()
     {
         return _listener;
     }
-
-    /**
-     @brief set login callback function
-     */
-    inline void setCallback(const ProtocolUserCallback &cb)
-    {
-        _callback = cb;
-    }
-
-    /**
-     @brief get login callback function
-     */
-    inline ProtocolUserCallback& getCallback()
-    {
-        return _callback;
-    }
-
+	
 protected:
     UserActionListener* _listener;
-    ProtocolUserCallback _callback;
 };
 
 } // namespace opensdk {
