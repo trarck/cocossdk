@@ -1,40 +1,16 @@
-/****************************************************************************
- Copyright (c) 2014 Chukong Technologies Inc.
-
- http://www.cocos2d-x.org
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- THE SOFTWARE.
- ****************************************************************************/
- 
 #include <vector>
 
 #include "AgentManager.h"
 #include "PluginManager.h"
 #include "ProtocolUser.h"
 #include "ProtocolAnalytics.h"
-#include "PluginUtils.h"
+#include "PluginUtilsAndroid.h"
 
-namespace cocos2d{ namespace plugin{
+namespace opensdk {
 
-static AgentManager* s_AgentManager = nullptr;
+static AgentManager* s_AgentManager = NULL;
 
-AgentManager::AgentManager():pUser(nullptr), pShare(nullptr), pSocial(nullptr), pAds(nullptr), pAnalytics(nullptr), pIAP(nullptr)
+AgentManager::AgentManager():pUser(NULL), pShare(NULL), pSocial(NULL), pAds(NULL), pAnalytics(NULL), pIAP(NULL)
 {
 
 }
@@ -56,7 +32,7 @@ void AgentManager::purge()
 
 AgentManager* AgentManager::getInstance()
 {
-	if(nullptr == s_AgentManager)
+	if(NULL == s_AgentManager)
 	{
 		s_AgentManager = new (std::nothrow) AgentManager();
 		//s_AgentManager->init();
@@ -69,7 +45,7 @@ void AgentManager::destroyInstance()
 	if(s_AgentManager)
 	{
 		delete s_AgentManager;
-		s_AgentManager = nullptr;
+		s_AgentManager = NULL;
 	}
 }
 
@@ -116,14 +92,14 @@ bool AgentManager::init(std::map<std::string, std::string>& conf)
 	return true;
 }
 
-static std::vector<std::string> s_plugins = {"PluginUser", "PluginShare", "PluginSocial", "PluginAds", "PluginAnalytics", "PluginIAP"};
+static std::string s_plugins[]={"PluginUser", "PluginShare", "PluginSocial", "PluginAds", "PluginAnalytics", "PluginIAP"};
 
 std::map<std::string, std::string> AgentManager::getPluginConfigure()
 {
 	std::map<std::string, std::string> configure;
 
 	PluginJniMethodInfo t;
-	JNIEnv* env = PluginUtils::getEnv();
+	JNIEnv* env = PluginUtilsAndroid::getEnv();
 
 	if(PluginJniHelper::getStaticMethodInfo(t, "org/cocos2dx/plugin/PluginWrapper", "getPluginConfigure", "()Ljava/util/Hashtable;"))
 	{
@@ -134,14 +110,16 @@ std::map<std::string, std::string> AgentManager::getPluginConfigure()
 			jstring jKey;
 			jstring jValue;
 			std::string stdValue;
+			
+			size_t count=sizeof(s_plugins)/sizeof(std::string);
 
-			for(std::vector<std::string>::iterator iter = s_plugins.begin(); iter != s_plugins.end(); ++iter)
+			for(int i=0;i<count;++i)
 			{
-				jKey = env->NewStringUTF((*iter).c_str());
+				jKey = env->NewStringUTF(s_plugins[i].c_str());
 				jValue = (jstring) (env->CallObjectMethod(jhashtable,tGetMethod.methodID,jKey));
 				stdValue = PluginJniHelper::jstring2string(jValue);
 				if(!stdValue.empty())
-					configure.insert(std::make_pair(*iter, stdValue));
+					configure.insert(std::make_pair(s_plugins[i], stdValue));
 			}
 
 			tGetMethod.env->DeleteLocalRef(jKey);
@@ -155,4 +133,4 @@ std::map<std::string, std::string> AgentManager::getPluginConfigure()
 	return configure;
 }
 
-}}
+}

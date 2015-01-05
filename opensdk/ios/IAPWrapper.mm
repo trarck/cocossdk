@@ -28,7 +28,7 @@ THE SOFTWARE.
 #import <StoreKit/StoreKit.h>
 #import "ParseUtils.h"
 
-using namespace cocos2d::plugin;
+using namespace opensdk;
 
 @implementation IAPWrapper
 

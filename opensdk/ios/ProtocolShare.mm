@@ -25,7 +25,7 @@ THE SOFTWARE.
 #include "PluginUtilsIOS.h"
 #import "InterfaceShare.h"
 
-namespace cocos2d { namespace plugin {
+namespace opensdk {
 
 ProtocolShare::ProtocolShare()
 : _listener(NULL)
@@ -110,4 +110,4 @@ void ProtocolShare::onShareResult(ShareResultCode ret, const char* msg)
     PluginUtilsIOS::outputLog("Share result of %s is : %d(%s)", this->getPluginName(), (int) ret, msg);
 }
 
-}} // namespace cocos2d { namespace plugin {
+} // namespace opensdk {

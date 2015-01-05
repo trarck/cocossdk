@@ -34,7 +34,7 @@ THE SOFTWARE.
 @end
 
 
-namespace cocos2d { namespace plugin {
+namespace opensdk {
 
 PluginProtocol::~PluginProtocol()
 {
@@ -217,4 +217,4 @@ float PluginProtocol::callFloatFuncWithParam(const char* funcName, std::vector<P
     CALL_OC_FUNC(float, 0.0f, Float)
 }
 
-}} //namespace cocos2d { namespace plugin {
+} //namespace opensdk {

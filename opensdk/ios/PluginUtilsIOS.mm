@@ -29,7 +29,7 @@ THE SOFTWARE.
 
 #define MAX_LOG_LEN         256
 
-namespace cocos2d { namespace plugin {
+namespace opensdk {
 
 void PluginUtilsIOS::initOCPlugin(PluginProtocol* pPlugin, id ocObj, const char* className)
 {
@@ -343,4 +343,4 @@ void PluginUtilsIOS::outputLog(const char* pFormat, ...)
     printf("\n");
 }
 
-}}// namespace cocos2d { namespace plugin {
+}// namespace opensdk {

@@ -38,7 +38,7 @@ THE SOFTWARE.
 #import "InterfaceSocial.h"
 #import "InterfaceUser.h"
 
-namespace cocos2d { namespace plugin {
+namespace opensdk {
 
 static PluginFactory* s_pFactory = NULL;
 
@@ -121,4 +121,4 @@ PluginProtocol* PluginFactory::createPlugin(const char* name)
 	return pRet;
 }
 
-}} //namespace cocos2d { namespace plugin {
+} //namespace opensdk {

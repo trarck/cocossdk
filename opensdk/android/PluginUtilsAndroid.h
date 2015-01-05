@@ -1,26 +1,3 @@
-/****************************************************************************
-Copyright (c) 2012-2013 cocos2d-x.org
-
-http://www.cocos2d-x.org
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-****************************************************************************/
 #ifndef __PLUGIN_UTILS_H__
 #define __PLUGIN_UTILS_H__
 
@@ -31,13 +8,15 @@ THE SOFTWARE.
 #include "PluginJniMacros.h"
 #include <android_native_app_glue.h>
 
-namespace cocos2d { namespace plugin {
+namespace opensdk {
 
 class PluginProtocol;
-class PluginUtils
+class PluginUtilsAndroid
 {
 public:
     static void initPluginWrapper(android_app* app);
+    static void outputLog(const char* logTag, const char* pFormat, ...);
+    
     static jobject createJavaMapObject(std::map<std::string, std::string>* paramMap);
     static void initJavaPlugin(PluginProtocol* pPlugin, jobject jObj, const char* className);
     static JNIEnv* getEnv();
@@ -56,7 +35,7 @@ public:
     {
         return_if_fails(funcName != NULL && strlen(funcName) > 0);
         return_if_fails(paramCode != NULL && strlen(paramCode) > 0);
-        PluginJavaData* pData = PluginUtils::getPluginJavaData(thiz);
+        PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(thiz);
         return_if_fails(pData != NULL);
 
         PluginJniMethodInfo t;
@@ -72,7 +51,7 @@ public:
     static void callJavaFunctionWithName(PluginProtocol* thiz, const char* funcName)
     {
         return_if_fails(funcName != NULL && strlen(funcName) > 0);
-        PluginJavaData* pData = PluginUtils::getPluginJavaData(thiz);
+        PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(thiz);
         return_if_fails(pData != NULL);
 
         PluginJniMethodInfo t;
@@ -93,7 +72,7 @@ public:
         std::string ret = "";
         return_val_if_fails(funcName != NULL && strlen(funcName) > 0, ret);
         return_val_if_fails(paramCode != NULL && strlen(paramCode) > 0, ret);
-        PluginJavaData* pData = PluginUtils::getPluginJavaData(thiz);
+        PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(thiz);
         return_val_if_fails(pData != NULL, ret);
 
         PluginJniMethodInfo t;
@@ -112,7 +91,7 @@ public:
     {
         std::string ret = "";
         return_val_if_fails(funcName != NULL && strlen(funcName) > 0, ret);
-        PluginJavaData* pData = PluginUtils::getPluginJavaData(thiz);
+        PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(thiz);
         return_val_if_fails(pData != NULL, ret);
 
         PluginJniMethodInfo t;
@@ -156,14 +135,19 @@ public:
     {
         CALL_BASERET_JAVA_FUNC_WITH_PARAM(bool, paramCode, param, Boolean, false)
     }
+    
     static bool callJavaBoolFuncWithName(PluginProtocol* thiz, const char* funcName)
     {
         CALL_BASERET_JAVA_FUNC(bool, "()Z", Boolean, false)
     }
+    
+    static void callJavaFunctionWithName_map(PluginProtocol* thiz, const char* funcName, std::map<std::string, std::string>* paramMap);
+    
+    static void callJavaFunctionWithName_string_map(PluginProtocol* thiz, const char* funcName, const char* keyParam, std::map<std::string, std::string>* paramMap);
 
-    static void outputLog(const char* logTag, const char* pFormat, ...);
+    static void callJavaFunctionWithName_string_string(PluginProtocol* thiz, const char* funcName,const char* param1, const char* param2);
 };
 
-}} // namespace cocos2d { namespace plugin {
+} // namespace opensdk {
 
 #endif //__PLUGIN_UTILS_H__

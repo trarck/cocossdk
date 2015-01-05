@@ -1,26 +1,3 @@
-/****************************************************************************
-Copyright (c) 2012-2013 cocos2d-x.org
-
-http://www.cocos2d-x.org
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-****************************************************************************/
 #include "PluginJniHelper.h"
 #include <android/log.h>
 #include <string.h>
@@ -32,7 +9,7 @@ THE SOFTWARE.
 #define  LOGD(...) 
 #endif
 
-#define JAVAVM    cocos2d::PluginJniHelper::getJavaVM()
+#define JAVAVM    opensdk::PluginJniHelper::getJavaVM()
 
 using namespace std;
 
@@ -77,12 +54,12 @@ extern "C"
             return NULL;
         }
 
-        JNIEnv* env = cocos2d::PluginJniHelper::getEnv();
+        JNIEnv* env = opensdk::PluginJniHelper::getEnv();
 
         jstring _jstrClassName = env->NewStringUTF(className);
 
-        jclass _clazz = (jclass) env->CallObjectMethod(cocos2d::PluginJniHelper::classloader,
-                                                       cocos2d::PluginJniHelper::loadclassMethod_methodID,
+        jclass _clazz = (jclass) env->CallObjectMethod(opensdk::PluginJniHelper::classloader,
+                                                       opensdk::PluginJniHelper::loadclassMethod_methodID,
                                                        _jstrClassName);
 
         if (NULL == _clazz) {
@@ -101,7 +78,7 @@ extern "C"
 
         do 
         {
-            if (cocos2d::PluginJniHelper::classloader)
+            if (opensdk::PluginJniHelper::classloader)
             {
                 ret = _getClassIDByLoader(className);
                 break;
@@ -109,7 +86,7 @@ extern "C"
 
             if (! pEnv)
             {
-                pEnv = cocos2d::PluginJniHelper::getEnv();
+                pEnv = opensdk::PluginJniHelper::getEnv();
                 if (! pEnv)
                 {
                     break;
@@ -128,7 +105,7 @@ extern "C"
     }
 }
 
-namespace cocos2d {
+namespace opensdk {
 
 JavaVM* PluginJniHelper::_psJavaVM = NULL;
 jmethodID PluginJniHelper::loadclassMethod_methodID = NULL;
@@ -291,7 +268,7 @@ bool PluginJniHelper::setClassLoaderFrom(jobject nativeactivityinstance) {
         return false;
     }
 
-    jobject _c = cocos2d::PluginJniHelper::getEnv()->CallObjectMethod(nativeactivityinstance,
+    jobject _c = opensdk::PluginJniHelper::getEnv()->CallObjectMethod(nativeactivityinstance,
                                                                 _getclassloaderMethod.methodID);
 
     if (NULL == _c) {
@@ -348,4 +325,4 @@ bool PluginJniHelper::getMethodInfo_DefaultClassLoader(PluginJniMethodInfo &meth
     return true;
 }
 
-} // end of namespace cocos2d
+} // end of namespace opensdk

@@ -1,6 +1,6 @@
 #include "AgentManager.h"
 #include "iOSIAPAgent.h"
-namespace cocos2d{namespace plugin{
+namespace opensdk{
     
     static FacebookAgent* s_sharedFacebookAgent = nullptr;
     
@@ -134,4 +134,4 @@ namespace cocos2d{namespace plugin{
         return std::string("Facebook SDK beta2");
     }
 
-}}
+}

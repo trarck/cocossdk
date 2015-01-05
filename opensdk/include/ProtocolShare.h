@@ -48,7 +48,6 @@ public:
              Look at the manual of plugins.
     */
     void share(TShareInfo info);
-    void share(TShareInfo &info, ProtocolShareCallback &cb);
 
     /**
     @deprecated

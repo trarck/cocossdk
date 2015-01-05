@@ -25,7 +25,7 @@ THE SOFTWARE.
 #include "PluginUtilsIOS.h"
 #import "InterfaceSocial.h"
 
-namespace cocos2d { namespace plugin {
+namespace opensdk {
 
 ProtocolSocial::ProtocolSocial()
 : _listener(NULL)
@@ -146,4 +146,4 @@ void ProtocolSocial::showAchievements()
     PluginUtilsIOS::callOCFunctionWithName(this, "showAchievements");
 }
 
-}} // namespace cocos2d { namespace plugin {
+} // namespace opensdk {

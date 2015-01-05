@@ -43,19 +43,15 @@ public:
      @brief User login
      */
     void login();
-    void login(ProtocolUserCallback &cb);
 
     /**
      @brief User logout
      */
     void logout();
-    void logout(ProtocolUserCallback &cb);
 
     /**
      @brief Check whether the user logined or not
      */
-    CC_DEPRECATED_ATTRIBUTE bool isLogined() {return isLoggedIn();}
-
     bool isLoggedIn();
     /**
      @brief Get session ID

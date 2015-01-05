@@ -30,7 +30,7 @@
 #include "ProtocolAnalytics.h"
 #include "PluginUtilsIOS.h"
 
-namespace cocos2d{ namespace plugin{
+namespace opensdk {
 
 static AgentManager* s_AgentManager = nullptr;
 
@@ -133,4 +133,4 @@ std::map<std::string, std::string> AgentManager::getPluginConfigure()
 	return configure;
 }
 
-}}
+}

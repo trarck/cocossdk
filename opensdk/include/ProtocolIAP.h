@@ -56,7 +56,6 @@ public:
              Look at the manual of plugins.
     */
     void payForProduct(TProductInfo info);
-    void payForProduct(TProductInfo info, ProtocolIAPCallback cb);
 
     /**
     @deprecated

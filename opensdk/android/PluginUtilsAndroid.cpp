@@ -1,37 +1,14 @@
-/****************************************************************************
-Copyright (c) 2012-2013 cocos2d-x.org
-
-http://www.cocos2d-x.org
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-****************************************************************************/
-#include "PluginUtils.h"
+#include "PluginUtilsAndroid.h"
 #include <android/log.h>
 #include <map>
 
 #define MAX_LOG_LEN			256
 
-namespace cocos2d { namespace plugin {
+namespace opensdk {
 
-#define JAVAVM    cocos2d::PluginJniHelper::getJavaVM()
+#define JAVAVM    opensdk::PluginJniHelper::getJavaVM()
 
-void PluginUtils::initPluginWrapper(android_app* app)
+void PluginUtilsAndroid::initPluginWrapper(android_app* app)
 {
     PluginJniMethodInfo t;
     if (! PluginJniHelper::getStaticMethodInfo(t
@@ -39,7 +16,7 @@ void PluginUtils::initPluginWrapper(android_app* app)
         , "initFromNativeActivity"
         , "(Landroid/app/Activity;)V"))
     {
-        outputLog("PluginUtils", "Failed to init context of plugin");
+        outputLog("PluginUtilsAndroid", "Failed to init context of plugin");
         return;
     }
 
@@ -47,7 +24,7 @@ void PluginUtils::initPluginWrapper(android_app* app)
     t.env->DeleteLocalRef(t.classID);
 }
 
-jobject PluginUtils::createJavaMapObject(std::map<std::string, std::string>* paramMap)
+jobject PluginUtilsAndroid::createJavaMapObject(std::map<std::string, std::string>* paramMap)
 {
     JNIEnv* env = getEnv();
 	jclass class_Hashtable = env->FindClass("java/util/Hashtable");
@@ -69,15 +46,15 @@ jobject PluginUtils::createJavaMapObject(std::map<std::string, std::string>* par
     return obj_Map;
 }
 
-void PluginUtils::initJavaPlugin(PluginProtocol* pPlugin, jobject jObj, const char* className)
+void PluginUtilsAndroid::initJavaPlugin(PluginProtocol* pPlugin, jobject jObj, const char* className)
 {
-	cocos2d::plugin::PluginJavaData* pUserData = new cocos2d::plugin::PluginJavaData();
-	pUserData->jobj = PluginUtils::getEnv()->NewGlobalRef(jObj);
+	opensdk::PluginJavaData* pUserData = new opensdk::PluginJavaData();
+	pUserData->jobj = PluginUtilsAndroid::getEnv()->NewGlobalRef(jObj);
 	pUserData->jclassName = className;
-	cocos2d::plugin::PluginUtils::setPluginJavaData(pPlugin, pUserData);
+	opensdk::PluginUtilsAndroid::setPluginJavaData(pPlugin, pUserData);
 }
 
-JNIEnv* PluginUtils::getEnv()
+JNIEnv* PluginUtilsAndroid::getEnv()
 {
     bool bRet = false;
     JNIEnv* env = NULL;
@@ -85,13 +62,13 @@ JNIEnv* PluginUtils::getEnv()
     {
         if (JAVAVM->GetEnv((void**)&env, JNI_VERSION_1_4) != JNI_OK)
         {
-        	outputLog("PluginUtils", "Failed to get the environment using GetEnv()");
+        	outputLog("PluginUtilsAndroid", "Failed to get the environment using GetEnv()");
             break;
         }
 
         if (JAVAVM->AttachCurrentThread(&env, 0) < 0)
         {
-            outputLog("PluginUtils", "Failed to get the environment using AttachCurrentThread()");
+            outputLog("PluginUtilsAndroid", "Failed to get the environment using AttachCurrentThread()");
             break;
         }
 
@@ -111,7 +88,7 @@ std::map<std::string, PluginProtocol*> s_JObjPluginMap;
 typedef std::map<PluginProtocol*, PluginJavaData*>::iterator ObjMapIter;
 typedef std::map<std::string, PluginProtocol*>::iterator JObjPluginMapIter;
 
-PluginJavaData* PluginUtils::getPluginJavaData(PluginProtocol* pKeyObj)
+PluginJavaData* PluginUtilsAndroid::getPluginJavaData(PluginProtocol* pKeyObj)
 {
     PluginJavaData* ret = NULL;
     ObjMapIter it = s_PluginObjMap.find(pKeyObj);
@@ -122,7 +99,7 @@ PluginJavaData* PluginUtils::getPluginJavaData(PluginProtocol* pKeyObj)
     return ret;
 }
 
-PluginProtocol* PluginUtils::getPluginPtr(std::string className)
+PluginProtocol* PluginUtilsAndroid::getPluginPtr(std::string className)
 {
 	PluginProtocol* ret = NULL;
 	JObjPluginMapIter it = s_JObjPluginMap.find(className);
@@ -133,14 +110,14 @@ PluginProtocol* PluginUtils::getPluginPtr(std::string className)
 	return ret;
 }
 
-void PluginUtils::setPluginJavaData(PluginProtocol* pKeyObj, PluginJavaData* pData)
+void PluginUtilsAndroid::setPluginJavaData(PluginProtocol* pKeyObj, PluginJavaData* pData)
 {
     erasePluginJavaData(pKeyObj);
     s_PluginObjMap.insert(std::pair<PluginProtocol*, PluginJavaData*>(pKeyObj, pData));
     s_JObjPluginMap.insert(std::pair<std::string, PluginProtocol*>(pData->jclassName, pKeyObj));
 }
 
-void PluginUtils::erasePluginJavaData(PluginProtocol* pKeyObj)
+void PluginUtilsAndroid::erasePluginJavaData(PluginProtocol* pKeyObj)
 {
     ObjMapIter it = s_PluginObjMap.find(pKeyObj);
     if (it != s_PluginObjMap.end()) {
@@ -156,7 +133,7 @@ void PluginUtils::erasePluginJavaData(PluginProtocol* pKeyObj)
             }
 
             JNIEnv* pEnv = getEnv();
-            outputLog("PluginUtils", "Delete global reference.");
+            outputLog("PluginUtilsAndroid", "Delete global reference.");
             pEnv->DeleteGlobalRef(jobj);
             delete pData;
         }
@@ -164,7 +141,7 @@ void PluginUtils::erasePluginJavaData(PluginProtocol* pKeyObj)
     }
 }
 
-void PluginUtils::outputLog(const char* logTag, const char* pFormat, ...)
+void PluginUtilsAndroid::outputLog(const char* logTag, const char* pFormat, ...)
 {
 	char buf[MAX_LOG_LEN + 1];
 
@@ -176,7 +153,7 @@ void PluginUtils::outputLog(const char* logTag, const char* pFormat, ...)
 	__android_log_print(ANDROID_LOG_DEBUG, logTag, "%s", buf);
 }
 
-jobject PluginUtils::getJObjFromParam(PluginParam* param)
+jobject PluginUtilsAndroid::getJObjFromParam(PluginParam* param)
 {
 	if (NULL == param)
 	{
@@ -185,7 +162,7 @@ jobject PluginUtils::getJObjFromParam(PluginParam* param)
 
 	jobject obj = NULL;
 	PluginJniMethodInfo t;
-	JNIEnv* env = PluginUtils::getEnv();
+	JNIEnv* env = PluginUtilsAndroid::getEnv();
 
 	switch(param->getCurrentType())
 	{
@@ -252,13 +229,13 @@ jobject PluginUtils::getJObjFromParam(PluginParam* param)
 				if (PluginJniHelper::getMethodInfo(tInfo, "org/json/JSONObject", "put", "(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;"))
 				{
 					jstring strKey = tInfo.env->NewStringUTF(it->first.c_str());
-					jobject objValue = PluginUtils::getJObjFromParam(it->second);
+					jobject objValue = PluginUtilsAndroid::getJObjFromParam(it->second);
 
 					tInfo.env->CallObjectMethod(obj, tInfo.methodID, strKey, objValue);
 					tInfo.env->DeleteLocalRef(tInfo.classID);
 
 					tInfo.env->DeleteLocalRef(strKey);
-					PluginUtils::getEnv()->DeleteLocalRef(objValue);
+					PluginUtilsAndroid::getEnv()->DeleteLocalRef(objValue);
 				}
 			}
 		}
@@ -269,5 +246,87 @@ jobject PluginUtils::getJObjFromParam(PluginParam* param)
 
 	return obj;
 }
+    
+void PluginUtilsAndroid::callJavaFunctionWithName_map(PluginProtocol* thiz, const char* funcName, std::map<std::string, std::string>* paramMap)
+{
+    return_if_fails(funcName != NULL && strlen(funcName) > 0);
+    return_if_fails(paramMap != NULL);
+    
+    PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(thiz);
+    
+    PluginJniMethodInfo t;
 
-}}// namespace cocos2d { namespace plugin {
+    if (PluginJniHelper::getMethodInfo(t
+                                       , pData->jclassName.c_str()
+                                       , funcName
+                                       , "(Ljava/util/Hashtable;)V"))
+    {
+        jobject obj_Map = PluginUtilsAndroid::createJavaMapObject(paramMap);
+        t.env->CallVoidMethod(pData->jobj, t.methodID, obj_Map);
+        t.env->DeleteLocalRef(obj_Map);
+        t.env->DeleteLocalRef(t.classID);
+    }
+    
+}
+
+void PluginUtilsAndroid::callJavaFunctionWithName_string_map(PluginProtocol* thiz, const char* funcName, const char* param, std::map<std::string, std::string>* paramMap)
+{
+    return_if_fails(funcName != NULL && strlen(funcName) > 0);
+    return_if_fails(param != NULL);
+    
+    PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(thiz);
+    
+    PluginJniMethodInfo t;
+    if (NULL == paramMap)
+    {
+        if (PluginJniHelper::getMethodInfo(t
+                                           , pData->jclassName.c_str()
+                                           , funcName
+                                           , "(Ljava/lang/String;)V"))
+        {
+            jstring jparam = t.env->NewStringUTF(param);
+            t.env->CallVoidMethod(pData->jobj, t.methodID, jparam);
+            t.env->DeleteLocalRef(jparam);
+            t.env->DeleteLocalRef(t.classID);
+        }
+    }
+    else
+    {
+        if (PluginJniHelper::getMethodInfo(t
+                                           , pData->jclassName.c_str()
+                                           , funcName
+                                           , "(Ljava/lang/String;Ljava/util/Hashtable;)V"))
+        {
+            jstring jparam = t.env->NewStringUTF(param);
+            jobject obj_Map = PluginUtilsAndroid::createJavaMapObject(paramMap);
+            t.env->CallVoidMethod(pData->jobj, t.methodID, jparam, obj_Map);
+            t.env->DeleteLocalRef(jparam);
+            t.env->DeleteLocalRef(obj_Map);
+            t.env->DeleteLocalRef(t.classID);
+        }
+    }
+}
+    
+void PluginUtilsAndroid::callJavaFunctionWithName_string_string(PluginProtocol* thiz, const char* funcName,const char* param1, const char* param2)
+{
+    return_if_fails(param1 != NULL && strlen(param1) > 0);
+    return_if_fails(param2 != NULL && strlen(param2) > 0);
+    
+    PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(thiz);
+    PluginJniMethodInfo t;
+    if (PluginJniHelper::getMethodInfo(t
+                                       , pData->jclassName.c_str()
+                                       , funcName
+                                       , "(Ljava/lang/String;Ljava/lang/String;)V"))
+    {
+        jstring jparam1 = t.env->NewStringUTF(param1);
+        jstring jparam2 = t.env->NewStringUTF(param2);
+        
+        t.env->CallVoidMethod(pData->jobj, t.methodID, jparam1, jparam2);
+        t.env->DeleteLocalRef(jparam1);
+        t.env->DeleteLocalRef(jparam2);
+        t.env->DeleteLocalRef(t.classID);
+    }
+}
+
+}// namespace opensdk {

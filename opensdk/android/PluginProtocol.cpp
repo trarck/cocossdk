@@ -1,51 +1,28 @@
-/****************************************************************************
-Copyright (c) 2012-2013 cocos2d-x.org
-
-http://www.cocos2d-x.org
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-****************************************************************************/
 #include "PluginProtocol.h"
-#include "PluginUtils.h"
+#include "PluginUtilsAndroid.h"
 
 #define LOG_TAG     "PluginProtocol"
 
-namespace cocos2d { namespace plugin {
+namespace opensdk {
 
 PluginProtocol::~PluginProtocol()
 {
-    PluginUtils::erasePluginJavaData(this);
+    PluginUtilsAndroid::erasePluginJavaData(this);
 }
 
 std::string PluginProtocol::getPluginVersion()
 {
-    return PluginUtils::callJavaStringFuncWithName(this, "getPluginVersion");
+    return PluginUtilsAndroid::callJavaStringFuncWithName(this, "getPluginVersion");
 }
 
 std::string PluginProtocol::getSDKVersion()
 {
-    return PluginUtils::callJavaStringFuncWithName(this, "getSDKVersion");
+    return PluginUtilsAndroid::callJavaStringFuncWithName(this, "getSDKVersion");
 }
 
 void PluginProtocol::setDebugMode(bool isDebugMode)
 {
-    PluginUtils::callJavaFunctionWithName_oneParam(this, "setDebugMode", "(Z)V", isDebugMode);
+    PluginUtilsAndroid::callJavaFunctionWithName_oneParam(this, "setDebugMode", "(Z)V", isDebugMode);
 }
 
 void PluginProtocol::callFuncWithParam(const char* funcName, PluginParam* param, ...)
@@ -74,16 +51,16 @@ void PluginProtocol::callFuncWithParam(const char* funcName, PluginParam* param,
 
 void PluginProtocol::callFuncWithParam(const char* funcName, std::vector<PluginParam*> params)
 {
-    PluginJavaData* pData = PluginUtils::getPluginJavaData(this);
+    PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(this);
     if (NULL == pData) {
-        PluginUtils::outputLog(LOG_TAG, "Can't find java data for plugin : %s", this->getPluginName());
+        PluginUtilsAndroid::outputLog(LOG_TAG, "Can't find java data for plugin : %s", this->getPluginName());
         return;
     }
 
     int nParamNum = params.size();
     if (nParamNum == 0)
     {
-        PluginUtils::callJavaFunctionWithName(this, funcName);
+        PluginUtilsAndroid::callJavaFunctionWithName(this, funcName);
     } else
     {
         PluginParam* pRetParam = NULL;
@@ -112,27 +89,27 @@ void PluginProtocol::callFuncWithParam(const char* funcName, std::vector<PluginP
         switch(pRetParam->getCurrentType())
         {
         case PluginParam::kParamTypeInt:
-            PluginUtils::callJavaFunctionWithName_oneParam(this, funcName, "(I)V", pRetParam->getIntValue());
+            PluginUtilsAndroid::callJavaFunctionWithName_oneParam(this, funcName, "(I)V", pRetParam->getIntValue());
             break;
         case PluginParam::kParamTypeFloat:
-            PluginUtils::callJavaFunctionWithName_oneParam(this, funcName, "(F)V", pRetParam->getFloatValue());
+            PluginUtilsAndroid::callJavaFunctionWithName_oneParam(this, funcName, "(F)V", pRetParam->getFloatValue());
             break;
         case PluginParam::kParamTypeBool:
-            PluginUtils::callJavaFunctionWithName_oneParam(this, funcName, "(Z)V", pRetParam->getBoolValue());
+            PluginUtilsAndroid::callJavaFunctionWithName_oneParam(this, funcName, "(Z)V", pRetParam->getBoolValue());
             break;
         case PluginParam::kParamTypeString:
             {
-                jstring jstr = PluginUtils::getEnv()->NewStringUTF(pRetParam->getStringValue());
-                PluginUtils::callJavaFunctionWithName_oneParam(this, funcName, "(Ljava/lang/String;)V", jstr);
-                PluginUtils::getEnv()->DeleteLocalRef(jstr);
+                jstring jstr = PluginUtilsAndroid::getEnv()->NewStringUTF(pRetParam->getStringValue());
+                PluginUtilsAndroid::callJavaFunctionWithName_oneParam(this, funcName, "(Ljava/lang/String;)V", jstr);
+                PluginUtilsAndroid::getEnv()->DeleteLocalRef(jstr);
             }
             break;
         case PluginParam::kParamTypeStringMap:
         case PluginParam::kParamTypeMap:
             {
-                jobject jMap = PluginUtils::getJObjFromParam(pRetParam);
-                PluginUtils::callJavaFunctionWithName_oneParam(this, funcName, "(Lorg/json/JSONObject;)V", jMap);
-                PluginUtils::getEnv()->DeleteLocalRef(jMap);
+                jobject jMap = PluginUtilsAndroid::getJObjFromParam(pRetParam);
+                PluginUtilsAndroid::callJavaFunctionWithName_oneParam(this, funcName, "(Lorg/json/JSONObject;)V", jMap);
+                PluginUtilsAndroid::getEnv()->DeleteLocalRef(jMap);
             }
             break;
         default:
@@ -187,4 +164,4 @@ float PluginProtocol::callFloatFuncWithParam(const char* funcName, std::vector<P
     CALL_JAVA_FUNC(float, Float, 0.0f, "F")
 }
 
-}} //namespace cocos2d { namespace plugin {
+} //namespace opensdk {

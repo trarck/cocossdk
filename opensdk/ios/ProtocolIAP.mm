@@ -25,7 +25,7 @@
 #include "PluginUtilsIOS.h"
 #import "InterfaceIAP.h"
 
-namespace cocos2d { namespace plugin {
+namespace opensdk {
 
 bool ProtocolIAP::_paying = false;
 
@@ -147,4 +147,4 @@ void ProtocolIAP::onPayResult(PayResultCode ret, const char* msg)
     PluginUtilsIOS::outputLog("Pay result of %s is : %d(%s)", this->getPluginName(), (int) ret, msg);
 }
 
-}} //namespace cocos2d { namespace plugin {
+} //namespace opensdk {

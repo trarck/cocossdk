@@ -25,8 +25,8 @@ THE SOFTWARE.
 #import "UserWrapper.h"
 #include "PluginUtilsIOS.h"
 #include "ProtocolUser.h"
-#include "FacebookAgent.h"
-using namespace cocos2d::plugin;
+
+using namespace opensdk;
 
 @implementation UserWrapper
 

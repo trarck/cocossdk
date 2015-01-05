@@ -1,6 +1,6 @@
 #include "PluginParam.h"
 
-namespace cocos2d { namespace plugin {
+namespace opensdk {
 
 PluginParam::PluginParam()
 {
@@ -43,4 +43,4 @@ PluginParam::PluginParam(StringMap strMapValue)
     _type = kParamTypeStringMap;
 }
 
-}} //namespace cocos2d { namespace plugin {
+} //namespace cocos2d { namespace plugin {
