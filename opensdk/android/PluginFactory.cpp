@@ -1,5 +1,5 @@
 #include "PluginFactory.h"
-#include "PluginUtilsAndroid.h"
+#include "PluginUtils.h"
 #include "PluginJniHelper.h"
 #include "ProtocolAds.h"
 #include "ProtocolAnalytics.h"
@@ -62,7 +62,7 @@ PluginProtocol* PluginFactory::createPlugin(const char* name)
 
 		std::string jClassName = ANDROID_PLUGIN_PACKAGE_PREFIX;
 		jClassName.append(name);
-		PluginUtilsAndroid::outputLog("PluginFactory", "Java class name of plugin %s is : %s", name, jClassName.c_str());
+		PluginUtils::outputLog("PluginFactory", "Java class name of plugin %s is : %s", name, jClassName.c_str());
 
 		PluginJniMethodInfo t;
 		if (! PluginJniHelper::getStaticMethodInfo(t
@@ -70,7 +70,7 @@ PluginProtocol* PluginFactory::createPlugin(const char* name)
 			, "initPlugin"
 			, "(Ljava/lang/String;)Ljava/lang/Object;"))
 		{
-			PluginUtilsAndroid::outputLog("PluginFactory", "Can't find method initPlugin in class org.cocos2dx.plugin.PluginWrapper");
+			PluginUtils::outputLog("PluginFactory", "Can't find method initPlugin in class org.cocos2dx.plugin.PluginWrapper");
 			break;
 		}
 
@@ -80,7 +80,7 @@ PluginProtocol* PluginFactory::createPlugin(const char* name)
 		t.env->DeleteLocalRef(t.classID);
 		if (jObj == NULL)
 		{
-			PluginUtilsAndroid::outputLog("PluginFactory", "Can't find java class %s", jClassName.c_str());
+			PluginUtils::outputLog("PluginFactory", "Can't find java class %s", jClassName.c_str());
 			break;
 		}
 
@@ -89,12 +89,12 @@ PluginProtocol* PluginFactory::createPlugin(const char* name)
 			, "getPluginType"
 			, "(Ljava/lang/Object;)I"))
 		{
-			PluginUtilsAndroid::outputLog("PluginFactory", "Can't find method getPluginType in class org.cocos2dx.plugin.PluginWrapper");
+			PluginUtils::outputLog("PluginFactory", "Can't find method getPluginType in class org.cocos2dx.plugin.PluginWrapper");
 			break;
 		}
 		int curType = t.env->CallStaticIntMethod(t.classID, t.methodID, jObj);
 		t.env->DeleteLocalRef(t.classID);
-		PluginUtilsAndroid::outputLog("PluginFactory", "The type of plugin %s is : %d", name, curType);
+		PluginUtils::outputLog("PluginFactory", "The type of plugin %s is : %d", name, curType);
 
 		switch (curType)
 		{
@@ -123,7 +123,7 @@ PluginProtocol* PluginFactory::createPlugin(const char* name)
 		if (pRet != NULL)
 		{
 			pRet->setPluginName(name);
-			PluginUtilsAndroid::initJavaPlugin(pRet, jObj, jClassName.c_str());
+			PluginUtils::initJavaPlugin(pRet, jObj, jClassName.c_str());
 		}
 	} while(0);
 

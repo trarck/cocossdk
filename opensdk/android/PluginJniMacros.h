@@ -8,7 +8,7 @@
 retType ret = defaultRet;                                        \
 return_val_if_fails(funcName != NULL && strlen(funcName) > 0, ret);       \
 return_val_if_fails(paramCode != NULL && strlen(paramCode) > 0, ret);     \
-PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(thiz);    \
+PluginJavaData* pData = PluginUtils::getPluginJavaData(thiz);    \
 return_val_if_fails(pData != NULL, ret);                         \
                                                                  \
 PluginJniMethodInfo t;                                           \
@@ -26,7 +26,7 @@ return ret;                                                      \
 #define CALL_BASERET_JAVA_FUNC(retType, paramCode, retCode, defaultRet)   \
 retType ret = defaultRet;                                        \
 return_val_if_fails(funcName != NULL && strlen(funcName) > 0, ret);       \
-PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(thiz);    \
+PluginJavaData* pData = PluginUtils::getPluginJavaData(thiz);    \
 return_val_if_fails(pData != NULL, ret);                         \
                                                                  \
 PluginJniMethodInfo t;                                           \
@@ -66,9 +66,9 @@ return call##retCode##FuncWithParam(funcName, allParams);    \
 
 #define CALL_JAVA_FUNC(retType, retCode, defaultRet, jRetCode)    \
 retType ret = defaultRet;                                                                                     \
-PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(this);                                                 \
+PluginJavaData* pData = PluginUtils::getPluginJavaData(this);                                                 \
 if (NULL == pData) {                                                                                          \
-    PluginUtilsAndroid::outputLog("PluginProtocol", "Can't find java data for plugin : %s", this->getPluginName());  \
+    PluginUtils::outputLog("PluginProtocol", "Can't find java data for plugin : %s", this->getPluginName());  \
     return ret;                                                                                               \
 }                                                                                                             \
                                                                                                               \
@@ -78,7 +78,7 @@ if (0 == nParamNum)                                                             
 {                                                                                                             \
     paramCode = "()";                                                                                         \
     paramCode.append(jRetCode);                                                                               \
-    ret = PluginUtilsAndroid::callJava##retCode##FuncWithName(this, funcName);                                       \
+    ret = PluginUtils::callJava##retCode##FuncWithName(this, funcName);                                       \
 } else                                                                                                        \
 {                                                                                                             \
     PluginParam* pRetParam = NULL;                                                                            \
@@ -109,35 +109,35 @@ if (0 == nParamNum)                                                             
     case PluginParam::kParamTypeInt:                                                                          \
         paramCode = "(I)";                                                                                    \
         paramCode.append(jRetCode);                                                                           \
-        ret = PluginUtilsAndroid::callJava##retCode##FuncWithName_oneParam(this, funcName, paramCode.c_str(), pRetParam->getIntValue());         \
+        ret = PluginUtils::callJava##retCode##FuncWithName_oneParam(this, funcName, paramCode.c_str(), pRetParam->getIntValue());         \
         break;                                                                                                \
     case PluginParam::kParamTypeFloat:                                                                        \
         paramCode = "(F)";                                                                                    \
         paramCode.append(jRetCode);                                                                           \
-        ret = PluginUtilsAndroid::callJava##retCode##FuncWithName_oneParam(this, funcName, paramCode.c_str(), pRetParam->getFloatValue());       \
+        ret = PluginUtils::callJava##retCode##FuncWithName_oneParam(this, funcName, paramCode.c_str(), pRetParam->getFloatValue());       \
         break;                                                                                                \
     case PluginParam::kParamTypeBool:                                                                         \
         paramCode = "(Z)";                                                                                    \
         paramCode.append(jRetCode);                                                                           \
-        ret = PluginUtilsAndroid::callJava##retCode##FuncWithName_oneParam(this, funcName, paramCode.c_str(), pRetParam->getBoolValue());        \
+        ret = PluginUtils::callJava##retCode##FuncWithName_oneParam(this, funcName, paramCode.c_str(), pRetParam->getBoolValue());        \
         break;                                                                                                \
     case PluginParam::kParamTypeString:                                                                       \
         {                                                                                                     \
-            jstring jstr = PluginUtilsAndroid::getEnv()->NewStringUTF(pRetParam->getStringValue());                  \
+            jstring jstr = PluginUtils::getEnv()->NewStringUTF(pRetParam->getStringValue());                  \
             paramCode = "(Ljava/lang/String;)";                                                               \
             paramCode.append(jRetCode);                                                                      \
-            ret = PluginUtilsAndroid::callJava##retCode##FuncWithName_oneParam(this, funcName, paramCode.c_str(), jstr);    \
-            PluginUtilsAndroid::getEnv()->DeleteLocalRef(jstr);                                                      \
+            ret = PluginUtils::callJava##retCode##FuncWithName_oneParam(this, funcName, paramCode.c_str(), jstr);    \
+            PluginUtils::getEnv()->DeleteLocalRef(jstr);                                                      \
         }                                                                                                     \
         break;                                                                                                \
     case PluginParam::kParamTypeStringMap:                                                                    \
     case PluginParam::kParamTypeMap:                                                                          \
         {                                                                                                     \
-            jobject jMap = PluginUtilsAndroid::getJObjFromParam(pRetParam);                                          \
+            jobject jMap = PluginUtils::getJObjFromParam(pRetParam);                                          \
             paramCode = "(Lorg/json/JSONObject;)";                                                            \
             paramCode.append(jRetCode);                                                                       \
-            ret = PluginUtilsAndroid::callJava##retCode##FuncWithName_oneParam(this, funcName, paramCode.c_str(), jMap); \
-            PluginUtilsAndroid::getEnv()->DeleteLocalRef(jMap);                                                      \
+            ret = PluginUtils::callJava##retCode##FuncWithName_oneParam(this, funcName, paramCode.c_str(), jMap); \
+            PluginUtils::getEnv()->DeleteLocalRef(jMap);                                                      \
         }                                                                                                     \
         break;                                                                                                \
     default:                                                                                                  \

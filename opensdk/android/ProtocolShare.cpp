@@ -1,7 +1,7 @@
 #include "ProtocolShare.h"
 #include "PluginJniHelper.h"
 #include <android/log.h>
-#include "PluginUtilsAndroid.h"
+#include "PluginUtils.h"
 #include "PluginJavaData.h"
 
 namespace opensdk {
@@ -20,12 +20,12 @@ void ProtocolShare::configDeveloperInfo(TShareDeveloperInfo devInfo)
 {
     if (devInfo.empty())
     {
-        PluginUtilsAndroid::outputLog("ProtocolShare", "The developer info is empty!");
+        PluginUtils::outputLog("ProtocolShare", "The developer info is empty!");
         return;
     }
     else
     {
-        PluginUtilsAndroid::callJavaFunctionWithName_map(this, "configDeveloperInfo", &devInfo);
+        PluginUtils::callJavaFunctionWithName_map(this, "configDeveloperInfo", &devInfo);
     }
 }
 
@@ -37,12 +37,12 @@ void ProtocolShare::share(TShareInfo info)
         {
             onShareResult(kShareFail, "Share info error");
         }
-        PluginUtilsAndroid::outputLog("ProtocolShare", "The Share info is empty!");
+        PluginUtils::outputLog("ProtocolShare", "The Share info is empty!");
         return;
     }
     else
     {
-        PluginUtilsAndroid::callJavaFunctionWithName_map(this, "configDeveloperInfo", &info);
+        PluginUtils::callJavaFunctionWithName_map(this, "configDeveloperInfo", &info);
     }
 }
 
@@ -65,9 +65,9 @@ void ProtocolShare::onShareResult(ShareResultCode ret, const char* msg)
     }
     else
     {
-        PluginUtilsAndroid::outputLog("ProtocolShare", "Result listener is null!");
+        PluginUtils::outputLog("ProtocolShare", "Result listener is null!");
     }
-    PluginUtilsAndroid::outputLog("ProtocolShare", "Share result is : %d(%s)", (int) ret, msg);
+    PluginUtils::outputLog("ProtocolShare", "Share result is : %d(%s)", (int) ret, msg);
 }
 
 } // namespace opensdk {

@@ -1,7 +1,7 @@
 #include "ProtocolUser.h"
 #include "PluginJniHelper.h"
 #include <android/log.h>
-#include "PluginUtilsAndroid.h"
+#include "PluginUtils.h"
 #include "PluginJavaData.h"
 
 namespace opensdk {
@@ -20,38 +20,38 @@ void ProtocolUser::configDeveloperInfo(TUserDeveloperInfo devInfo)
 {
     if (devInfo.empty())
     {
-        PluginUtilsAndroid::outputLog("ProtocolUser", "The developer info is empty!");
+        PluginUtils::outputLog("ProtocolUser", "The developer info is empty!");
         return;
     }
     else
     {
-        PluginUtilsAndroid::callJavaFunctionWithName_map(this, "configDeveloperInfo", &devInfo);
+        PluginUtils::callJavaFunctionWithName_map(this, "configDeveloperInfo", &devInfo);
     }
 }
 
 void ProtocolUser::login()
 {
-    PluginUtilsAndroid::callJavaFunctionWithName(this, "login");
+    PluginUtils::callJavaFunctionWithName(this, "login");
 }
 
 void ProtocolUser::logout()
 {
-    PluginUtilsAndroid::callJavaFunctionWithName(this, "logout");
+    PluginUtils::callJavaFunctionWithName(this, "logout");
 }
 
 bool ProtocolUser::isLoggedIn()
 {
-    return PluginUtilsAndroid::callJavaBoolFuncWithName(this, "isLogined");
+    return PluginUtils::callJavaBoolFuncWithName(this, "isLogined");
 }
 
 std::string ProtocolUser::getSessionID()
 {
-    return PluginUtilsAndroid::callJavaStringFuncWithName(this, "getSessionID");
+    return PluginUtils::callJavaStringFuncWithName(this, "getSessionID");
 }
 
 std::string ProtocolUser::getAccessToken()
 {
-	return PluginUtilsAndroid::callJavaStringFuncWithName(this, "getAccessToken");
+	return PluginUtils::callJavaStringFuncWithName(this, "getAccessToken");
 }
 
 } // namespace opensdk {

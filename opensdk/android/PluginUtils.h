@@ -11,7 +11,7 @@
 namespace opensdk {
 
 class PluginProtocol;
-class PluginUtilsAndroid
+class PluginUtils
 {
 public:
     static void initPluginWrapper(android_app* app);
@@ -35,7 +35,7 @@ public:
     {
         return_if_fails(funcName != NULL && strlen(funcName) > 0);
         return_if_fails(paramCode != NULL && strlen(paramCode) > 0);
-        PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(thiz);
+        PluginJavaData* pData = PluginUtils::getPluginJavaData(thiz);
         return_if_fails(pData != NULL);
 
         PluginJniMethodInfo t;
@@ -51,7 +51,7 @@ public:
     static void callJavaFunctionWithName(PluginProtocol* thiz, const char* funcName)
     {
         return_if_fails(funcName != NULL && strlen(funcName) > 0);
-        PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(thiz);
+        PluginJavaData* pData = PluginUtils::getPluginJavaData(thiz);
         return_if_fails(pData != NULL);
 
         PluginJniMethodInfo t;
@@ -72,7 +72,7 @@ public:
         std::string ret = "";
         return_val_if_fails(funcName != NULL && strlen(funcName) > 0, ret);
         return_val_if_fails(paramCode != NULL && strlen(paramCode) > 0, ret);
-        PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(thiz);
+        PluginJavaData* pData = PluginUtils::getPluginJavaData(thiz);
         return_val_if_fails(pData != NULL, ret);
 
         PluginJniMethodInfo t;
@@ -91,7 +91,7 @@ public:
     {
         std::string ret = "";
         return_val_if_fails(funcName != NULL && strlen(funcName) > 0, ret);
-        PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(thiz);
+        PluginJavaData* pData = PluginUtils::getPluginJavaData(thiz);
         return_val_if_fails(pData != NULL, ret);
 
         PluginJniMethodInfo t;

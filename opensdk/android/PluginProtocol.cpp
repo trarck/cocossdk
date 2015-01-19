@@ -1,5 +1,5 @@
 #include "PluginProtocol.h"
-#include "PluginUtilsAndroid.h"
+#include "PluginUtils.h"
 
 #define LOG_TAG     "PluginProtocol"
 
@@ -7,22 +7,22 @@ namespace opensdk {
 
 PluginProtocol::~PluginProtocol()
 {
-    PluginUtilsAndroid::erasePluginJavaData(this);
+    PluginUtils::erasePluginJavaData(this);
 }
 
 std::string PluginProtocol::getPluginVersion()
 {
-    return PluginUtilsAndroid::callJavaStringFuncWithName(this, "getPluginVersion");
+    return PluginUtils::callJavaStringFuncWithName(this, "getPluginVersion");
 }
 
 std::string PluginProtocol::getSDKVersion()
 {
-    return PluginUtilsAndroid::callJavaStringFuncWithName(this, "getSDKVersion");
+    return PluginUtils::callJavaStringFuncWithName(this, "getSDKVersion");
 }
 
 void PluginProtocol::setDebugMode(bool isDebugMode)
 {
-    PluginUtilsAndroid::callJavaFunctionWithName_oneParam(this, "setDebugMode", "(Z)V", isDebugMode);
+    PluginUtils::callJavaFunctionWithName_oneParam(this, "setDebugMode", "(Z)V", isDebugMode);
 }
 
 void PluginProtocol::callFuncWithParam(const char* funcName, PluginParam* param, ...)
@@ -51,16 +51,16 @@ void PluginProtocol::callFuncWithParam(const char* funcName, PluginParam* param,
 
 void PluginProtocol::callFuncWithParam(const char* funcName, std::vector<PluginParam*> params)
 {
-    PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(this);
+    PluginJavaData* pData = PluginUtils::getPluginJavaData(this);
     if (NULL == pData) {
-        PluginUtilsAndroid::outputLog(LOG_TAG, "Can't find java data for plugin : %s", this->getPluginName());
+        PluginUtils::outputLog(LOG_TAG, "Can't find java data for plugin : %s", this->getPluginName());
         return;
     }
 
     int nParamNum = params.size();
     if (nParamNum == 0)
     {
-        PluginUtilsAndroid::callJavaFunctionWithName(this, funcName);
+        PluginUtils::callJavaFunctionWithName(this, funcName);
     } else
     {
         PluginParam* pRetParam = NULL;
@@ -89,27 +89,27 @@ void PluginProtocol::callFuncWithParam(const char* funcName, std::vector<PluginP
         switch(pRetParam->getCurrentType())
         {
         case PluginParam::kParamTypeInt:
-            PluginUtilsAndroid::callJavaFunctionWithName_oneParam(this, funcName, "(I)V", pRetParam->getIntValue());
+            PluginUtils::callJavaFunctionWithName_oneParam(this, funcName, "(I)V", pRetParam->getIntValue());
             break;
         case PluginParam::kParamTypeFloat:
-            PluginUtilsAndroid::callJavaFunctionWithName_oneParam(this, funcName, "(F)V", pRetParam->getFloatValue());
+            PluginUtils::callJavaFunctionWithName_oneParam(this, funcName, "(F)V", pRetParam->getFloatValue());
             break;
         case PluginParam::kParamTypeBool:
-            PluginUtilsAndroid::callJavaFunctionWithName_oneParam(this, funcName, "(Z)V", pRetParam->getBoolValue());
+            PluginUtils::callJavaFunctionWithName_oneParam(this, funcName, "(Z)V", pRetParam->getBoolValue());
             break;
         case PluginParam::kParamTypeString:
             {
-                jstring jstr = PluginUtilsAndroid::getEnv()->NewStringUTF(pRetParam->getStringValue());
-                PluginUtilsAndroid::callJavaFunctionWithName_oneParam(this, funcName, "(Ljava/lang/String;)V", jstr);
-                PluginUtilsAndroid::getEnv()->DeleteLocalRef(jstr);
+                jstring jstr = PluginUtils::getEnv()->NewStringUTF(pRetParam->getStringValue());
+                PluginUtils::callJavaFunctionWithName_oneParam(this, funcName, "(Ljava/lang/String;)V", jstr);
+                PluginUtils::getEnv()->DeleteLocalRef(jstr);
             }
             break;
         case PluginParam::kParamTypeStringMap:
         case PluginParam::kParamTypeMap:
             {
-                jobject jMap = PluginUtilsAndroid::getJObjFromParam(pRetParam);
-                PluginUtilsAndroid::callJavaFunctionWithName_oneParam(this, funcName, "(Lorg/json/JSONObject;)V", jMap);
-                PluginUtilsAndroid::getEnv()->DeleteLocalRef(jMap);
+                jobject jMap = PluginUtils::getJObjFromParam(pRetParam);
+                PluginUtils::callJavaFunctionWithName_oneParam(this, funcName, "(Lorg/json/JSONObject;)V", jMap);
+                PluginUtils::getEnv()->DeleteLocalRef(jMap);
             }
             break;
         default:

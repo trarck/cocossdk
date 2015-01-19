@@ -4,7 +4,7 @@
 #include "PluginManager.h"
 #include "ProtocolUser.h"
 #include "ProtocolAnalytics.h"
-#include "PluginUtilsAndroid.h"
+#include "PluginUtils.h"
 
 namespace opensdk {
 
@@ -99,7 +99,7 @@ std::map<std::string, std::string> AgentManager::getPluginConfigure()
 	std::map<std::string, std::string> configure;
 
 	PluginJniMethodInfo t;
-	JNIEnv* env = PluginUtilsAndroid::getEnv();
+	JNIEnv* env = PluginUtils::getEnv();
 
 	if(PluginJniHelper::getStaticMethodInfo(t, "org/cocos2dx/plugin/PluginWrapper", "getPluginConfigure", "()Ljava/util/Hashtable;"))
 	{

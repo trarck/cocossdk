@@ -1,7 +1,7 @@
 #include "ProtocolSocial.h"
 #include "PluginJniHelper.h"
 #include <android/log.h>
-#include "PluginUtilsAndroid.h"
+#include "PluginUtils.h"
 #include "PluginJavaData.h"
 
 namespace opensdk {
@@ -20,25 +20,25 @@ void ProtocolSocial::configDeveloperInfo(TSocialDeveloperInfo devInfo)
 {
     if (devInfo.empty())
     {
-        PluginUtilsAndroid::outputLog("ProtocolSocial", "The developer info is empty!");
+        PluginUtils::outputLog("ProtocolSocial", "The developer info is empty!");
         return;
     }
     else
     {
-        PluginUtilsAndroid::callJavaFunctionWithName_map(this, "configDeveloperInfo", &devInfo);
+        PluginUtils::callJavaFunctionWithName_map(this, "configDeveloperInfo", &devInfo);
     }
 }
 
 void ProtocolSocial::submitScore(const char* leadboardID, long score)
 {
-    PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(this);
+    PluginJavaData* pData = PluginUtils::getPluginJavaData(this);
     PluginJniMethodInfo t;
     if (PluginJniHelper::getMethodInfo(t
         , pData->jclassName.c_str()
         , "submitScore"
         , "(Ljava/lang/String;J)V"))
     {
-        jstring strID = PluginUtilsAndroid::getEnv()->NewStringUTF(leadboardID);
+        jstring strID = PluginUtils::getEnv()->NewStringUTF(leadboardID);
 
         // invoke java method
         t.env->CallVoidMethod(pData->jobj, t.methodID, strID, score);
@@ -49,16 +49,16 @@ void ProtocolSocial::submitScore(const char* leadboardID, long score)
 
 void ProtocolSocial::showLeaderboard(const char* leaderboardID)
 {
-    PluginUtilsAndroid::callJavaFunctionWithName_oneParam(this, "showLeaderboard", "(Ljava/lang/String;)V", leaderboardID);
+    PluginUtils::callJavaFunctionWithName_oneParam(this, "showLeaderboard", "(Ljava/lang/String;)V", leaderboardID);
 //    
-//    PluginJavaData* pData = PluginUtilsAndroid::getPluginJavaData(this);
+//    PluginJavaData* pData = PluginUtils::getPluginJavaData(this);
 //    PluginJniMethodInfo t;
 //    if (PluginJniHelper::getMethodInfo(t
 //        , pData->jclassName.c_str()
 //        , "showLeaderboard"
 //        , "(Ljava/lang/String;)V"))
 //    {
-//        jstring strID = PluginUtilsAndroid::getEnv()->NewStringUTF(leaderboardID);
+//        jstring strID = PluginUtils::getEnv()->NewStringUTF(leaderboardID);
 //
 //        // invoke java method
 //        t.env->CallVoidMethod(pData->jobj, t.methodID, strID);
@@ -71,18 +71,18 @@ void ProtocolSocial::unlockAchievement(TAchievementInfo achInfo)
 {
     if (achInfo.empty())
     {
-        PluginUtilsAndroid::outputLog("ProtocolSocial", "The achievement info is empty!");
+        PluginUtils::outputLog("ProtocolSocial", "The achievement info is empty!");
         return;
     }
     else
     {
-        PluginUtilsAndroid::callJavaFunctionWithName_map(this, "unlockAchievement", &achInfo);
+        PluginUtils::callJavaFunctionWithName_map(this, "unlockAchievement", &achInfo);
     }
 }
 
 void ProtocolSocial::showAchievements()
 {
-    PluginUtilsAndroid::callJavaFunctionWithName(this, "showAchievements");
+    PluginUtils::callJavaFunctionWithName(this, "showAchievements");
 }
 
 } // namespace opensdk {
