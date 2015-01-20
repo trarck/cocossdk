@@ -1,4 +1,4 @@
-package org.cocos2dx.plugin;
+package com.opensdk.framework;
 
 import android.content.Intent;
 
