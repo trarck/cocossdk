@@ -43,7 +43,7 @@ public class SpecialInitHelper {
 				cls=it.substring(0, pos).trim();
 				
 				//get method 
-				String[] methods=it.substring(pos+1).split(".");
+				String[] methods=it.substring(pos+1).split("\\.");
 				
 				//first must be static method
 				if(methods.length>0){

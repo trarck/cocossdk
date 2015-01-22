@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 
 public class SpecialInitInfo {
 
@@ -11,6 +12,7 @@ public class SpecialInitInfo {
 	private String staticMethod=null;
 	private List<String> instanceMethods=null;
 	
+	private static String TAG="OpenSdk";
 	
 	public void invoke(Context content){
 		
@@ -22,6 +24,10 @@ public class SpecialInitInfo {
 					//have instance method
 					Method m=cls.getMethod(staticMethod, new Class[]{});
 					Object obj=m.invoke(cls, new Object[]{});
+					//check have return object
+					if(null==obj){
+						throw new Exception("no return for method "+m.getName()+" of "+cls.getName());
+					}
 					
 					int i=0;
 					int size=instanceMethods.size();
@@ -34,7 +40,15 @@ public class SpecialInitInfo {
 							m.invoke(cls, new Object[]{content});
 						}else{
 							m=cls.getMethod(iter, new Class[]{});
+							if(null==m){
+								Log.w(TAG,"can not get method "+staticMethod+" for "+cls.getName());
+								return;
+							}
 							obj=m.invoke(obj, new Object[]{});
+							//check have return object
+							if(null==obj){
+								throw new Exception("no return for method "+m.getName()+" of "+cls.getName());
+							}
 						}
 					}
 				}else{

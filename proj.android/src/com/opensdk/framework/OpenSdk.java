@@ -68,8 +68,12 @@ public class OpenSdk {
 		String[] libs=getNeedLoadLibraries(content);
 		
 		if(libs!=null){
-			for(int i=0;i<libs.length;++i){
-				System.loadLibrary(libs[i]);
+			try{
+				for(int i=0;i<libs.length;++i){
+					System.loadLibrary(libs[i]);
+				}
+			}catch(UnsatisfiedLinkError e){
+				e.printStackTrace();
 			}
 		}
 	}
@@ -135,17 +139,19 @@ public class OpenSdk {
 	    {
 	    	InputStream datIn=content.getAssets().open(LIB_LOAD_FILE);
 			
-			int  c= 0;
-		    ByteArrayOutputStream localByteArrayOutputStream = new ByteArrayOutputStream();
-		    
-		    while ((c = datIn.read()) != -1)
-		    	localByteArrayOutputStream.write(c);
-		    String  libStr= localByteArrayOutputStream.toString();
-		    
-		    datIn.close();
-		    localByteArrayOutputStream.close();
-		    
-			return libStr.split(",");
+	    	if(null!=datIn){
+				int  c= 0;
+			    ByteArrayOutputStream localByteArrayOutputStream = new ByteArrayOutputStream();
+			    
+			    while ((c = datIn.read()) != -1)
+			    	localByteArrayOutputStream.write(c);
+			    String  libStr= localByteArrayOutputStream.toString();
+			    
+			    datIn.close();
+			    localByteArrayOutputStream.close();
+			    
+				return libStr.split(",");
+	    	}
 			
 	    }
 	    catch (IOException ex)
@@ -167,10 +173,11 @@ public class OpenSdk {
 		try {
 			ai = content.getPackageManager().getApplicationInfo(content.getPackageName(), PackageManager.GET_META_DATA);
 			Bundle bundle = ai.metaData;
-			
-			String libs=bundle.getString(LIB_META_KEY);
-			if(null!=libs && !"".equals(libs)){
-				return libs.split(",");
+			if(null!=bundle){
+				String libs=bundle.getString(LIB_META_KEY);
+				if(null!=libs && !"".equals(libs)){
+					return libs.split(",");
+				}
 			}
 			
 		} catch (NameNotFoundException e) {
@@ -196,17 +203,19 @@ public class OpenSdk {
 	    {
 	    	InputStream datIn=content.getAssets().open(SPECAIL_INIT_FILE);
 			
-			int  c= 0;
-		    ByteArrayOutputStream localByteArrayOutputStream = new ByteArrayOutputStream();
-		    
-		    while ((c = datIn.read()) != -1)
-		    	localByteArrayOutputStream.write(c);
-		    String  infoStr= localByteArrayOutputStream.toString();
-		    
-		    datIn.close();
-		    localByteArrayOutputStream.close();
-		    
-			return infoStr;
+	    	if(null!=datIn){
+				int  c= 0;
+			    ByteArrayOutputStream localByteArrayOutputStream = new ByteArrayOutputStream();
+			    
+			    while ((c = datIn.read()) != -1)
+			    	localByteArrayOutputStream.write(c);
+			    String  infoStr= localByteArrayOutputStream.toString();
+			    
+			    datIn.close();
+			    localByteArrayOutputStream.close();
+			    
+				return infoStr;
+	    	}
 	    }
 	    catch (IOException ex)
 	    {
@@ -223,7 +232,7 @@ public class OpenSdk {
 			ai = content.getPackageManager().getApplicationInfo(content.getPackageName(), PackageManager.GET_META_DATA);
 			Bundle bundle = ai.metaData;
 			
-			return bundle.getString(SPECAIL_INIT_META_KEY);
+			return bundle!=null ?bundle.getString(SPECAIL_INIT_META_KEY):null;
 			
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
