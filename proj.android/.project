@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>libPluginProtocol</name>
+	<name>libOpenSdk</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -34,12 +34,18 @@
 		<link>
 			<name>android</name>
 			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/platform/android</locationURI>
+			<locationURI>copy_PARENT/platform/android</locationURI>
 		</link>
 		<link>
 			<name>include</name>
 			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/include</locationURI>
+			<locationURI>copy_PARENT/include</locationURI>
 		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>copy_PARENT</name>
+			<value>$%7BPARENT-3-PROJECT_LOC%7D/Develops/cocos/cocos2d-x/projects/opensdk</value>
+		</variable>
+	</variableList>
 </projectDescription>

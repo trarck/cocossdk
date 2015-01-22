@@ -80,3 +80,4 @@ Device-Release/
 /proj.win32/*.vsp
 
 /proj.win32/*.psess
+.settings
