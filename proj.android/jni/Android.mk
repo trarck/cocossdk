@@ -10,7 +10,7 @@ LOCAL_SRC_FILES :=\
 $(addprefix ../../opensdk/android/, \
 	PluginFactory.cpp \
     PluginJniHelper.cpp \
-    PluginUtilsAndroid.cpp \
+    PluginUtils.cpp \
     PluginProtocol.cpp \
     ProtocolAnalytics.cpp \
     ProtocolIAP.cpp \
