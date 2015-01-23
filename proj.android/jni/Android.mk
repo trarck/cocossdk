@@ -19,11 +19,13 @@ $(addprefix ../../opensdk/android/, \
     ProtocolUser.cpp \
     ProtocolSocial.cpp \
     AgentManager.cpp \
-    jni/Java_org_cocos2dx_plugin_Ads.cpp \
-    jni/Java_org_cocos2dx_plugin_IAP.cpp \
-    jni/Java_org_cocos2dx_plugin_Share.cpp \
-    jni/Java_org_cocos2dx_plugin_Social.cpp \
-    jni/Java_org_cocos2dx_plugin_User.cpp \
+    jni/Java_com_opensdk_framework_Ads.cpp \
+    jni/Java_com_opensdk_framework_IAP.cpp \
+    jni/Java_com_opensdk_framework_Share.cpp \
+    jni/Java_com_opensdk_framework_Social.cpp \
+    jni/Java_com_opensdk_framework_User.cpp \
+	InitManager.cpp \
+	jni/Java_com_opensdk_init_InitManager.cpp \
 ) \
 ../../opensdk/PluginManager.cpp \
 ../../opensdk/PluginParam.cpp
