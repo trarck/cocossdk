@@ -18,7 +18,7 @@ import com.opensdk.init.SpecialInitInfo;
 
 public class InitManager {
 	private static final String TAG = InitManager.class.getSimpleName();
-	private static OpenSdk _instance;
+	private static InitManager _instance;
 	
 	private static final String LIB_META_KEY = "OPENSDK_LOADLIBS";
 	private static final String LIB_LOAD_FILE = "loadlibs.dat";
