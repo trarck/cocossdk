@@ -32,6 +32,8 @@ public class PluginWrapper {
         if (null == sMainThreadHandler) {
             sMainThreadHandler = new Handler();
         }
+        
+        Wrapper.analysisDeveloperInfo(context);
     }
 
     public static void setGLSurfaceView(GLSurfaceView value) {
