@@ -1,4 +1,4 @@
-package com.opensdk.utils;
+package com.opensdk.init;
 
 import java.lang.reflect.Method;
 import java.util.List;

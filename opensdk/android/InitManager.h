@@ -3,31 +3,31 @@
 
 namespace opensdk {
 
-class OpenSdkListener
+class InitListener
 {
 public:
     virtual void onInitPlugins() = 0;
 };
 
-class OpenSdk
+class InitManager
 {
 public:
-    virtual ~OpenSdk();
+    virtual ~InitManager();
 
-	static OpenSdk* getInstance();
+	static InitManager* getInstance();
 	static void destroyInstance();
 
 	void onInitPlugins();
 
-	void setListener(OpenSdkListener* pListener);
+	void setListener(InitListener* pListener);
     
-    inline OpenSdkListener* getListener()
+    inline InitListener* getListener()
     {
         return _listener;
     }
 
 private:
-	OpenSdkListener* _listener;
+	InitListener* _listener;
 };
 
 } //namespace opensdk {

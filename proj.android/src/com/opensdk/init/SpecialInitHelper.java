@@ -1,4 +1,4 @@
-package com.opensdk.utils;
+package com.opensdk.init;
 
 import java.util.ArrayList;
 import java.util.List;

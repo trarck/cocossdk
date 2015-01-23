@@ -1,12 +1,9 @@
-package com.opensdk.framework;
+package com.opensdk.init;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-
-import com.opensdk.utils.SpecialInitHelper;
-import com.opensdk.utils.SpecialInitInfo;
 
 import android.app.Application;
 import android.content.Context;
@@ -16,8 +13,11 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.util.Log;
 
-public class OpenSdk {
-	private static final String TAG = OpenSdk.class.getSimpleName();
+import com.opensdk.init.SpecialInitHelper;
+import com.opensdk.init.SpecialInitInfo;
+
+public class InitManager {
+	private static final String TAG = InitManager.class.getSimpleName();
 	private static OpenSdk _instance;
 	
 	private static final String LIB_META_KEY = "OPENSDK_LOADLIBS";
@@ -28,11 +28,11 @@ public class OpenSdk {
 	private static final int LIB_CONFIG_TYPE_META = 1; 
 	private static final int LIB_CONFIG_TYPE_FILE = 2; 
 	
-	private int _libConfigType=LIB_CONFIG_TYPE_META;
+	private int _initConfigType=LIB_CONFIG_TYPE_META;
 	
-	public static OpenSdk getInstance() {
+	public static InitManager getInstance() {
 		if (_instance == null) {
-			_instance = new OpenSdk();
+			_instance = new InitManager();
 		}
 		return _instance;
 	}
@@ -43,6 +43,7 @@ public class OpenSdk {
 	 * @param content
 	 */
 	public void initApp(Context content){
+		Log.d(TAG,"init on Application create");
 		//加载动态库.可以加载多个
 		loadLibrary(content);
 		
@@ -65,6 +66,8 @@ public class OpenSdk {
 	 * @param content
 	 */
 	public void loadLibrary(Context content){
+		Log.d(TAG,"begin load library");
+		
 		String[] libs=getNeedLoadLibraries(content);
 		
 		if(libs!=null){
@@ -76,12 +79,15 @@ public class OpenSdk {
 				e.printStackTrace();
 			}
 		}
+		
+		Log.d(TAG,"end load library");
 	}
 	
 	/**
 	 * 一些特殊sdk的初始化
 	 */
 	public void initSpecials(Context content){
+		Log.d(TAG,"begin special init");
 		//检查是不是在Application中调用，如果不是则忽略。
 		if(Application.class.isInstance(content)){
 			
@@ -93,22 +99,23 @@ public class OpenSdk {
 				}
 			}
 		}
+		Log.d(TAG,"end special init");
 	}
 
 	/**
 	 * 取得动态连接库的加载方法
 	 * @return
 	 */
-	public int getLibConfigType() {
-		return _libConfigType;
+	public int getInitConfigType() {
+		return _initConfigType;
 	}
 
 	/**
 	 * 设置动态连接库的加载方法
 	 * @param libConfigType
 	 */
-	public void setLibConfigType(int libConfigType) {
-		this._libConfigType = libConfigType;
+	public void setInitConfigType(int initConfigType) {
+		this._initConfigType = initConfigType;
 	}
 	
 	
@@ -118,9 +125,9 @@ public class OpenSdk {
 	 * @return
 	 */
 	private String[] getNeedLoadLibraries(Context content){
-		if(_libConfigType==LIB_CONFIG_TYPE_META){
+		if(_initConfigType==LIB_CONFIG_TYPE_META){
 			return getNeedLoadLibrariesFromMeta(content);
-		}else if(_libConfigType==LIB_CONFIG_TYPE_FILE){
+		}else if(_initConfigType==LIB_CONFIG_TYPE_FILE){
 			return getNeedLoadLibrariesFromFile(content);
 		}
 		
@@ -189,7 +196,7 @@ public class OpenSdk {
 	
 	private List<SpecialInitInfo> getSpecialInitInfo(Context content){
 		
-		String infoStr=_libConfigType==LIB_CONFIG_TYPE_META?getSpecialInitInfoFromMeta(content):getSpecialInitInfoFromMeta(content);
+		String infoStr=_initConfigType==LIB_CONFIG_TYPE_META?getSpecialInitInfoFromMeta(content):getSpecialInitInfoFromMeta(content);
 		if(null!=infoStr){
 			return SpecialInitHelper.getInstance().getSpecialInitData(infoStr);
 		}
