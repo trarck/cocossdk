@@ -12,5 +12,8 @@ public class MainApp extends Application {
 	    System.out.println("start opensdk init" + System.currentTimeMillis());
 	    OpenSdk.getInstance().initApp(this);
 	    System.out.println("finish opensdk init" + System.currentTimeMillis());
+	    
+	    System.out.print("appContext:");
+	    System.out.println(this);
 	  }
 }

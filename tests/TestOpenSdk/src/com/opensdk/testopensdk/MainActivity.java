@@ -12,6 +12,16 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        System.out.print("activity context:");
+        System.out.println(this);
+        
+        System.out.print("direct view context:");
+        System.out.println(this.getWindow().getDecorView().getContext());
+        
+        System.out.print("window context:");
+        System.out.println(this.getWindow().getContext());
+    
     }
 
 

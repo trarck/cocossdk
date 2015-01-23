@@ -22,8 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <meta-data android:name="OPENSDK_LOADLIBS" android:value="nofile,megjb"/>
-        <meta-data android:name="OPENSDK_SPECAIL_INIT" android:value="com.opensdk.testopensdk.MyInit@myAppInit,com.opensdk.testopensdk.MyInit@nofun,com.opensdk.testopensdk.NoClass@myAppInit"/>
+        <meta-data android:name="OPENSDK_LOADLIBS" android:value="megjb"/>
+        <meta-data android:name="OPENSDK_SPECAIL_INIT" android:value="com.opensdk.testopensdk.MyInit@myAppInit"/>
     </application>
 
 </manifest>
