@@ -1,5 +1,7 @@
 package com.opensdk.testopensdk;
 
+import com.anysdk.framework.java.AnySDK;
+
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,6 +23,8 @@ public class MainActivity extends ActionBarActivity {
         
         System.out.print("window context:");
         System.out.println(this.getWindow().getContext());
+        
+        AnySDK.getInstance().initPluginSystem(this, "E366F9F3-570E-4F9E-0B42-57A868DC4EC7", "69ab62a83a3edf48ac85ee5977ee1656", "9BE2243B53F070D00AA4B40B3F4CE558", "");
     
     }
 
