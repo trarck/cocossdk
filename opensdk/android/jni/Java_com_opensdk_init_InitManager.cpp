@@ -3,7 +3,7 @@
 #include <android/log.h>
 #include "PluginUtils.h"
 #include <jni.h>
-#include "OpenSdk.h"
+#include "InitManager.h"
 
 using namespace opensdk;
 
@@ -11,6 +11,6 @@ extern "C" {
     
     JNIEXPORT void JNICALL Java_com_opensdk_init_InitManager_nativeInitPlugins(JNIEnv*  env, jobject thiz)
     {
-		OpenSdk::getInstance()->onInitPlugins();
+		InitManager::getInstance()->onInitPlugins();
     }
 }
