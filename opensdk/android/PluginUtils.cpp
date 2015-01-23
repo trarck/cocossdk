@@ -12,7 +12,7 @@ void PluginUtils::initPluginWrapper(android_app* app)
 {
     PluginJniMethodInfo t;
     if (! PluginJniHelper::getStaticMethodInfo(t
-        , "org/cocos2dx/plugin/PluginWrapper"
+        , "com/opensdk/framework/PluginWrapper"
         , "initFromNativeActivity"
         , "(Landroid/app/Activity;)V"))
     {

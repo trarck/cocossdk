@@ -8,7 +8,7 @@ using namespace opensdk;
 
 extern "C" {
     
-    JNIEXPORT void JNICALL Java_org_cocos2dx_plugin_UserWrapper_nativeOnActionResult(JNIEnv*  env, jobject thiz, jstring className, jint ret, jstring msg)
+    JNIEXPORT void JNICALL Java_com_opensdk_framework_UserWrapper_nativeOnActionResult(JNIEnv*  env, jobject thiz, jstring className, jint ret, jstring msg)
     {
         std::string strMsg = PluginJniHelper::jstring2string(msg);
         std::string strClassName = PluginJniHelper::jstring2string(className);

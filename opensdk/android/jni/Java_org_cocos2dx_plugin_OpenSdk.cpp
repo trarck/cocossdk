@@ -3,13 +3,14 @@
 #include <android/log.h>
 #include "PluginUtils.h"
 #include <jni.h>
+#include "OpenSdk.h"
 
 using namespace opensdk;
 
 extern "C" {
     
-    JNIEXPORT void JNICALL Java_org_cocos2dx_plugin_OpenSdk_nativeInitPlugins(JNIEnv*  env, jobject thiz)
+    JNIEXPORT void JNICALL Java_com_opensdk_framework_OpenSdk_nativeInitPlugins(JNIEnv*  env, jobject thiz)
     {
-		
+		OpenSdk::getInstance()->onInitPlugins();
     }
 }

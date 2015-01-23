@@ -19,7 +19,7 @@ enum {
 	kPluginSocial,
 };
 
-#define ANDROID_PLUGIN_PACKAGE_PREFIX			"org/cocos2dx/plugin/"
+#define ANDROID_PLUGIN_PACKAGE_PREFIX			"com/opensdk/framework/"
 
 static PluginFactory* s_pFactory = NULL;
 
@@ -66,7 +66,7 @@ PluginProtocol* PluginFactory::createPlugin(const char* name)
 
 		PluginJniMethodInfo t;
 		if (! PluginJniHelper::getStaticMethodInfo(t
-			, "org/cocos2dx/plugin/PluginWrapper"
+			, "com/opensdk/framework/PluginWrapper"
 			, "initPlugin"
 			, "(Ljava/lang/String;)Ljava/lang/Object;"))
 		{
@@ -85,7 +85,7 @@ PluginProtocol* PluginFactory::createPlugin(const char* name)
 		}
 
 		if (! PluginJniHelper::getStaticMethodInfo(t
-			, "org/cocos2dx/plugin/PluginWrapper"
+			, "com/opensdk/framework/PluginWrapper"
 			, "getPluginType"
 			, "(Ljava/lang/Object;)I"))
 		{

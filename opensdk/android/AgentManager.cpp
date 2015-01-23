@@ -101,7 +101,7 @@ std::map<std::string, std::string> AgentManager::getPluginConfigure()
 	PluginJniMethodInfo t;
 	JNIEnv* env = PluginUtils::getEnv();
 
-	if(PluginJniHelper::getStaticMethodInfo(t, "org/cocos2dx/plugin/PluginWrapper", "getPluginConfigure", "()Ljava/util/Hashtable;"))
+	if(PluginJniHelper::getStaticMethodInfo(t, "com/opensdk/framework/PluginWrapper", "getPluginConfigure", "()Ljava/util/Hashtable;"))
 	{
 		jobject jhashtable = t.env->CallStaticObjectMethod(t.classID, t.methodID);
 		PluginJniMethodInfo tGetMethod;
