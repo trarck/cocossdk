@@ -10,15 +10,6 @@
 
 namespace opensdk {
 
-enum {
-	kPluginAds = 1,
-	kPluginAnalytics,
-	kPluginIAP,
-	kPluginShare,
-	kPluginUser,
-	kPluginSocial,
-};
-
 #define ANDROID_PLUGIN_PACKAGE_PREFIX			"com/opensdk/framework/"
 
 static PluginFactory* s_pFactory = NULL;

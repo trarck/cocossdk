@@ -3,8 +3,19 @@
 
 namespace opensdk {
 
+typedef enum {
+	kPluginAds = 1,/**< enum value kPluginAds. */
+	kPluginAnalytics,/**< enum value kPluginAnalytics. */
+	kPluginIAP,/**< enum value kPluginIAP. */
+	kPluginShare,/**< enum value kPluginShare. */
+	kPluginUser,/**< enum value kPluginUser. */
+	kPluginSocial,/**< enum value kPluginSocial. */
+	kPluginPush,/**< enum value kPluginPush. */
+}Plugin_type;
+	
 class PluginProtocol;
 class PluginManager;
+
 class PluginFactory
 {
 public:

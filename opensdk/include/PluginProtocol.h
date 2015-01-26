@@ -4,64 +4,57 @@
 #include "PluginParam.h"
 #include <vector>
 
-#if defined(__GNUC__) && ((__GNUC__ >= 4) || ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 1)))
-    #define CC_DEPRECATED_ATTRIBUTE __attribute__((deprecated))
-#elif _MSC_VER >= 1400 //vs 2005 or higher
-    #define CC_DEPRECATED_ATTRIBUTE __declspec(deprecated) 
-#else
-    #define CC_DEPRECATED_ATTRIBUTE
-#endif 
-
 namespace opensdk {
 
 /**
-	The super class for all plugins.
-*/
-class PluginFactory;
+ *@brief The super class for all plugins.
+ */
+
 class PluginProtocol
 {
 public:
     virtual ~PluginProtocol();
 
+    virtual void setPluginName(const char* name) = 0;
+	
     /**
-    @brief plug-in info methods(name, version, SDK version)
+     *@brief get plugin name
+     */
+    virtual const char* getPluginName() =0;
+	
+   /**
+    *@brief get plugin version
     */
-    inline const char* getPluginName() { return _pluginName.c_str(); }
-    std::string getPluginVersion();
-    std::string getSDKVersion();
+    virtual std::string getPluginVersion();
+	
+   /**
+    *@brief get sdk name
+    */
+    virtual std::string getSDKVersion();
 
     /**
     @brief switch debug plug-in on/off
     */
-    void setDebugMode(bool bDebug);
+    virtual void setDebugMode(bool bDebug);
 
     /**
      * @brief methods for reflections
      */
-    void callFuncWithParam(const char* funcName, PluginParam* param, ...);
-    void callFuncWithParam(const char* funcName, std::vector<PluginParam*> params);
+    virtual void callFuncWithParam(const char* funcName, PluginParam* param, ...);
+    virtual void callFuncWithParam(const char* funcName, std::vector<PluginParam*> params);
 
-    std::string callStringFuncWithParam(const char* funcName, PluginParam* param, ...);
-    std::string callStringFuncWithParam(const char* funcName, std::vector<PluginParam*> params);
+    virtual std::string callStringFuncWithParam(const char* funcName, PluginParam* param, ...);
+    virtual std::string callStringFuncWithParam(const char* funcName, std::vector<PluginParam*> params);
 
-    int callIntFuncWithParam(const char* funcName, PluginParam* param, ...);
-    int callIntFuncWithParam(const char* funcName, std::vector<PluginParam*> params);
+    virtual int callIntFuncWithParam(const char* funcName, PluginParam* param, ...);
+    virtual int callIntFuncWithParam(const char* funcName, std::vector<PluginParam*> params);
 
-    bool callBoolFuncWithParam(const char* funcName, PluginParam* param, ...);
-    bool callBoolFuncWithParam(const char* funcName, std::vector<PluginParam*> params);
+    virtual bool callBoolFuncWithParam(const char* funcName, PluginParam* param, ...);
+    virtual bool callBoolFuncWithParam(const char* funcName, std::vector<PluginParam*> params);
 
-    float callFloatFuncWithParam(const char* funcName, PluginParam* param, ...);
-    float callFloatFuncWithParam(const char* funcName, std::vector<PluginParam*> params);
+    virtual float callFloatFuncWithParam(const char* funcName, PluginParam* param, ...);
+    virtual float callFloatFuncWithParam(const char* funcName, std::vector<PluginParam*> params);
 
-protected:
-    PluginProtocol() {}
-
-private:
-    friend class PluginFactory;
-    inline void setPluginName(const char* name) {
-    	_pluginName = name;
-    }
-    std::string _pluginName;
 };
 
 } //namespace opensdk {
