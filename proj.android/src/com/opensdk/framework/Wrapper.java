@@ -123,8 +123,6 @@ public class Wrapper {
 			}
 			
 		}
-		
-		
 	}
 
 	public static Hashtable<String, String> getDeveloperInfo() {

@@ -1,10 +1,15 @@
 package com.opensdk.framework;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import org.xmlpull.v1.XmlPullParser;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,6 +21,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.Xml;
 
 
 public class PluginWrapper {
@@ -173,4 +179,65 @@ public class PluginWrapper {
 
         return ht;
     }
+    
+    /**
+     * <support>
+     * 		<PluginTypeName>Real plugin name</PluginTypeName>//exmaple <PluginUser>UserNd91</PluginUser>
+     * 																   <PluginIAP>IAPNd91</PluginIAP>
+     * </support>
+     * 
+     * 
+     * @param pluginConfigureFile
+     * @return
+     */
+    public static Hashtable<String, String> GetPluginConfigFromFile(String pluginConfigureFile) {
+    	Hashtable<String, String> ht = new Hashtable<String, String>();
+
+		Context context = PluginWrapper.getContext();
+		
+		try {
+			InputStreamReader inStreamReader = new InputStreamReader(context.getAssets().open(pluginConfigureFile));
+			BufferedReader buffReader = new BufferedReader(inStreamReader);
+			StringBuilder data = new StringBuilder();
+
+			String str = null;
+
+			while ((str = buffReader.readLine()) != null) {
+				data.append(str);
+			}
+			
+//			inStreamReader.close();
+			buffReader.close();
+
+			str = data.toString();
+
+			XmlPullParser xmlParser = Xml.newPullParser();
+			xmlParser.setInput(new StringReader(str));
+			int eventType = xmlParser.getEventType();
+			String pluginType="";
+			
+
+			while (eventType != XmlPullParser.END_DOCUMENT) {
+				switch (eventType) {
+//					case XmlPullParser.START_DOCUMENT:
+//						break;
+					case XmlPullParser.START_TAG:
+						pluginType=xmlParser.getName();
+						ht.put(pluginType, xmlParser.nextText());
+						break;
+//					case XmlPullParser.END_TAG:
+//						break;
+//					case XmlPullParser.TEXT:
+//						
+//						break;
+				}
+				
+				eventType=xmlParser.next();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ht;
+	}
 }
