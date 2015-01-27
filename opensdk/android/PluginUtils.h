@@ -4,6 +4,7 @@
 #include "PluginJniHelper.h"
 #include "PluginJavaData.h"
 #include <map>
+#include <list>
 #include "PluginParam.h"
 #include "PluginJniMacros.h"
 #include <android_native_app_glue.h>
@@ -18,6 +19,8 @@ public:
     static void outputLog(const char* logTag, const char* pFormat, ...);
     
     static jobject createJavaMapObject(std::map<std::string, std::string>* paramMap);
+    static jobject createJavaListObject(std::list<std::string>* paramList);
+    
     static void initJavaPlugin(PluginProtocol* pPlugin, jobject jObj, const char* className);
     static JNIEnv* getEnv();
 

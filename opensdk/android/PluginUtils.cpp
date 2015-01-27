@@ -45,6 +45,27 @@ jobject PluginUtils::createJavaMapObject(std::map<std::string, std::string>* par
     env->DeleteLocalRef(class_Hashtable);
     return obj_Map;
 }
+    
+jobject createJavaListObject(std::list<std::string>* paramList)
+{
+    
+    JNIEnv* env = getEnv();
+    jclass class_ArrayList = env->FindClass("java/util/ArrayList");
+    jmethodID construct_method = env->GetMethodID( class_ArrayList, "<init>","()V");
+    jobject obj_List = env->NewObject( class_ArrayList, construct_method, "");
+    if (paramList != NULL)
+    {
+        jmethodID add_method= env->GetMethodID( class_ArrayList,"add","(Ljava/lang/Object;)Z");
+        for (std::list<std::string>::const_iterator it = paramList->begin(); it != paramList->end(); ++it)
+        {
+            jstring value = env->NewStringUTF(*it);
+            env->CallObjectMethod(obj_List, add_method, value);
+            env->DeleteLocalRef(value);
+        }
+    }
+    env->DeleteLocalRef(class_ArrayList);
+    return obj_List;
+}
 
 void PluginUtils::initJavaPlugin(PluginProtocol* pPlugin, jobject jObj, const char* className)
 {

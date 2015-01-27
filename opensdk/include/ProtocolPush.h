@@ -12,8 +12,6 @@ namespace opensdk {
 typedef enum
 {
 	kPushReceiveMessage = 0,/**value is callback of Receiving Message . */
-
-
 } PushActionResultCode;
 class ProtocolPush;
 /**   
