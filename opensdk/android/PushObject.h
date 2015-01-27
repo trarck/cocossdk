@@ -7,6 +7,13 @@
 #include <string>
 
 namespace opensdk {
+    
+typedef struct
+{
+    PushActionResultCode resultCode;
+    std::string msg;
+} PushActionResult;
+    
 /**   
  *  @class  ProtocolPush  
  */
@@ -85,6 +92,8 @@ public:
 protected:
 	std::string _pluginName;
 	PushActionListener* _listener;
+    
+    std::vector<PushActionResult> _actionResultList;
 
 };
 
