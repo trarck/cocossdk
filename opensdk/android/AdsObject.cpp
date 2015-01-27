@@ -13,6 +13,7 @@ AdsObject::AdsObject()
 
 AdsObject::~AdsObject()
 {
+	
 }
 
 void AdsObject::setPluginName(const char* name)

@@ -1,7 +1,7 @@
-#ifndef __OPENSDK_PROTOCOL_ANALYTICS_H__
-#define __OPENSDK_PROTOCOL_ANALYTICS_H__
+#ifndef __OPENSDK_ANALYTICS_OBJECT_H__
+#define __OPENSDK_ANALYTICS_OBJECT_H__
 
-#include "PluginProtocol.h"
+#include "ProtocolAnalytics.h"
 #include <map>
 #include <string>
 
@@ -10,65 +10,82 @@ namespace opensdk {
 typedef std::pair< std::string, std::string >   LogEventParamPair;
 typedef std::map< std::string, std::string >    LogEventParamMap;
 
-class ProtocolAnalytics : public PluginProtocol
+class AnalyticsObject : public ProtocolAnalytics
 {
 public:
 
+	AnalyticsObject();
+	
+	virtual ~AnalyticsObject();
+   /**
+    *@brief set plugin name
+    */
+    virtual void setPluginName(const char* name);
+	
+    /**
+     *@brief get plugin name
+     */
+    virtual const char* getPluginName();
+	
 	/**
      @brief Start a new session.
      @param appKey The identity of the application.
      */
-	virtual  void startSession() = 0;
+	virtual  void startSession();
     
 	/**
      @brief Stop a session.
      @warning This interface only worked on android
      */
-	virtual void stopSession() = 0;
+	virtual void stopSession();
 
     /**
      @brief Set the timeout for expiring a session.
      @param millis In milliseconds as the unit of time.
      @note It must be invoked before calling startSession.
      */
-	virtual void setSessionContinueMillis(long millis) = 0;
+	virtual void setSessionContinueMillis(long millis);
     
     /**
      @brief log an error
      @param errorId The identity of error
      @param message Extern message for the error
      */
-	virtual void logError(const char* errorId, const char* message) = 0;
+	virtual void logError(const char* errorId, const char* message);
     
 	/**
      @brief log an event.
      @param eventId The identity of event
      @param paramMap Extern parameters of the event, use NULL if not needed.
      */
-	virtual void logEvent(const char* eventId, LogEventParamMap* paramMap = NULL) = 0;
+	virtual void logEvent(const char* eventId, LogEventParamMap* paramMap = NULL);
     
     /**
      @brief Track an event begin.
      @param eventId The identity of event
      */
-    virtual void logTimedEventBegin(const char* eventId) = 0;
+    virtual void logTimedEventBegin(const char* eventId);
     
     /**
      @brief Track an event end.
      @param eventId The identity of event
      */
-	virtual void logTimedEventEnd(const char* eventId) = 0;
+	virtual void logTimedEventEnd(const char* eventId);
     
 	/**
      @brief Whether to catch uncaught exceptions to server.
      @warning This interface only worked on android.
      */
-	virtual void setCaptureUncaughtException(bool enabled) = 0;
+	virtual void setCaptureUncaughtException(bool enabled);
 	
-	virtual bool isFunctionSupported(std::string functionName) = 0;
+	virtual bool isFunctionSupported(std::string functionName);
+	
+private:
+
+    std::string _pluginName;
 };
 
 } // namespace opensdk {
 
 
-#endif /* __OPENSDK_PROTOCOL_ANALYTICS_H__ */
+#endif /* __OPENSDK_ANALYTICS_OBJECT_H__ */

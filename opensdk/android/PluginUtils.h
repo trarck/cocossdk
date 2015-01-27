@@ -48,6 +48,7 @@ public:
             t.env->DeleteLocalRef(t.classID);
         }
     }
+	
     static void callJavaFunctionWithName(PluginProtocol* thiz, const char* funcName)
     {
         return_if_fails(funcName != NULL && strlen(funcName) > 0);
@@ -87,6 +88,7 @@ public:
         }
         return ret;
     }
+	
     static std::string callJavaStringFuncWithName(PluginProtocol* thiz, const char* funcName)
     {
         std::string ret = "";

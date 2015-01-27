@@ -10,9 +10,12 @@ namespace opensdk {
 class AdsObject : public ProtocolAds
 {
 public:
-	ProtocolAds();
-	virtual ~ProtocolAds();
+	AdsObject();
+	virtual ~AdsObject();
 
+   /**
+    *@brief set plugin name
+    */
     virtual void setPluginName(const char* name);
 	
     /**

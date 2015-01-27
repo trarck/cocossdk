@@ -63,8 +63,6 @@ public:
 class ProtocolAds : public PluginProtocol
 {
 public:
-	ProtocolAds();
-	virtual ~ProtocolAds();
 
     /**
     @brief config the application info

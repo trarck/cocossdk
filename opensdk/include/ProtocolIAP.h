@@ -10,32 +10,36 @@ namespace opensdk {
 typedef std::map<std::string, std::string> TIAPDeveloperInfo;
 typedef std::map<std::string, std::string> TProductInfo;
 typedef std::vector<TProductInfo> TProductList;
+typedef std::map<std::string, TProductInfo> AllProductsInfo;
+
 typedef enum 
 {
-    kPaySuccess = 0,
-    kPayFail,
-    kPayCancel,
-    kPayTimeOut,
+    kPaySuccess = 0,/**< enum value is callback of succeeding in paying . */
+    kPayFail,/**< enum value is callback of failing to pay . */
+    kPayCancel,/**< enum value is callback of canceling to pay . */
+    kPayNetworkError,/**< enum value is callback of network error . */
+    kPayProductionInforIncomplete,/**< enum value is callback of incompleting info . */
+	kPayInitSuccess,/**< enum value is callback of succeeding in initing sdk . */
+	kPayInitFail,/**< enum value is callback of failing to init sdk . */
+	kPayNowPaying,/**< enum value is callback of paying now . */
+	kPayRechargeSuccess,/**< enum value is callback of  succeeding in recharging. */
 } PayResultCode;
     
 typedef enum {
-    RequestSuccees=0,
-    RequestFail,
-    RequestTimeout,
-} IAPProductRequest;
+    kRequestSuccess = 31000,/**< enum value is callback of succeeding in paying . */
+    kRequestFail/**< enum value is callback of failing to pay . */
+} RequestResultCode;
 
 class PayResultListener
 {
 public:
     virtual void onPayResult(PayResultCode ret, const char* msg, TProductInfo info) = 0;
-    virtual void onRequestProductsResult(IAPProductRequest ret, TProductList info){}
+    virtual void onRequestProductsResult(RequestResultCode ret, const char* msg, AllProductsInfo info){}
 };
 
 class ProtocolIAP : public PluginProtocol
 {
 public:
-	ProtocolIAP();
-	virtual ~ProtocolIAP();
 
     /**
     @brief config the developer info
@@ -44,7 +48,7 @@ public:
     @warning Must invoke this interface before other interfaces.
              And invoked only once.
     */
-    void configDeveloperInfo(TIAPDeveloperInfo devInfo);
+    virtual void configDeveloperInfo(TIAPDeveloperInfo devInfo) = 0;
 
     /**
     @brief pay for product
@@ -55,7 +59,13 @@ public:
     @warning For different plugin, the parameter should have other keys to pay.
              Look at the manual of plugins.
     */
-    void payForProduct(TProductInfo info);
+    virtual void payForProduct(TProductInfo info) = 0;
+	
+   /**
+    @brief get order id
+    @return the order id
+    */
+    virtual std::string getOrderId() = 0;
 
     /**
     @deprecated
@@ -63,28 +73,33 @@ public:
     @param pListener The callback object for pay result
     @wraning Must invoke this interface before payForProduct.
     */
-    void setResultListener(PayResultListener* pListener);
+    virtual void setResultListener(PayResultListener* pListener) = 0;
     
     /**
     @deprecated
     @breif get the result listener
     */
-    inline PayResultListener* getResultListener()
-    {
-        return _listener;
-    }
+    virtual PayResultListener* getResultListener() = 0;
+	
+   /**
+    @brief get plugin id
+    @return the plugin id
+    */
+	virtual std::string getPluginId() = 0 ;
     
     /**
     @brief pay result callback
     */
-    void onPayResult(PayResultCode ret, const char* msg);
+    virtual void onPayResult(PayResultCode ret, const char* msg) = 0;
 
-
+	static void resetPayState()
+	{
+		_paying = false;
+	}
+	
 protected:
     static bool _paying;
-
-    TProductInfo _curInfo;
-    PayResultListener* _listener;
+	
 };
 
 } // namespace opensdk {
