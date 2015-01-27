@@ -1,35 +1,28 @@
-#ifndef  __OPENSDK_PROTOCOL_SHARE_H__
-#define  __OPENSDK_PROTOCOL_SHARE_H__
+#ifndef  __OPENSDK_SHARE_OBJECT_H__
+#define  __OPENSDK_SHARE_OBJECT_H__
 
-#include "PluginProtocol.h"
+#include "ProtocolShare"
 #include <map>
 #include <string>
 
 namespace opensdk {
 
-typedef std::map<std::string, std::string> TShareDeveloperInfo;
-typedef std::map<std::string, std::string> TShareInfo;
-
-typedef enum 
-{
-    kShareSuccess = 0,
-    kShareFail,
-    kShareCancel,
-    kShareTimeOut,
-} ShareResultCode;
-
-class ShareResultListener
+class ShareObject : public PluginProtocol
 {
 public:
-    virtual void onShareResult(ShareResultCode ret, const char* msg) = 0 ;
-};
+	ShareObject();
+	virtual ~ShareObject();
 
-class ProtocolShare : public PluginProtocol
-{
-public:
-	ProtocolShare();
-	virtual ~ProtocolShare();
-
+    /**
+     *@brief set plugin name
+     */
+    virtual void setPluginName(const char* name);
+    
+    /**
+     *@brief get plugin name
+     */
+    virtual const char* getPluginName();
+    
     /**
     @brief config the share developer info
     @param devInfo This parameter is the info of developer,
@@ -37,8 +30,8 @@ public:
     @warning Must invoke this interface before other interfaces.
              And invoked only once.
     */
-    virtual void configDeveloperInfo(TShareDeveloperInfo devInfo) = 0 ;
-    
+    void configDeveloperInfo(TShareDeveloperInfo devInfo);
+
     /**
     @brief share information
     @param info The info of share, contains key:
@@ -47,7 +40,7 @@ public:
     @warning For different plugin, the parameter should have other keys to share.
              Look at the manual of plugins.
     */
-    virtual void share(TShareInfo info) = 0 ;
+    void share(TShareInfo info);
 
     /**
     @deprecated
@@ -55,7 +48,7 @@ public:
     @param pListener The callback object for share result
     @wraning Must invoke this interface before share
     */
-    virtual void setResultListener(ShareResultListener* pListener) = 0 ;
+    void setResultListener(ShareResultListener* pListener);
     
     /**
      @deprecated
@@ -63,16 +56,18 @@ public:
      @return The callback object for share result
      @wraning Must invoke this interface before share
      */
-    virtual ShareResultListener* getResultListener() = 0 ;
+    ShareResultListener* getResultListener();
     
 
     /**
     @brief share result callback
     */
-    virtual void onShareResult(ShareResultCode ret, const char* msg) = 0 ;
+    void onShareResult(ShareResultCode ret, const char* msg);
 
+protected:
+    ShareResultListener* _listener;
 };
 
 } // namespace opensdk {
 
-#endif   /* ----- #ifndef __OPENSDK_PROTOCOL_SHARE_H__ ----- */
+#endif   /* ----- #ifndef __OPENSDK_SHARE_OBJECT_H__ ----- */
