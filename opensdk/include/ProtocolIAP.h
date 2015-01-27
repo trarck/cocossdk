@@ -10,7 +10,7 @@ namespace opensdk {
 typedef std::map<std::string, std::string> TIAPDeveloperInfo;
 typedef std::map<std::string, std::string> TProductInfo;
 typedef std::vector<TProductInfo> TProductList;
-typedef std::map<std::string, TProductInfo> AllProductsInfo;
+//typedef std::map<std::string, TProductInfo> AllProductsInfo;
 
 typedef enum 
 {
@@ -34,7 +34,7 @@ class PayResultListener
 {
 public:
     virtual void onPayResult(PayResultCode ret, const char* msg, TProductInfo info) = 0;
-    virtual void onRequestProductsResult(RequestResultCode ret, const char* msg, AllProductsInfo info){}
+    virtual void onRequestResult(RequestResultCode ret, const char* msg, TProductList info){}
 };
 
 class ProtocolIAP : public PluginProtocol
