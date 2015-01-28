@@ -7,7 +7,7 @@ LOCAL_MODULE := OpensdkStatic
 LOCAL_MODULE_FILENAME := libOpensdkStatic
 
 LOCAL_SRC_FILES :=\
-$(addprefix ../../opensdk/android/, \
+$(addprefix ../../android/, \
 	PluginFactory.cpp \
     PluginJniHelper.cpp \
     PluginUtils.cpp \
@@ -29,15 +29,15 @@ $(addprefix ../../opensdk/android/, \
 	InitManager.cpp \
 	jni/Java_com_opensdk_init_InitManager.cpp \
 ) \
-../../opensdk/PluginManager.cpp \
-../../opensdk/PluginParam.cpp
+../../PluginManager.cpp \
+../../PluginParam.cpp
 
 #LOCAL_CFLAGS := -std=c++11 -Wno-psabi
 LOCAL_CFLAGS := -Wno-psabi
 LOCAL_EXPORT_CFLAGS := -Wno-psabi
 
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../opensdk/include $(LOCAL_PATH)/../../opensdk/android
-LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../../opensdk/include $(LOCAL_PATH)/../../opensdk/android
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include $(LOCAL_PATH)/../../android
+LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../../include $(LOCAL_PATH)/../../android
 
 LOCAL_LDLIBS := -landroid
 LOCAL_LDLIBS += -llog
