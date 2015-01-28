@@ -39,7 +39,7 @@ public:
      */
     virtual void login();
     
-    virtual void login(std::string server_id, std::string oauthLoginServer = "");
+    virtual void login(const std::string& server_id, const std::string& oauthLoginServer = "");
 
     /**
      @brief User logout
@@ -83,7 +83,7 @@ public:
      @return if the function support ,return true
      else retur false
      */
-    virtual bool isFunctionSupported(std::string functionName);
+    virtual bool isFunctionSupported(const std::string& functionName);
     
     /**
      @brief get plugin id

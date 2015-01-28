@@ -10,6 +10,7 @@ bool ProtocolIAP::_paying = false;
 
 IAPObject::IAPObject()
 : _listener(NULL)
+, _pluginName("")
 {
 }
 

@@ -44,6 +44,7 @@ typedef enum {
 } AdsType;
 
 class ProtocolAds;
+    
 class AdsListener
 {
 public:

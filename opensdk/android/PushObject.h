@@ -54,28 +54,28 @@ public:
      *@param tags
      *@return void
      */
-    virtual void setAlias(std::string alias);
+    virtual void setAlias(const std::string& alias);
 
     /**
      *@brief del alias
      *@param tags
      *@return void
      */
-    virtual void delAlias(std::string alias);
+    virtual void delAlias(const std::string& alias);
 
     /**
      *@brief set tag
      *@param tags
      *@return void
      */
-    virtual void setTags(std::list<std::string> tags);
+    virtual void setTags(const std::list<std::string>& tags);
 
     /**
      *@brief delete tag
      *@param tags
      *@return void
      */
-    virtual void delTags(std::list<std::string> tags);
+    virtual void delTags(const std::list<std::string>& tags);
 
     /**
      @brief set the result listener

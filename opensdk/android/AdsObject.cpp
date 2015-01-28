@@ -8,6 +8,7 @@ namespace opensdk {
 
 AdsObject::AdsObject()
 : _listener(NULL)
+, _pluginName("")
 {
 }
 

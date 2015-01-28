@@ -78,7 +78,7 @@ public:
      */
 	virtual void setCaptureUncaughtException(bool enabled);
 	
-	virtual bool isFunctionSupported(std::string functionName);
+	virtual bool isFunctionSupported(const std::string& functionName);
 	
 private:
 

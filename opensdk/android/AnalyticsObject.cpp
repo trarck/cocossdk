@@ -6,6 +6,7 @@
 namespace opensdk {
 
 AnalyticsObject::AnalyticsObject()
+: _pluginName("")
 {
 }
 
@@ -61,6 +62,12 @@ void AnalyticsObject::logTimedEventBegin(const char* eventId)
 void AnalyticsObject::logTimedEventEnd(const char* eventId)
 {
 	PluginUtils::callJavaFunctionWithName_string_map(this, "logTimedEventEnd", eventId, NULL);
+}
+    
+bool AnalyticsObject::isFunctionSupported(const std::string& functionName)
+{
+    PluginParam paramFunctionName(functionName.c_str());
+    return callBoolFuncWithParam("isFunctionSupported", &paramFunctionName,NULL);
 }
 
 } //namespace plugin {

@@ -9,6 +9,7 @@ namespace opensdk {
 
 ShareObject::ShareObject()
 : _listener(NULL)
+, _pluginName("")
 {
 }
 

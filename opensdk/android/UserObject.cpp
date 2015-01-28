@@ -12,6 +12,7 @@ std::string UserObject::_serverIP="";
 
 UserObject::UserObject()
 : _listener(NULL)
+, _pluginName("")
 {
 }
 
@@ -47,7 +48,7 @@ void UserObject::login()
     PluginUtils::callJavaFunctionWithName(this, "login");
 }
     
-void UserObject::login(std::string server_id, std::string oauthLoginServer)
+void UserObject::login(const std::string& server_id, const std::string& oauthLoginServer)
 {
     if(!server_id.empty()){
         _serverID=server_id;
@@ -95,7 +96,7 @@ UserActionListener* UserObject::getActionListener()
     return _listener;
 }
 
-bool UserObject::isFunctionSupported(std::string functionName)
+bool UserObject::isFunctionSupported(const std::string& functionName)
 {
     jstring jstr = PluginUtils::getEnv()->NewStringUTF(functionName.c_str());
     bool ret=PluginUtils::callJavaBoolFuncWithName_oneParam(this, "isFunctionSupported", "(Ljava/lang/String;)V", jstr);

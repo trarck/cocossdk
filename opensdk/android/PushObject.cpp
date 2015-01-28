@@ -7,7 +7,8 @@
 namespace opensdk {
 
 PushObject::PushObject()
-    :_listener(NULL)
+:_listener(NULL)
+, _pluginName("")
 {
 	
 }
@@ -37,21 +38,21 @@ void PushObject::closePush()
     PluginUtils::callJavaFunctionWithName(this,"closePush");
 }
 
-void PushObject::setAlias(std::string alias)
+void PushObject::setAlias(const std::string& alias)
 {
     PluginParam paramAlias(alias.c_str());
     
     callFuncWithParam("setAlias", &paramAlias,NULL);
 }
 
-void PushObject::delAlias(std::string alias)
+void PushObject::delAlias(const std::string& alias)
 {
     PluginParam paramAlias(alias.c_str());
     
     callFuncWithParam("delAlias", &paramAlias,NULL);
 }
 
-void PushObject::setTags(std::list<std::string> tags)
+void PushObject::setTags(const std::list<std::string>& tags)
 {
     PluginJavaData* pData = PluginUtils::getPluginJavaData(this);
     
@@ -75,7 +76,7 @@ void PushObject::setTags(std::list<std::string> tags)
     }
 }
 
-void PushObject::delTags(std::list<std::string> tags)
+void PushObject::delTags(const std::list<std::string>& tags)
 {
     PluginJavaData* pData = PluginUtils::getPluginJavaData(this);
     

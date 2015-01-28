@@ -9,6 +9,7 @@ namespace opensdk {
 
 SocialObject::SocialObject()
 : _listener(NULL)
+, _pluginName("")
 {
 }
 

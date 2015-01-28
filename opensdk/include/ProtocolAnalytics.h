@@ -65,7 +65,7 @@ public:
      */
 	virtual void setCaptureUncaughtException(bool enabled) = 0;
 	
-	virtual bool isFunctionSupported(std::string functionName) = 0;
+	virtual bool isFunctionSupported(const std::string& functionName) = 0;
 };
 
 } // namespace opensdk {

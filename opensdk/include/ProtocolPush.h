@@ -5,7 +5,6 @@
 #include <map>
 #include <list>
 #include <string>
-using namespace std;
 
 namespace opensdk {
 /** @brief Plugin_type enum, with inline docs */
@@ -56,28 +55,28 @@ public:
      *@param tags
      *@return void
      */
-    virtual void setAlias(string alias) = 0;
+    virtual void setAlias(const std::string& alias) = 0;
 
     /**
      *@brief del alias
      *@param tags
      *@return void
      */
-    virtual void delAlias(string alias) = 0;
+    virtual void delAlias(const std::string& alias) = 0;
 
     /**
      *@brief set tag
      *@param tags
      *@return void
      */
-    virtual void setTags(list<string> tags) = 0;
+    virtual void setTags(const std::list<std::string>& tags) = 0;
 
     /**
      *@brief delete tag
      *@param tags
      *@return void
      */
-    virtual void delTags(list<string> tags) = 0;
+    virtual void delTags(const std::list<std::string>& tags) = 0;
 
     /**
      @brief set the result listener
