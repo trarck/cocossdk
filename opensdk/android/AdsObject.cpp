@@ -100,7 +100,7 @@ void AdsObject::spendPoints(int points)
 void AdsObject::setAdsListener(AdsListener* listener)
 {
 	_listener=listener;
-    popActionResult(this);
+    popActionResult();
 }
 
 AdsListener* AdsObject::getAdsListener()
@@ -114,15 +114,15 @@ bool AdsObject::isAdTypeSupported(AdsType adType)
 	return callBoolFuncWithParam("isAdTypeSupported",&paramAdsType,NULL);
 }
     
-void AdsObject::popActionResult(AdsObject* adsObject)
+void AdsObject::popActionResult()
 {
-    for(std::vector<AdsActionResult>::const_iterator iter=_actionResultList.begin();iter!=_actionResultList.end();){
+    for(std::vector<AdsActionResult>::iterator iter=_actionResultList.begin();iter!=_actionResultList.end();){
         
         ProtocolAds* pAds = dynamic_cast<ProtocolAds*>(PluginUtils::getPluginPtr(iter->className));
         if(pAds){
             AdsListener* listener = pAds->getAdsListener();
             if(listener){
-                listener->onAdsResult(iter->code, iter->msg.c_str());
+                listener->onAdsResult(iter->resultCode, iter->msg.c_str());
                 
                 //remove from record
                 iter=_actionResultList.erase(iter);

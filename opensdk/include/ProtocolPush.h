@@ -69,14 +69,14 @@ public:
      *@param tags
      *@return void
      */
-    virtual void setTags(const std::list<std::string>& tags) = 0;
+    virtual void setTags(std::list<std::string>& tags) = 0;
 
     /**
      *@brief delete tag
      *@param tags
      *@return void
      */
-    virtual void delTags(const std::list<std::string>& tags) = 0;
+    virtual void delTags(std::list<std::string>& tags) = 0;
 
     /**
      @brief set the result listener

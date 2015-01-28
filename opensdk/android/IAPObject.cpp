@@ -119,7 +119,7 @@ void IAPObject::onPayResult(PayResultCode ret, const char* msg)
 
 void IAPObject::popActionResult()
 {
-    for(std::vector<IAPActionResult>::const_iterator iter=_actionResultList.begin();iter!=_actionResultList.end();){
+    for(std::vector<IAPActionResult>::iterator iter=_actionResultList.begin();iter!=_actionResultList.end();){
         
         IAPObject* iapObject = dynamic_cast<IAPObject*>(PluginUtils::getPluginPtr(iter->className));
         if(iapObject){

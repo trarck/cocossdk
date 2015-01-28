@@ -46,7 +46,7 @@ jobject PluginUtils::createJavaMapObject(std::map<std::string, std::string>* par
     return obj_Map;
 }
     
-jobject createJavaListObject(std::list<std::string>* paramList)
+jobject PluginUtils::createJavaListObject(std::list<std::string>* paramList)
 {
     
     JNIEnv* env = getEnv();
@@ -58,7 +58,7 @@ jobject createJavaListObject(std::list<std::string>* paramList)
         jmethodID add_method= env->GetMethodID( class_ArrayList,"add","(Ljava/lang/Object;)Z");
         for (std::list<std::string>::const_iterator it = paramList->begin(); it != paramList->end(); ++it)
         {
-            jstring value = env->NewStringUTF(*it);
+            jstring value = env->NewStringUTF(it->c_str());
             env->CallObjectMethod(obj_List, add_method, value);
             env->DeleteLocalRef(value);
         }

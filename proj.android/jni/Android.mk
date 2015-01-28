@@ -12,15 +12,17 @@ $(addprefix ../../opensdk/android/, \
     PluginJniHelper.cpp \
     PluginUtils.cpp \
     PluginProtocol.cpp \
-    ProtocolAnalytics.cpp \
-    ProtocolIAP.cpp \
-    ProtocolAds.cpp \
-    ProtocolShare.cpp \
-    ProtocolUser.cpp \
-    ProtocolSocial.cpp \
+	AdsObject.cpp \
+    AnalyticsObject.cpp \
+    IAPObject.cpp \
+    PushObject.cpp \
+    ShareObject.cpp \
+    SocialObject.cpp \
+	UserObject.cpp \
     AgentManager.cpp \
     jni/Java_com_opensdk_framework_Ads.cpp \
     jni/Java_com_opensdk_framework_IAP.cpp \
+	jni/Java_com_opensdk_framework_Push.cpp \
     jni/Java_com_opensdk_framework_Share.cpp \
     jni/Java_com_opensdk_framework_Social.cpp \
     jni/Java_com_opensdk_framework_User.cpp \

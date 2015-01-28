@@ -98,7 +98,7 @@ void ShareObject::onShareResult(ShareResultCode ret, const char* msg)
     
 void ShareObject::popActionResult()
 {
-    for(std::vector<ShareActionResult>::const_iterator iter=_actionResultList.begin();iter!=_actionResultList.end();){
+    for(std::vector<ShareActionResult>::iterator iter=_actionResultList.begin();iter!=_actionResultList.end();){
         
         ShareObject* shareObject = dynamic_cast<ShareObject*>(PluginUtils::getPluginPtr(iter->className));
         if(shareObject){

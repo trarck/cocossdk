@@ -113,7 +113,7 @@ std::string UserObject::getPluginId()
     
 void UserObject::popActionResult()
 {
-    for(std::vector<UserActionResult>::const_iterator iter=_actionResultList.begin();iter!=_actionResultList.end();){
+    for(std::vector<UserActionResult>::iterator iter=_actionResultList.begin();iter!=_actionResultList.end();){
         
         UserObject* userObject = dynamic_cast<UserObject*>(PluginUtils::getPluginPtr(iter->className));
         if(userObject){

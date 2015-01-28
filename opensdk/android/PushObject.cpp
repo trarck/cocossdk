@@ -52,7 +52,7 @@ void PushObject::delAlias(const std::string& alias)
     callFuncWithParam("delAlias", &paramAlias,NULL);
 }
 
-void PushObject::setTags(const std::list<std::string>& tags)
+void PushObject::setTags(std::list<std::string>& tags)
 {
     PluginJavaData* pData = PluginUtils::getPluginJavaData(this);
     
@@ -69,14 +69,14 @@ void PushObject::setTags(const std::list<std::string>& tags)
                                        , "setTags"
                                        , "(Ljava/util/ArrayList;)V"))
     {
-        jobject obj_List = PluginUtils::createJavaMapObject(tags);
+        jobject obj_List = PluginUtils::createJavaListObject(&tags);
         t.env->CallVoidMethod(pData->jobj, t.methodID, obj_List);
         t.env->DeleteLocalRef(obj_List);
         t.env->DeleteLocalRef(t.classID);
     }
 }
 
-void PushObject::delTags(const std::list<std::string>& tags)
+void PushObject::delTags(std::list<std::string>& tags)
 {
     PluginJavaData* pData = PluginUtils::getPluginJavaData(this);
     
@@ -93,7 +93,7 @@ void PushObject::delTags(const std::list<std::string>& tags)
                                        , "delTags"
                                        , "(Ljava/util/ArrayList;)V"))
     {
-        jobject obj_List = PluginUtils::createJavaMapObject(tags);
+        jobject obj_List = PluginUtils::createJavaListObject(&tags);
         t.env->CallVoidMethod(pData->jobj, t.methodID, obj_List);
         t.env->DeleteLocalRef(obj_List);
         t.env->DeleteLocalRef(t.classID);
@@ -113,7 +113,7 @@ PushActionListener* PushObject::getActionListener()
     
 void PushObject::popActionResult()
 {
-    for(std::vector<PushActionResult>::const_iterator iter=_actionResultList.begin();iter!=_actionResultList.end();){
+    for(std::vector<PushActionResult>::iterator iter=_actionResultList.begin();iter!=_actionResultList.end();){
         
         PushObject* pushObject = dynamic_cast<PushObject*>(PluginUtils::getPluginPtr(iter->className));
         if(pushObject){

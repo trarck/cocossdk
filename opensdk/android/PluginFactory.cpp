@@ -1,12 +1,13 @@
 #include "PluginFactory.h"
 #include "PluginUtils.h"
 #include "PluginJniHelper.h"
-#include "ProtocolAds.h"
-#include "ProtocolAnalytics.h"
-#include "ProtocolIAP.h"
-#include "ProtocolShare.h"
-#include "ProtocolUser.h"
-#include "ProtocolSocial.h"
+#include "AdsObject.h"
+#include "AnalyticsObject.h"
+#include "IAPObject.h"
+#include "PushObject.h"
+#include "ShareObject.h"
+#include "UserObject.h"
+#include "SocialObject.h"
 
 namespace opensdk {
 
@@ -90,23 +91,26 @@ PluginProtocol* PluginFactory::createPlugin(const char* name)
 		switch (curType)
 		{
 		case kPluginAds:
-			pRet = new ProtocolAds();
+			pRet = new AdsObject();
 			break;
 		case kPluginAnalytics:
-			pRet = new ProtocolAnalytics();
+			pRet = new AnalyticsObject();
 			break;
 		case kPluginIAP:
-			pRet = new ProtocolIAP();
+			pRet = new IAPObject();
 			break;
 		case kPluginShare:
-			pRet = new ProtocolShare();
+			pRet = new ShareObject();
 			break;
 		case kPluginUser:
-		    pRet = new ProtocolUser();
+		    pRet = new UserObject();
 		    break;
 		case kPluginSocial:
-		    pRet = new ProtocolSocial();
+		    pRet = new SocialObject();
 		    break;
+        case kPluginPush:
+            pRet = new PushObject();
+            break;
 		default:
 			break;
 		}

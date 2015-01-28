@@ -10,7 +10,7 @@ namespace opensdk {
 
 typedef struct{
     
-    AdsResultCode code;
+    AdsResultCode resultCode;
     std::string msg;
     std::string className;
 } AdsActionResult;
@@ -107,7 +107,7 @@ public:
     */
     virtual bool isAdTypeSupported(AdsType adType);
     
-    static void popActionResult(AdsObject* adsObject);
+    static void popActionResult();
     
     static void pushActionResult(AdsActionResult actionResult);
 

@@ -26,7 +26,7 @@ extern "C" {
             }
             else
             {
-                PushActionResult result={
+                SocialActionResult result={
                     (SocialRetCode)ret,
                     strMsg,
                     strClassName
@@ -38,7 +38,7 @@ extern "C" {
 
         }else{
             
-            PushActionResult result={
+            SocialActionResult result={
                 (SocialRetCode)ret,
                 strMsg,
                 strClassName
