@@ -65,6 +65,7 @@ public:
     void onShareResult(ShareResultCode ret, const char* msg);
 
 protected:
+    std::string _pluginName;
     ShareResultListener* _listener;
 };
 
