@@ -66,21 +66,21 @@ void AdsObject::hideAds(TAdsInfo info)
     PluginUtils::callJavaFunctionWithName_map(this, "hideAds", &info);
 }
 
-void AdsObject::showAds(AdsType adsType, int idx = 1)
+void AdsObject::showAds(AdsType adsType, int idx)
 {
 	PluginParam paramAdsType(adsType);
 	PluginParam paramIdx(idx);
 	callFuncWithParam("showAds",&paramAdsType,&paramIdx,NULL);
 }
 
-void AdsObject::hideAds(AdsType adsType, int idx = 1)
+void AdsObject::hideAds(AdsType adsType, int idx)
 {
 	PluginParam paramAdsType(adsType);
 	PluginParam paramIdx(idx);
 	callFuncWithParam("hideAds",&paramAdsType,&paramIdx,NULL);
 }
 
-void AdsObject::preloadAds(AdsType adsType, int idx = 1)
+void AdsObject::preloadAds(AdsType adsType, int idx)
 {
 	PluginParam paramAdsType(adsType);
 	PluginParam paramIdx(idx);
@@ -100,6 +100,7 @@ void AdsObject::spendPoints(int points)
 void AdsObject::setAdsListener(AdsListener* listener)
 {
 	_listener=listener;
+    popActionResult(this);
 }
 
 AdsListener* AdsObject::getAdsListener()
@@ -109,8 +110,34 @@ AdsListener* AdsObject::getAdsListener()
 
 bool AdsObject::isAdTypeSupported(AdsType adType)
 {
-	PluginParam paramAdsType(adsType);
+	PluginParam paramAdsType((int)adType);
 	return callBoolFuncWithParam("isAdTypeSupported",&paramAdsType,NULL);
+}
+    
+void AdsObject::popActionResult(AdsObject* adsObject)
+{
+    for(std::vector<AdsActionResult>::const_iterator iter=_actionResultList.begin();iter!=_actionResultList.end();){
+        
+        ProtocolAds* pAds = dynamic_cast<ProtocolAds*>(PluginUtils::getPluginPtr(iter->className));
+        if(pAds){
+            AdsListener* listener = pAds->getAdsListener();
+            if(listener){
+                listener->onAdsResult(iter->code, iter->msg.c_str());
+                
+                //remove from record
+                iter=_actionResultList.erase(iter);
+                
+                continue;
+            }
+        }
+        
+        ++iter;
+    }
+}
+
+void AdsObject::pushActionResult(AdsActionResult actionResult)
+{
+    _actionResultList.push_back(actionResult);
 }
 
 } // namespace opensdk {

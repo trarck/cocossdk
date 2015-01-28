@@ -1,4 +1,4 @@
-#include "ProtocolIAP.h"
+#include "IAPObject.h"
 #include "PluginJniHelper.h"
 #include <android/log.h>
 #include "PluginUtils.h"
@@ -14,16 +14,38 @@ extern "C" {
         std::string strClassName = PluginJniHelper::jstring2string(className);
         PluginProtocol* pPlugin = PluginUtils::getPluginPtr(strClassName);
         PluginUtils::outputLog("ProtocolIAP", "nativeOnPayResult(), Get plugin ptr : %p", pPlugin);
-        if (pPlugin != NULL)
+        IAPObject* iapObject = dynamic_cast<IAPObject*>(pPlugin);
+        if (iapObject != NULL)
         {
             PluginUtils::outputLog("ProtocolIAP", "nativeOnPayResult(), Get plugin name : %s", pPlugin->getPluginName());
-            ProtocolIAP* pIAP = dynamic_cast<ProtocolIAP*>(pPlugin);
-            if (pIAP != NULL)
-            {
-                pIAP->onPayResult((PayResultCode) ret, strMsg.c_str());
+            
+            if (iapObject->getResultListener()){
+                
+                iapObject->onPayResult((PayResultCode) ret, strMsg.c_str());
+                
             }else{
+                //save pay result
+                IAPActionResult result={
+                    (PayResultCode)ret,
+                    strMsg,
+                    strClassName
+                };
+                
+                IAPObject::_actionResultList.push_back(result);
+
             	PluginUtils::outputLog("ProtocolIAP", "Can't find nativeOnPayResult listener of plugin %s", pPlugin->getPluginName());
             }
+        }else{
+            //save pay result
+            IAPActionResult result={
+                (PayResultCode)ret,
+                strMsg,
+                strClassName
+            };
+            
+            IAPObject::_actionResultList.push_back(result);
+            
+            PluginUtils::outputLog("ProtocolIAP", "no plugin name : %s", pPlugin->getPluginName());
         }
     }
     

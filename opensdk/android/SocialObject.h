@@ -7,6 +7,14 @@
 
 namespace opensdk {
 
+typedef struct
+{
+    SocialRetCode resultCode;
+    std::string msg;
+    std::string className;
+    
+} SocialActionResult;
+    
 class SocialObject : public ProtocolSocial
 {
 public:
@@ -67,7 +75,17 @@ public:
      @brief get listener
      */
     virtual SocialListener* getListener();
-
+    
+public:
+    
+    static void popActionResult();
+    
+    static void pushActionResult(const SocialActionResult& actionResult);
+    
+    
+public:
+    static std::vector<SocialActionResult> _actionResultList;
+    
 protected:
     std::string _pluginName;
     SocialListener* _listener;

@@ -1,12 +1,21 @@
 #ifndef  __OPENSDK_SHARE_OBJECT_H__
 #define  __OPENSDK_SHARE_OBJECT_H__
 
-#include "ProtocolShare"
+#include "ProtocolShare.h"
 #include <map>
 #include <string>
 
 namespace opensdk {
 
+typedef struct
+{
+    ShareResultCode resultCode;
+    std::string msg;
+    std::string className;
+    
+} ShareActionResult;
+
+    
 class ShareObject : public PluginProtocol
 {
 public:
@@ -63,7 +72,16 @@ public:
     @brief share result callback
     */
     void onShareResult(ShareResultCode ret, const char* msg);
-
+public:
+    
+    static void popActionResult();
+    
+    static void pushActionResult(const ShareActionResult& actionResult);
+    
+    
+public:
+    static std::vector<ShareActionResult> _actionResultList;
+    
 protected:
     std::string _pluginName;
     ShareResultListener* _listener;

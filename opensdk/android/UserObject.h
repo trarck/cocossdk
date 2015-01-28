@@ -7,6 +7,13 @@
 
 namespace opensdk {
 
+typedef struct
+{
+    UserActionResultCode resultCode;
+    std::string msg;
+    std::string className;
+} UserActionResult;
+    
 class UserObject : public ProtocolUser
 {
 public:
@@ -90,10 +97,22 @@ public:
      @return the plugin id
      */
     virtual std::string getPluginId();
+
+    
+public:
+    
+    static void popActionResult();
+    
+    static void pushActionResult(const UserActionResult& actionResult);
+    
+    
+public:
+    static std::vector<UserActionResult> _actionResultList;
+    
     
     static std::string _serverID;
     static std::string _serverIP;
-	
+    
 protected:
     std::string _pluginName;
     

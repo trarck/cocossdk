@@ -10,9 +10,10 @@ namespace opensdk {
 
 typedef struct 
 {
-	PayResultCode payResultCode;
+	PayResultCode resultCode;
 	std::string msg;
-	TProductInfo productInfo;
+    std::string className;
+    
 } IAPActionResult;
 
 class IAPObject : public ProtocolIAP
@@ -83,19 +84,26 @@ public:
     @brief pay result callback
     */
     virtual void onPayResult(PayResultCode ret, const char* msg);
-	
-	void popActionResult();
-	
-	void pushActionResult(const IAPActionResult& actionResult);
 
-	void pushActionResult(PayResultCode ret, const char* msg);
+public:
+    
+	static void popActionResult();
+	
+	static void pushActionResult(const IAPActionResult& actionResult);
 
+
+public:
+    static std::vector<IAPActionResult> _actionResultList;
+    
 protected:
+    
 	std::string _pluginName;
+    
     TProductInfo _curInfo;
+    
     PayResultListener* _listener;
 	
-	std::vector<IAPActionResult> _actionResultList;
+
 };
 
 } // namespace opensdk {

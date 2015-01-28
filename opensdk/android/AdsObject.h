@@ -4,25 +4,33 @@
 #include "ProtocolAds.h"
 #include <map>
 #include <string>
+#include <vector>
 
 namespace opensdk {
 
+typedef struct{
+    
+    AdsResultCode code;
+    std::string msg;
+    std::string className;
+} AdsActionResult;
+    
 class AdsObject : public ProtocolAds
 {
 public:
-	AdsObject();
-	virtual ~AdsObject();
+    AdsObject();
+    virtual ~AdsObject();
 
-   /**
+    /**
     *@brief set plugin name
     */
     virtual void setPluginName(const char* name);
-	
+
     /**
      *@brief get plugin name
      */
     virtual const char* getPluginName();
-	
+
     /**
     @brief config the application info
     @param devInfo This parameter is the info of aplication,
@@ -45,7 +53,7 @@ public:
     @param info The information of adview will be hided
     */
     virtual void hideAds(TAdsInfo info);
-	
+
     /**
     @brief show adview
     @param the type of ads
@@ -90,14 +98,22 @@ public:
      @brief set the Ads listener
     */
     virtual  AdsListener* getAdsListener();
-	
-   /**
+
+    /**
     @brief Is it supportive of this type of ads
     @param the type of ads
     @return if it is supportive ,return true
-    	 	 else retur false
+             else retur false
     */
-   virtual bool isAdTypeSupported(AdsType adType);
+    virtual bool isAdTypeSupported(AdsType adType);
+    
+    static void popActionResult(AdsObject* adsObject);
+    
+    static void pushActionResult(AdsActionResult actionResult);
+
+public:
+    
+    static std::vector<AdsActionResult> _actionResultList;
     
 private:
 

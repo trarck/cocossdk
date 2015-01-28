@@ -1,4 +1,4 @@
-#include "ProtocolShare.h"
+#include "ShareObject.h"
 #include "PluginJniHelper.h"
 #include <android/log.h>
 #include "PluginUtils.h"
@@ -13,23 +13,41 @@ extern "C" {
         std::string strClassName = PluginJniHelper::jstring2string(className);
         PluginProtocol* pPlugin = PluginUtils::getPluginPtr(strClassName);
         PluginUtils::outputLog("ProtocolShare", "nativeOnShareResult(), Get plugin ptr : %p", pPlugin);
-        if (pPlugin != NULL)
+        ShareObject* shareObject = dynamic_cast<ShareObject*>(pPlugin);
+        if (shareObject != NULL)
         {
             PluginUtils::outputLog("ProtocolShare", "nativeOnShareResult(), Get plugin name : %s", pPlugin->getPluginName());
-            ProtocolShare* pShare = dynamic_cast<ProtocolShare*>(pPlugin);
-            if (pShare != NULL)
-            {
-                ShareResultListener* listener = pShare->getResultListener();
-                if (NULL != listener)
-                {
-                    ShareResultCode cRet = (ShareResultCode) ret;
-                    listener->onShareResult(cRet, strMsg.c_str());
-                }else
-                {
-					PluginUtils::outputLog("ProtocolShare", "Can't find the listener of plugin %s", pPlugin->getPluginName());
-                }
-            }
             
+
+            ShareResultListener* listener = shareObject->getResultListener();
+            if (NULL != listener)
+            {
+                ShareResultCode cRet = (ShareResultCode) ret;
+                listener->onShareResult(cRet, strMsg.c_str());
+            }else
+            {
+                //save sahre result
+                ShareActionResult result={
+                    (ShareResultCode)ret,
+                    strMsg,
+                    strClassName
+                };
+                ShareObject::_actionResultList.push_back(result);
+                
+                PluginUtils::outputLog("ProtocolShare", "Can't find the listener of plugin %s", pPlugin->getPluginName());
+            }
+        }else{
+            //save sahre result
+            ShareActionResult result={
+                (ShareResultCode)ret,
+                strMsg,
+                strClassName
+            };
+            
+            ShareObject::_actionResultList.push_back(result);
+            
+            PluginUtils::outputLog("ProtocolShare", "no plugin name : %s", pPlugin->getPluginName());
+
         }
     }
     

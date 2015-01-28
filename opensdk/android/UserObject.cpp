@@ -89,6 +89,7 @@ std::string UserObject::getAccessToken()
 void UserObject::setActionListener(UserActionListener* listener)
 {
     _listener = listener;
+    popActionResult();
 }
 
 UserActionListener* UserObject::getActionListener()
@@ -108,6 +109,31 @@ bool UserObject::isFunctionSupported(const std::string& functionName)
 std::string UserObject::getPluginId()
 {
     return PluginUtils::callJavaStringFuncWithName(this, "getPluginId");
+}
+    
+void UserObject::popActionResult()
+{
+    for(std::vector<UserActionResult>::const_iterator iter=_actionResultList.begin();iter!=_actionResultList.end();){
+        
+        UserObject* userObject = dynamic_cast<UserObject*>(PluginUtils::getPluginPtr(iter->className));
+        if(userObject){
+            UserActionListener* listener = userObject->getActionListener();
+            if(listener){
+                listener->onActionResult(userObject,iter->resultCode, iter->msg.c_str());
+                
+                //remove from record
+                iter=_actionResultList.erase(iter);
+                continue;
+            }
+        }
+        
+        ++iter;
+    }
+}
+
+void UserObject::pushActionResult(const UserActionResult& actionResult)
+{
+    _actionResultList.push_back(actionResult);
 }
 
 } // namespace opensdk {

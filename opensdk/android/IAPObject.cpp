@@ -54,6 +54,18 @@ void IAPObject::payForProduct(TProductInfo info)
         if (NULL != _listener)
         {
             onPayResult(kPayFail, "Product info error");
+        }else{
+            //save pay result for listener
+            PluginJavaData* pData = PluginUtils::getPluginJavaData(this);
+            if(pData){
+                IAPActionResult result={
+                    kPayFail,
+                    "Product info error",
+                    pData->jclassName
+                };
+                
+                _actionResultList.push_back(result);
+            }
         }
         PluginUtils::outputLog("IAPObject", "The product info is empty!");
         return;
@@ -90,29 +102,38 @@ std::string IAPObject::getPluginId()
 
 void IAPObject::onPayResult(PayResultCode ret, const char* msg)
 {
-    _paying = false;
+    
     if (_listener)
     {
+        _paying = false;
     	_listener->onPayResult(ret, msg, _curInfo);
+        _curInfo.clear();
     }
     else
     {
         PluginUtils::outputLog("IAPObject", "Result listener is null!");
-		//处理没有设置listener导致丢单。可以使用一个列表保存所有没有处理的结果
-        pushActionResult(ret, msg);
     }
-    _curInfo.clear();
+    
     PluginUtils::outputLog("IAPObject", "Pay result is : %d(%s)", (int) ret, msg);
 }
 
 void IAPObject::popActionResult()
 {
-    if (_listener) {
-        while(_actionResultList.size()>0){
-            IAPActionResult actionResult=_actionResultList.back();
-            _listener->onPayResult(actionResult.payResultCode, actionResult.msg.c_str(), actionResult.productInfo);
-            _actionResultList.pop_back();
+    for(std::vector<IAPActionResult>::const_iterator iter=_actionResultList.begin();iter!=_actionResultList.end();){
+        
+        IAPObject* iapObject = dynamic_cast<IAPObject*>(PluginUtils::getPluginPtr(iter->className));
+        if(iapObject){
+            PayResultListener* listener = iapObject->getResultListener();
+            if(listener){
+                listener->onPayResult(iter->resultCode, iter->msg.c_str(), iapObject->_curInfo);
+                
+                //remove from record
+                iter=_actionResultList.erase(iter);
+                continue;
+            }
         }
+        
+        ++iter;
     }
 }
 
@@ -121,10 +142,5 @@ void IAPObject::pushActionResult(const IAPActionResult& actionResult)
     _actionResultList.push_back(actionResult);
 }
 
-void IAPObject::pushActionResult(PayResultCode ret, const char* msg)
-{
-    IAPActionResult actionResult={ret,msg,_curInfo};
-    _actionResultList.push_back(actionResult);
-}
 
 } // namespace opensdk {

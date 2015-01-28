@@ -103,11 +103,37 @@ void PushObject::delTags(const std::list<std::string>& tags)
 void PushObject::setActionListener(PushActionListener* listener)
 {
 	_listener=listener;
+    popActionResult();
 }
 
 PushActionListener* PushObject::getActionListener()
 {
 	return _listener;
+}
+    
+void PushObject::popActionResult()
+{
+    for(std::vector<PushActionResult>::const_iterator iter=_actionResultList.begin();iter!=_actionResultList.end();){
+        
+        PushObject* pushObject = dynamic_cast<PushObject*>(PluginUtils::getPluginPtr(iter->className));
+        if(pushObject){
+            PushActionListener* listener = pushObject->getActionListener();
+            if(listener){
+                listener->onActionResult(pushObject,iter->resultCode, iter->msg.c_str());
+                
+                //remove from record
+                iter=_actionResultList.erase(iter);
+                continue;
+            }
+        }
+        
+        ++iter;
+    }
+}
+
+void PushObject::pushActionResult(const PushActionResult& actionResult)
+{
+    _actionResultList.push_back(actionResult);
 }
 
 } // namespace opensdk

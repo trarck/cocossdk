@@ -47,7 +47,21 @@ void ShareObject::share(TShareInfo info)
         if (NULL != _listener)
         {
             onShareResult(kShareFail, "Share info error");
+        }else{
+            //save share result for listener
+            PluginJavaData* pData = PluginUtils::getPluginJavaData(this);
+            if(pData){
+                ShareActionResult result={
+                    kShareFail,
+                    "Share info error",
+                    pData->jclassName
+                };
+                
+                _actionResultList.push_back(result);
+            }
+
         }
+        
         PluginUtils::outputLog("ShareObject", "The Share info is empty!");
         return;
     }
@@ -61,6 +75,7 @@ void ShareObject::share(TShareInfo info)
 void ShareObject::setResultListener(ShareResultListener* pListener)
 {
 	_listener = pListener;
+    popActionResult();
 }
 
 ShareResultListener* ShareObject::getResultListener()
@@ -79,6 +94,31 @@ void ShareObject::onShareResult(ShareResultCode ret, const char* msg)
         PluginUtils::outputLog("ShareObject", "Result listener is null!");
     }
     PluginUtils::outputLog("ShareObject", "Share result is : %d(%s)", (int) ret, msg);
+}
+    
+void ShareObject::popActionResult()
+{
+    for(std::vector<ShareActionResult>::const_iterator iter=_actionResultList.begin();iter!=_actionResultList.end();){
+        
+        ShareObject* shareObject = dynamic_cast<ShareObject*>(PluginUtils::getPluginPtr(iter->className));
+        if(shareObject){
+            ShareResultListener* listener = shareObject->getResultListener();
+            if(listener){
+                listener->onShareResult(iter->resultCode, iter->msg.c_str());
+                
+                //remove from record
+                iter=_actionResultList.erase(iter);
+                continue;
+            }
+        }
+        
+        ++iter;
+    }
+}
+
+void ShareObject::pushActionResult(const ShareActionResult& actionResult)
+{
+    _actionResultList.push_back(actionResult);
 }
 
 } // namespace opensdk {

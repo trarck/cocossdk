@@ -1,4 +1,4 @@
-#include "ProtocolPush.h"
+#include "PushObject.h"
 #include "PluginJniHelper.h"
 #include <android/log.h>
 #include "PluginUtils.h"
@@ -14,22 +14,38 @@ extern "C" {
         std::string strClassName = PluginJniHelper::jstring2string(className);
         PluginProtocol* pPlugin = PluginUtils::getPluginPtr(strClassName);
         PluginUtils::outputLog("ProtocolPush", "nativeOnActionResult(), Get plugin ptr : %p", pPlugin);
-        if (pPlugin != NULL)
+        PushObject* pushObject = dynamic_cast<PushObject*>(pPlugin);
+        
+        if (pushObject != NULL)
         {
             PluginUtils::outputLog("ProtocolPush", "nativeOnActionResult(), Get plugin name : %s", pPlugin->getPluginName());
-            ProtocolPush* pPush = dynamic_cast<ProtocolPush*>(pPlugin);
-            if (pPush != NULL)
-            {
-                PushActionListener* listener=pPush->getActionListener();
-                
-                if(listener!=NULL){
-                    listener->onActionResult(pPush,(PushActionResultCode) ret, strMsg.c_str());
-                }else{
-                    PluginUtils::outputLog("ProtocolPush", "Can't find nativeOnPayResult listener of plugin %s", pPlugin->getPluginName());
-                }
+
+            PushActionListener* listener=pushObject->getActionListener();
+            
+            if(listener!=NULL){
+                listener->onActionResult(pushObject,(PushActionResultCode) ret, strMsg.c_str());
             }else{
-            	PluginUtils::outputLog("ProtocolPush", "plugin %s is null", pPlugin->getPluginName());
+                PushActionResult result={
+                    (PushActionResultCode)ret,
+                    strMsg,
+                    strClassName
+                };
+                
+                PushObject::_actionResultList.push_back(result);
+                
+                PluginUtils::outputLog("ProtocolPush", "Can't find nativeOnPayResult listener of plugin %s", pPlugin->getPluginName());
             }
+        }else{
+            
+            PushActionResult result={
+                (PushActionResultCode)ret,
+                strMsg,
+                strClassName
+            };
+            
+            PushObject::_actionResultList.push_back(result);
+            
+            PluginUtils::outputLog("ProtocolPush", "plugin %s is null", pPlugin->getPluginName());
         }
     }
     

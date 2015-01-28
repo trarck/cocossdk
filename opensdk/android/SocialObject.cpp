@@ -112,6 +112,7 @@ void SocialObject::showAchievements()
     
 void SocialObject::setListener(SocialListener* listener) {
     _listener = listener;
+    popActionResult();
 }
     
 SocialListener* SocialObject::getListener()
@@ -119,6 +120,30 @@ SocialListener* SocialObject::getListener()
     return _listener;
 }
 
+void SocialObject::popActionResult()
+{
+    for(std::vector<SocialActionResult>::const_iterator iter=_actionResultList.begin();iter!=_actionResultList.end();){
+        
+        SocialObject* socialObject = dynamic_cast<SocialObject*>(PluginUtils::getPluginPtr(iter->className));
+        if(socialObject){
+            SocialListener* listener = socialObject->getListener();
+            if(listener){
+                listener->onSocialResult(iter->resultCode, iter->msg.c_str());
+                
+                //remove from record
+                iter=_actionResultList.erase(iter);
+                continue;
+            }
+        }
+        
+        ++iter;
+    }
+}
+
+void SocialObject::pushActionResult(const SocialActionResult& actionResult)
+{
+    _actionResultList.push_back(actionResult);
+}
 
 
 } // namespace opensdk {

@@ -12,6 +12,7 @@ typedef struct
 {
     PushActionResultCode resultCode;
     std::string msg;
+    std::string className;
 } PushActionResult;
     
 /**   
@@ -89,12 +90,19 @@ public:
      */
     virtual  PushActionListener* getActionListener();
 
+public:
+    
+    static void popActionResult();
+    
+    static void pushActionResult(const PushActionResult& actionResult);
+    
+    
+public:
+    static std::vector<PushActionResult> _actionResultList;
+    
 protected:
 	std::string _pluginName;
 	PushActionListener* _listener;
-    
-    std::vector<PushActionResult> _actionResultList;
-
 };
 
 } // namespace opensdk
