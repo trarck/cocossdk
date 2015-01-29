@@ -42,7 +42,7 @@ void PluginManager::end()
     PluginFactory::purgeFactory();
 }
 
-PluginProtocol* PluginManager::loadPlugin(const char* name)
+PluginProtocol* PluginManager::loadPlugin(const char* name,int pluginType)
 {
     PluginProtocol* pRet = NULL;
     do {
@@ -51,12 +51,12 @@ PluginProtocol* PluginManager::loadPlugin(const char* name)
         if (it != _pluginsMap.end())
         {
             if (it->second == NULL) {
-                it->second = PluginFactory::getInstance()->createPlugin(name);
+                it->second = PluginFactory::getInstance()->createPlugin(name,pluginType);
             }
             pRet = it->second;
         } else
         {
-        	pRet = PluginFactory::getInstance()->createPlugin(name);
+        	pRet = PluginFactory::getInstance()->createPlugin(name,pluginType);
         	_pluginsMap[name] = pRet;
         }
     } while (false);

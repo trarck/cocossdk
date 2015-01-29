@@ -11,7 +11,7 @@ typedef enum {
 	kPluginUser,/**< enum value kPluginUser. */
 	kPluginSocial,/**< enum value kPluginSocial. */
 	kPluginPush,/**< enum value kPluginPush. */
-}Plugin_type;
+} PluginType;
 	
 class PluginProtocol;
 class PluginManager;
@@ -31,7 +31,7 @@ private:
     PluginFactory(void);
 
     /** create the plugin by name */
-    PluginProtocol* createPlugin(const char* name);
+    PluginProtocol* createPlugin(const char* name,int pluginType);
 };
 
 } //namespace opensdk {

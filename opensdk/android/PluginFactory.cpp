@@ -45,7 +45,7 @@ void PluginFactory::purgeFactory()
 }
 
 /** create the plugin by name */
-PluginProtocol* PluginFactory::createPlugin(const char* name)
+PluginProtocol* PluginFactory::createPlugin(const char* name,int pluginType)
 {
 	PluginProtocol* pRet = NULL;
 	do
@@ -76,43 +76,43 @@ PluginProtocol* PluginFactory::createPlugin(const char* name)
 			break;
 		}
 
-		if (! PluginJniHelper::getStaticMethodInfo(t
-			, "com/opensdk/framework/PluginWrapper"
-			, "getPluginType"
-			, "(Ljava/lang/Object;)I"))
-		{
-			PluginUtils::outputLog("PluginFactory", "Can't find method getPluginType in class org.cocos2dx.plugin.PluginWrapper");
-			break;
-		}
-		int curType = t.env->CallStaticIntMethod(t.classID, t.methodID, jObj);
-		t.env->DeleteLocalRef(t.classID);
-		PluginUtils::outputLog("PluginFactory", "The type of plugin %s is : %d", name, curType);
+//		if (! PluginJniHelper::getStaticMethodInfo(t
+//			, "com/opensdk/framework/PluginWrapper"
+//			, "getPluginType"
+//			, "(Ljava/lang/Object;)I"))
+//		{
+//			PluginUtils::outputLog("PluginFactory", "Can't find method getPluginType in class org.cocos2dx.plugin.PluginWrapper");
+//			break;
+//		}
+//		int curType = t.env->CallStaticIntMethod(t.classID, t.methodID, jObj);
+//		t.env->DeleteLocalRef(t.classID);
+//		PluginUtils::outputLog("PluginFactory", "The type of plugin %s is : %d", name, curType);
 
-		switch (curType)
+		switch (pluginType)
 		{
-		case kPluginAds:
-			pRet = new AdsObject();
-			break;
-		case kPluginAnalytics:
-			pRet = new AnalyticsObject();
-			break;
-		case kPluginIAP:
-			pRet = new IAPObject();
-			break;
-		case kPluginShare:
-			pRet = new ShareObject();
-			break;
-		case kPluginUser:
-		    pRet = new UserObject();
-		    break;
-		case kPluginSocial:
-		    pRet = new SocialObject();
-		    break;
-        case kPluginPush:
-            pRet = new PushObject();
-            break;
-		default:
-			break;
+            case kPluginAds:
+                pRet = new AdsObject();
+                break;
+            case kPluginAnalytics:
+                pRet = new AnalyticsObject();
+                break;
+            case kPluginIAP:
+                pRet = new IAPObject();
+                break;
+            case kPluginShare:
+                pRet = new ShareObject();
+                break;
+            case kPluginUser:
+                pRet = new UserObject();
+                break;
+            case kPluginSocial:
+                pRet = new SocialObject();
+                break;
+            case kPluginPush:
+                pRet = new PushObject();
+                break;
+            default:
+                break;
 		}
 
 		if (pRet != NULL)

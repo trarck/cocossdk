@@ -88,6 +88,7 @@ public:
             jstring strRet = (jstring)t.env->CallObjectMethod(pData->jobj, t.methodID, param);
             ret = PluginJniHelper::jstring2string(strRet);
             t.env->DeleteLocalRef(t.classID);
+			t.env->DeleteLocalRef(strRet);
         }
         return ret;
     }
@@ -108,6 +109,7 @@ public:
             jstring strRet = (jstring) t.env->CallObjectMethod(pData->jobj, t.methodID);
             ret = PluginJniHelper::jstring2string(strRet);
             t.env->DeleteLocalRef(t.classID);
+			t.env->DeleteLocalRef(strRet);
         }
         return ret;
     }

@@ -17,7 +17,7 @@ public:
     static void end();
     
     /** load the plugin by name */
-    PluginProtocol* loadPlugin(const char* name);
+    PluginProtocol* loadPlugin(const char* name,int pluginType);
     /** unload the plugin by name */
     void unloadPlugin(const char* name);
 

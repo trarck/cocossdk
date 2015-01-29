@@ -259,6 +259,49 @@ std::map<std::string, std::string> PluginJniHelper::JSONObject2Map(jobject json)
 	return stdmap;
 }
 
+std::map<std::string, std::string> PluginJniHelper::convertJavaHashTable2Map(jobject hastTable)
+{
+	std::map<std::string, std::string> stdmap;
+
+	JNIEnv* env = getEnv();
+
+	jclass c_hashtable = env->FindClass("java/util/Hashtable");
+	jclass c_set = env->FindClass("java/util/Set");
+	jclass c_iterator = env->FindClass("java/util/Iterator");
+
+	jmethodID m_keySet = env->GetMethodID(c_hashtable, "keySet", "()Ljava/util/Set;");
+	jmethodID m_keySetIterator = env->GetMethodID(c_set, "iterator", "()Ljava/util/Iterator;");
+	
+	jmethodID m_hasNext = env->GetMethodID(c_iterator, "hasNext", "()Z");
+	jmethodID m_next = env->GetMethodID(c_iterator, "next", "()Ljava/lang/Object;");
+	jmethodID m_get = env->GetMethodID(c_hashtable, "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
+
+	jstring jKeyString = NULL;
+	jstring jValueString = NULL;
+
+	jobject jKeySet = env->CallObjectMethod(hastTable, m_keySet);
+	jobject jIterator = env->CallObjectMethod(jKeySet, m_keySetIterator);
+	while(env->CallBooleanMethod(jIterator, m_hasNext))
+	{
+		jKeyString = (jstring)(env->CallObjectMethod(jIterator, m_next));
+		jValueString = (jstring)(env-> CallObjectMethod(hastTable, m_get, jKeyString));
+
+		stdmap.insert(std::make_pair(jstring2string(jKeyString), jstring2string(jValueString)));
+	}
+
+	env->DeleteLocalRef(jIterator);
+	env->DeleteLocalRef(jKeySet);
+	if(jKeyString)
+		env->DeleteLocalRef(jKeyString);
+	if(jValueString)
+		env->DeleteLocalRef(jValueString);
+	env->DeleteLocalRef(c_hashtable);
+	env->DeleteLocalRef(c_set);
+	env->DeleteLocalRef(c_iterator);
+
+	return stdmap;
+}
+
 bool PluginJniHelper::setClassLoaderFrom(jobject nativeactivityinstance) {
     PluginJniMethodInfo _getclassloaderMethod;
     if (!PluginJniHelper::getMethodInfo_DefaultClassLoader(_getclassloaderMethod,

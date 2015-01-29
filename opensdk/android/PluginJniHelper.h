@@ -25,6 +25,7 @@ public:
     static bool getMethodInfo(PluginJniMethodInfo &methodinfo, const char *className, const char *methodName, const char *paramCode);
     static std::string jstring2string(jstring jstr);
     static std::map<std::string, std::string> JSONObject2Map(jobject json);
+	static std::map<std::string, std::string> convertJavaHashTable2Map(jobject hashTable);
 
     static bool setClassLoaderFrom(jobject nativeActivityInstance);
 
