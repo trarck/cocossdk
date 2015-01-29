@@ -29,6 +29,11 @@ const char* PushObject::getPluginName()
 {
 	return _pluginName.c_str();
 }
+    
+int PushObject::getPluginType()
+{
+    return kPluginPush;
+}
 
 void PushObject::startPush()
 {

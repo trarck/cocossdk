@@ -28,6 +28,11 @@ const char* SocialObject::getPluginName()
 {
     return _pluginName.c_str();
 }
+    
+int SocialObject::getPluginType()
+{
+    return kPluginSocial;
+}
 
 void SocialObject::configDeveloperInfo(TSocialDeveloperInfo devInfo)
 {

@@ -28,6 +28,11 @@ const char* ShareObject::getPluginName()
     return _pluginName.c_str();
 }
 
+int ShareObject::getPluginType()
+{
+    return kPluginShare;
+}
+    
 void ShareObject::configDeveloperInfo(TShareDeveloperInfo devInfo)
 {
     if (devInfo.empty())

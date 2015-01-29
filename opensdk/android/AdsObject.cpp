@@ -24,14 +24,16 @@ void AdsObject::setPluginName(const char* name)
 	_pluginName = name;
 }
 
-/**
- *@brief get plugin name
- */
 const char* AdsObject::getPluginName()
 {
 	return _pluginName.c_str();
 }
 
+int AdsObject::getPluginType()
+{
+    return kPluginAds;
+}
+    
 void AdsObject::configDeveloperInfo(TAdsDeveloperInfo devInfo)
 {
     if (devInfo.empty())

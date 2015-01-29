@@ -76,17 +76,21 @@ PluginProtocol* PluginFactory::createPlugin(const char* name,int pluginType)
 			break;
 		}
 
-//		if (! PluginJniHelper::getStaticMethodInfo(t
-//			, "com/opensdk/framework/PluginWrapper"
-//			, "getPluginType"
-//			, "(Ljava/lang/Object;)I"))
-//		{
-//			PluginUtils::outputLog("PluginFactory", "Can't find method getPluginType in class org.cocos2dx.plugin.PluginWrapper");
-//			break;
-//		}
-//		int curType = t.env->CallStaticIntMethod(t.classID, t.methodID, jObj);
-//		t.env->DeleteLocalRef(t.classID);
-//		PluginUtils::outputLog("PluginFactory", "The type of plugin %s is : %d", name, curType);
+        if(pluginType==0){
+            //get from java class
+            if (! PluginJniHelper::getStaticMethodInfo(t
+                , "com/opensdk/framework/PluginWrapper"
+                , "getPluginType"
+                , "(Ljava/lang/Object;)I"))
+            {
+                PluginUtils::outputLog("PluginFactory", "Can't find method getPluginType in class org.cocos2dx.plugin.PluginWrapper");
+                break;
+            }
+            pluginType = t.env->CallStaticIntMethod(t.classID, t.methodID, jObj);
+            t.env->DeleteLocalRef(t.classID);
+            PluginUtils::outputLog("PluginFactory", "The type of plugin %s is : %d", name, pluginType);
+        }
+
 
 		switch (pluginType)
 		{

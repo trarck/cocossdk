@@ -5,7 +5,17 @@
 #include <vector>
 
 namespace opensdk {
-
+    
+typedef enum {
+    kPluginAds = 1,/**< enum value kPluginAds. */
+    kPluginAnalytics,/**< enum value kPluginAnalytics. */
+    kPluginIAP,/**< enum value kPluginIAP. */
+    kPluginShare,/**< enum value kPluginShare. */
+    kPluginUser,/**< enum value kPluginUser. */
+    kPluginSocial,/**< enum value kPluginSocial. */
+    kPluginPush,/**< enum value kPluginPush. */
+} PluginType;
+    
 /**
  *@brief The super class for all plugins.
  */
@@ -21,6 +31,11 @@ public:
      *@brief get plugin name
      */
     virtual const char* getPluginName() =0;
+    
+    /**
+     *@brief get plugin type
+     */
+    virtual int getPluginType() =0;
 	
    /**
     *@brief get plugin version

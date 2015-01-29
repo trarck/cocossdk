@@ -31,6 +31,11 @@ const char* UserObject::getPluginName()
     return _pluginName.c_str();
 }
     
+int UserObject::getPluginType()
+{
+    return kPluginUser;
+}
+    
 void UserObject::configDeveloperInfo(TUserDeveloperInfo devInfo)
 {
     if (devInfo.empty())

@@ -28,6 +28,11 @@ public:
 	virtual void init(const std::string& appKey,const std::string& appSecret,const std::string& privateKey,const std::string& oauthLoginServer);
 	
 	virtual void loadPluginsFromConfig(const std::map<std::string, std::string>& conf);
+    
+    /**
+     @brief plugin type define in the java/objc.
+     */
+    virtual void loadPluginsFromConfigAutoType(const std::map<std::string, std::string>& conf);
 	
 	virtual void loadAllPlugin();
 	

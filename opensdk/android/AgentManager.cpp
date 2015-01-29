@@ -81,51 +81,109 @@ void AgentManager::init(const std::string& appKey,const std::string& appSecret,c
 
 void AgentManager::loadPluginsFromConfig(const std::map<std::string, std::string>& conf)
 {
+    if(conf.empty())
+        return;
+    
+    for(std::map<std::string, std::string>::const_iterator iter = conf.begin(); iter != conf.end(); ++iter)
+    {
+        std::string pluginName = iter->first;
+        
+        if("PluginUser" == pluginName)
+        {
+            _pUser = dynamic_cast<ProtocolUser *>(PluginManager::getInstance()->loadPlugin(iter->second.c_str(),kPluginUser));
+        }
+        else if("PluginShare" == pluginName)
+        {
+            _pShare = dynamic_cast<ProtocolShare *>(PluginManager::getInstance()->loadPlugin(iter->second.c_str(),kPluginShare));
+        }
+        else if("PluginSocial" == pluginName)
+        {
+            _pSocial = dynamic_cast<ProtocolSocial *>(PluginManager::getInstance()->loadPlugin(iter->second.c_str(),kPluginSocial));
+        }
+        else if("PluginAds" == pluginName)
+        {
+            _pAds = dynamic_cast<ProtocolAds *>(PluginManager::getInstance()->loadPlugin(iter->second.c_str(),kPluginAds));
+        }
+        else if("PluginAnalytics" == pluginName)
+        {
+            _pAnalytics = dynamic_cast<ProtocolAnalytics *>(PluginManager::getInstance()->loadPlugin(iter->second.c_str(),kPluginAnalytics));
+        }
+        else if("PluginIAP" == pluginName)
+        {
+            //may have group
+            std::vector<std::string> iapPluginNames;
+            
+            split(iter->second,",",&iapPluginNames);
+            
+            for(std::vector<std::string>::iterator it=iapPluginNames.begin();it!=iapPluginNames.end();++it){
+                ProtocolIAP* pIAP = dynamic_cast<ProtocolIAP *>(PluginManager::getInstance()->loadPlugin(it->c_str(),kPluginIAP));
+                _pluginsIAPMap[*it]=pIAP;
+            }
+        }
+        else if("PluginPush" == pluginName)
+        {
+            _pPush = dynamic_cast<ProtocolPush *>(PluginManager::getInstance()->loadPlugin(iter->second.c_str(),kPluginPush));
+        }
+    }
+}
+    
+void AgentManager::loadPluginsFromConfigAutoType(const std::map<std::string, std::string>& conf)
+{
 	if(conf.empty())
 		return;
 
 	for(std::map<std::string, std::string>::const_iterator iter = conf.begin(); iter != conf.end(); ++iter)
 	{
 		std::string pluginName = iter->first;
-		if("PluginUser" == pluginName)
-		{
-			_pUser = dynamic_cast<ProtocolUser *>(PluginManager::getInstance()->loadPlugin(iter->second.c_str(),kPluginUser));
-		}
-		else if("PluginShare" == pluginName)
-		{
-			_pShare = dynamic_cast<ProtocolShare *>(PluginManager::getInstance()->loadPlugin(iter->second.c_str(),kPluginShare));
-		}
-		else if("PluginSocial" == pluginName)
-		{
-			_pSocial = dynamic_cast<ProtocolSocial *>(PluginManager::getInstance()->loadPlugin(iter->second.c_str(),kPluginSocial));
-		}
-		else if("PluginAds" == pluginName)
-		{
-			_pAds = dynamic_cast<ProtocolAds *>(PluginManager::getInstance()->loadPlugin(iter->second.c_str(),kPluginAds));
-		}
-		else if("PluginAnalytics" == pluginName)
-		{
-			_pAnalytics = dynamic_cast<ProtocolAnalytics *>(PluginManager::getInstance()->loadPlugin(iter->second.c_str(),kPluginAnalytics));
-		}
-		else if("PluginIAP" == pluginName)
-		{
-			//may have group
-			std::vector<std::string> iapPluginNames;
-			
-			split(iter->second,",",&iapPluginNames);
-			
-			for(std::vector<std::string>::iterator it=iapPluginNames.begin();it!=iapPluginNames.end();++it){
-				ProtocolIAP* pIAP = dynamic_cast<ProtocolIAP *>(PluginManager::getInstance()->loadPlugin(it->c_str(),kPluginIAP));
-				_pluginsIAPMap[*it]=pIAP;
-			}
-		}
-		else if("PluginPush" == pluginName)
-		{
-			_pPush = dynamic_cast<ProtocolPush *>(PluginManager::getInstance()->loadPlugin(iter->second.c_str(),kPluginPush));
-		}
+        
+        if("PluginIAP" == pluginName){
+            //may have group
+            std::vector<std::string> iapPluginNames;
+
+            split(iter->second,",",&iapPluginNames);
+
+            for(std::vector<std::string>::iterator it=iapPluginNames.begin();it!=iapPluginNames.end();++it){
+                ProtocolIAP* pIAP = dynamic_cast<ProtocolIAP *>(PluginManager::getInstance()->loadPlugin(it->c_str(),kPluginIAP));
+                
+//                //check is iap plugin
+//                if(pIAP->getPluginType()==kPluginIAP){
+//                    
+//                }
+                
+                _pluginsIAPMap[*it]=pIAP;
+            }
+        }else{
+            PluginProtocol* plugin=PluginManager::getInstance()->loadPlugin(iter->second.c_str());
+            
+            switch (plugin->getPluginType()){
+                case kPluginAds:
+                    _pAds=dynamic_cast<ProtocolAds*>(plugin);
+                    break;
+                case kPluginAnalytics:
+                    _pAnalytics=dynamic_cast<ProtocolAnalytics*>(plugin);
+                    break;
+                case kPluginShare:
+                    _pShare=dynamic_cast<ProtocolShare*>(plugin);
+                    break;
+                case kPluginUser:
+                    _pUser=dynamic_cast<ProtocolUser*>(plugin);
+                    break;
+                case kPluginSocial:
+                    _pSocial=dynamic_cast<ProtocolSocial*>(plugin);
+                    break;
+                case kPluginPush:
+                    _pPush=dynamic_cast<ProtocolPush*>(plugin);
+                    break;
+//                case kPluginIAP:{
+//                    
+//                }
+                default:
+                    break;
+            }
+        }
 	}
 }
-
+    
 void AgentManager::loadAllPlugin()
 {
     std::map<std::string,std::string> conf = getPluginConfigure();

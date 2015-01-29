@@ -35,6 +35,11 @@ public:
      *@brief get plugin name
      */
     virtual const char* getPluginName();
+    
+    /**
+     *@brief get plugin type
+     */
+    virtual int getPluginType();
 	
     /**
      *@brief start/register  Push services

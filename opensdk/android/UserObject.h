@@ -33,6 +33,11 @@ public:
     virtual const char* getPluginName();
     
     /**
+     *@brief get plugin type
+     */
+    virtual int getPluginType();
+    
+    /**
     @brief config the application info
     @param devInfo This parameter is the info of aplication,
            different plugin have different format

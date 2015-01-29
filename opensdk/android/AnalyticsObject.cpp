@@ -24,6 +24,11 @@ const char* AnalyticsObject::getPluginName()
 	return _pluginName.c_str();
 }
 
+int AnalyticsObject::getPluginType()
+{
+    return kPluginAnalytics;
+}
+    
 void AnalyticsObject::startSession()
 {
 	 PluginUtils::callJavaBoolFuncWithName(this, "startSession");

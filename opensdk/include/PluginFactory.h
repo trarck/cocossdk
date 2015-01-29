@@ -3,16 +3,6 @@
 
 namespace opensdk {
 
-typedef enum {
-	kPluginAds = 1,/**< enum value kPluginAds. */
-	kPluginAnalytics,/**< enum value kPluginAnalytics. */
-	kPluginIAP,/**< enum value kPluginIAP. */
-	kPluginShare,/**< enum value kPluginShare. */
-	kPluginUser,/**< enum value kPluginUser. */
-	kPluginSocial,/**< enum value kPluginSocial. */
-	kPluginPush,/**< enum value kPluginPush. */
-} PluginType;
-	
 class PluginProtocol;
 class PluginManager;
 
@@ -31,7 +21,7 @@ private:
     PluginFactory(void);
 
     /** create the plugin by name */
-    PluginProtocol* createPlugin(const char* name,int pluginType);
+    PluginProtocol* createPlugin(const char* name,int pluginType=0);
 };
 
 } //namespace opensdk {

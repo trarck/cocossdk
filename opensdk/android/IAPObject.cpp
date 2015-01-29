@@ -30,6 +30,11 @@ const char* IAPObject::getPluginName()
 	return _pluginName.c_str();
 }
 
+int IAPObject::getPluginType()
+{
+    return kPluginIAP;
+}
+
 void IAPObject::configDeveloperInfo(TIAPDeveloperInfo devInfo)
 {
     if (devInfo.empty())
