@@ -12,7 +12,7 @@ extern "C" {
         std::string strClassName = PluginJniHelper::jstring2string(className);
         PluginProtocol* pPlugin = PluginUtils::getPluginPtr(strClassName);
         PluginUtils::outputLog("ProtocolAds", "nativeOnAdsResult(), Get plugin ptr : %p", pPlugin);
-        ProtocolAds* pAds = dynamic_cast<ProtocolAds*>(pPlugin);
+        AdsObject* pAds = dynamic_cast<AdsObject*>(pPlugin);
         if (pAds != NULL)
         {
             PluginUtils::outputLog("ProtocolAds", "nativeOnAdsResult(), Get plugin name : %s", pPlugin->getPluginName());
@@ -54,7 +54,7 @@ extern "C" {
         if (pPlugin != NULL)
         {
             PluginUtils::outputLog("ProtocolAds", "nativeOnPlayerGetPoints(), Get plugin name : %s", pPlugin->getPluginName());
-            ProtocolAds* pAds = dynamic_cast<ProtocolAds*>(pPlugin);
+            AdsObject* pAds = dynamic_cast<AdsObject*>(pPlugin);
             if (pAds != NULL)
             {
                 AdsListener* listener = pAds->getAdsListener();

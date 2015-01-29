@@ -6,6 +6,7 @@
 
 namespace opensdk {
 
+std::vector<ShareActionResult> ShareObject::_actionResultList;
 
 ShareObject::ShareObject()
 : _listener(NULL)

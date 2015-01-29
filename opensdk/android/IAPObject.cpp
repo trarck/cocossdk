@@ -6,6 +6,8 @@
 
 namespace opensdk {
 
+std::vector<IAPActionResult> IAPObject::_actionResultList;
+
 bool ProtocolIAP::_paying = false;
 
 IAPObject::IAPObject()

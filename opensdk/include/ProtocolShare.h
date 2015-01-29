@@ -27,8 +27,6 @@ public:
 class ProtocolShare : public PluginProtocol
 {
 public:
-	ProtocolShare();
-	virtual ~ProtocolShare();
 
     /**
     @brief config the share developer info

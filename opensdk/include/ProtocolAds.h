@@ -72,7 +72,7 @@ public:
     @warning Must invoke this interface before other interfaces.
              And invoked only once.
     */
-    virtual void configDeveloperInfo(TAdsDeveloperInfo devInfo);
+    virtual void configDeveloperInfo(TAdsDeveloperInfo devInfo) =0 ;
 
     /**
     @brief show adview

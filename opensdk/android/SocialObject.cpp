@@ -6,6 +6,7 @@
 
 namespace opensdk {
 
+std::vector<SocialActionResult> SocialObject::_actionResultList;
 
 SocialObject::SocialObject()
 : _listener(NULL)

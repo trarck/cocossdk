@@ -5,6 +5,8 @@
 #include "PluginJavaData.h"
 
 namespace opensdk {
+	
+std::vector<PushActionResult> PushObject::_actionResultList;
 
 PushObject::PushObject()
 :_listener(NULL)

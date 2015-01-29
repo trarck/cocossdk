@@ -9,6 +9,7 @@ namespace opensdk {
 std::string UserObject::_serverID="";
 std::string UserObject::_serverIP="";
 
+std::vector<UserActionResult> UserObject::_actionResultList;
 
 UserObject::UserObject()
 : _listener(NULL)

@@ -6,6 +6,8 @@
 
 namespace opensdk {
 
+std::vector<AdsActionResult> AdsObject::_actionResultList;
+
 AdsObject::AdsObject()
 : _listener(NULL)
 , _pluginName("")
@@ -118,7 +120,7 @@ void AdsObject::popActionResult()
 {
     for(std::vector<AdsActionResult>::iterator iter=_actionResultList.begin();iter!=_actionResultList.end();){
         
-        ProtocolAds* pAds = dynamic_cast<ProtocolAds*>(PluginUtils::getPluginPtr(iter->className));
+        AdsObject* pAds = dynamic_cast<AdsObject*>(PluginUtils::getPluginPtr(iter->className));
         if(pAds){
             AdsListener* listener = pAds->getAdsListener();
             if(listener){
