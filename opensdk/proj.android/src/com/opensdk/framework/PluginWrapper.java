@@ -158,7 +158,7 @@ public class PluginWrapper {
         }
     }
     
-    private static String[] arrPlugins = {"PluginUser", "PluginShare", "PluginSocial", "PluginAds", "PluginAnalytics", "PluginIAP"};
+    private static String[] arrPlugins = {"PluginUser", "PluginShare", "PluginSocial", "PluginAds", "PluginAnalytics", "PluginIAP","PluginPush"};
     
     public static Hashtable<String, String> getPluginConfigure()
     {
@@ -190,7 +190,7 @@ public class PluginWrapper {
      * @param pluginConfigureFile
      * @return
      */
-    public static Hashtable<String, String> GetPluginConfigFromFile(String pluginConfigureFile) {
+    public static Hashtable<String, String> getPluginConfigFromFile(String pluginConfigureFile) {
     	Hashtable<String, String> ht = new Hashtable<String, String>();
 
 		Context context = PluginWrapper.getContext();

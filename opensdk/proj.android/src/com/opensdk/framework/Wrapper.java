@@ -175,7 +175,7 @@ public class Wrapper {
 //		return g.a(paramString);
 //	}
 
-	public static String GetFileContentWithName(String file) {
+	public static String getFileContentWithName(String file) {
 		StringBuilder stringBuilder = new StringBuilder();
 		String str = "";
 		Context content = PluginWrapper.getContext();
@@ -191,7 +191,7 @@ public class Wrapper {
 		return stringBuilder.toString();
 	}
 
-	public static String GetApkPath() {
+	public static String getApkPath() {
 		return PluginWrapper.getContext().getApplicationInfo().sourceDir;
 	}
 
