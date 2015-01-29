@@ -4,7 +4,7 @@ import java.util.Hashtable;
 
 public interface InterfaceAds {
 
-	public final int PluginType = 1;
+	public static final int PluginType = 1;
 
 	public void configDeveloperInfo(Hashtable<String, String> devInfo);
 	public void showAds(Hashtable<String, String> adsInfo, int pos);

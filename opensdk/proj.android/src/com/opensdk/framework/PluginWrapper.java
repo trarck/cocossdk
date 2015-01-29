@@ -5,9 +5,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.Vector;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -30,8 +28,8 @@ public class PluginWrapper {
     protected static GLSurfaceView sGLSurfaceView = null; 
     protected static Handler sMainThreadHandler = null;
     protected static Handler sGLThreadHandler = null;
-    protected static Set<PluginListener> sListeners = new LinkedHashSet<PluginListener>();
     private static final String TAG = "PluginWrapper";
+    private static Vector<IActivityCallback> mActivityCallback = new Vector<IActivityCallback>();
     
     public static void init(Context context) {
         sContext = context;
@@ -54,42 +52,62 @@ public class PluginWrapper {
 //        }
     }
     
-    public static void onResume() {
-    	for (PluginListener listener : sListeners) {
-    		listener.onResume();
-    	}
-    }
-    
-    public static void onPause() {
-    	for (PluginListener listener : sListeners) {
-    		listener.onPause();
-    	}
-    }
-    
-    public static void onDestroy() {
-    	Iterator<PluginListener> i = sListeners.iterator();
-    	while(i.hasNext()){
-    		PluginListener p = i.next();
-    		p.onDestroy();
-    	}
-    }
-
     public static boolean onActivityResult(int requestCode, int resultCode, Intent data) {
     	boolean result = true;
     	
-        for (PluginListener listener : sListeners) {
+        for (IActivityCallback listener : mActivityCallback) {
             result = result && listener.onActivityResult(requestCode, resultCode, data);
         }
         
         return result;
     }
     
-    public static void addListener(PluginListener listener) {
-    	sListeners.add(listener);
+    public static void onResume() {
+    	for (IActivityCallback listener : mActivityCallback) {
+    		listener.onResume();
+    	}
     }
     
-    public static void removeListener(PluginListener listener) {
-    	sListeners.remove(listener);
+    public static void onPause() {
+    	for (IActivityCallback listener : mActivityCallback) {
+    		listener.onPause();
+    	}
+    }
+    
+    public static void onDestroy() {
+    	for (IActivityCallback listener : mActivityCallback) {
+    		listener.onDestroy();
+    	}
+    }
+    
+    public static void onNewIntent(Intent intent)
+    {
+    	for (IActivityCallback listener : mActivityCallback) {
+    		listener.onNewIntent(intent);
+    	}
+    }
+
+    public static void onStop()
+    {
+    	for (IActivityCallback listener : mActivityCallback) {
+    		listener.onStop();
+    	}
+    }
+
+
+    public static void onRestart()
+    {
+    	for (IActivityCallback listener : mActivityCallback) {
+    		listener.onRestart();
+    	}
+    }
+    
+    public static void addActivityCallback(IActivityCallback listener) {
+    	mActivityCallback.add(listener);
+    }
+    
+    public static void removeListener(IActivityCallback listener) {
+    	mActivityCallback.remove(listener);
     }
     
     protected static Object initPlugin(String classFullName) {

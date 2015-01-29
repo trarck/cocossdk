@@ -4,7 +4,7 @@ import java.util.Hashtable;
 
 public interface InterfaceAnalytics {
 
-	public final int PluginType = 2;
+	public static final int PluginType = 2;
 
 	public void startSession(String appKey);
 	public void stopSession();
