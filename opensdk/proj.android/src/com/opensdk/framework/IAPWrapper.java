@@ -2,6 +2,8 @@ package com.opensdk.framework;
 
 import java.util.Hashtable;
 
+import com.opensdk.utils.SdkHttpListener;
+
 import android.content.Context;
 
 public class IAPWrapper {
@@ -30,8 +32,7 @@ public class IAPWrapper {
 	}
 
 	public static void getPayOrderId(Context content,
-			Hashtable<String, String> info)// , SdkHttpListener
-											// paramSdkHttpListener)
+			Hashtable<String, String> info , SdkHttpListener listener)
 	{
 		//TODO for test
 	}

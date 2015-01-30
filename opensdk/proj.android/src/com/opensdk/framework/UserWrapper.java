@@ -2,6 +2,8 @@ package com.opensdk.framework;
 
 import java.util.Hashtable;
 
+import com.opensdk.utils.SdkHttpListener;
+
 import android.content.Context;
 
 public class UserWrapper {
@@ -39,7 +41,7 @@ public class UserWrapper {
 	}
 
 	public static void getAccessToken(Context context,
-			Hashtable<String, String> info){//,SdkHttpListener paramSdkHttpListener) {
+			Hashtable<String, String> info,SdkHttpListener listener) {
 			//TODO getAccessToken
 	}
 

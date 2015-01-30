@@ -1,100 +1,186 @@
 package com.opensdk.framework;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.util.Log;
-import android.widget.ImageView;
-import android.widget.PopupWindow;
+import java.util.Hashtable;
+import java.util.Iterator;
+
 import org.json.JSONObject;
 
-public class AdsDebug
-  implements InterfaceAds
-{
-  private static Context mContext = null;
-  protected static String TAG = "AdsDebug";
-  private static AdsDebug mAdapter = null;
-  private static boolean isDebug = true;
-  private static PopupWindow popupWindow = null;
-  private ImageView imageView = null;
+import android.app.AlertDialog.Builder;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
 
-  protected static void LogE(String paramString, Exception paramException)
-  {
-    Log.e(TAG, paramString, paramException);
-    paramException.printStackTrace();
-  }
+public class AdsDebug implements InterfaceAds {
+	private static Context mContext = null;
+	protected static String TAG = "AdsDebug";
+	private static AdsDebug mAdapter = null;
+	private static boolean isDebug = true;
+	private static PopupWindow popupWindow = null;
+	private ImageView imageView = null;
 
-  protected static void LogD(String paramString)
-  {
-    if (isDebug)
-      Log.d(TAG, paramString);
-  }
+	protected static void LogE(String paramString, Exception paramException) {
+		Log.e(TAG, paramString, paramException);
+		paramException.printStackTrace();
+	}
 
-  public AdsDebug(Context paramContext)
-  {
-    mContext = paramContext;
-    mAdapter = this;
-  }
+	protected static void LogD(String paramString) {
+		if (isDebug)
+			Log.d(TAG, paramString);
+	}
 
-  public float queryPoints()
-  {
-    LogD("debug not support query points");
-    return 0.0F;
-  }
+	public AdsDebug(Context paramContext) {
+		mContext = paramContext;
+		mAdapter = this;
+	}
 
-  public void spendPoints(int paramInt)
-  {
-    LogD("debug not support spend points");
-  }
+	@Override
+	public void configDeveloperInfo(Hashtable<String, String> devInfo) {
+		String data="";
+		String key=null;
+		
+		for(Iterator<String> it=devInfo.keySet().iterator();it.hasNext();){
+			key=it.next();
+			data+=key+"="+devInfo.get(key)+"\n";
+		}
+		LogD("configDeveloperInfo \n" + data + "invoked!");
+	}
 
-  public void setDebugMode(boolean paramBoolean)
-  {
-    isDebug = paramBoolean;
-  }
+	@Override
+	public void showAds(Hashtable<String, String> adsInfo, int pos) {
+		String data="";
+		String key=null;
+		
+		for(Iterator<String> it=adsInfo.keySet().iterator();it.hasNext();){
+			key=it.next();
+			data+=key+"="+adsInfo.get(key)+"\n";
+		}
+		LogD("showAds \n" + data + "invoked!");
+	}
 
-  public String getSDKVersion()
-  {
-    return "2.0.3";
-  }
+	@Override
+	public void hideAds(Hashtable<String, String> adsInfo) {
+		String data="";
+		String key=null;
+		
+		for(Iterator<String> it=adsInfo.keySet().iterator();it.hasNext();){
+			key=it.next();
+			data+=key+"="+adsInfo.get(key)+"\n";
+		}
+		LogD("hideAds \n" + data + "invoked!");
+	}
 
-  public String getPluginVersion()
-  {
-    return "2.0.3";
-  }
+	public void showAds(JSONObject info) {
+		LogD("showAds " + info.toString() + "invoked!");
+		PluginWrapper.runOnMainThread(new Runnable() {
+			@Override
+			public void run() {
+				if (AdsDebug.popupWindow != null) {
+					AdsDebug.popupWindow.dismiss();
+					AdsDebug.popupWindow = null;
+				}
+				Bitmap bitmap = BitmapFactory.decodeResource(
+						AdsDebug.mContext.getResources(),
+						AdsDebug.getResourceId("ui_ad", "drawable"));
+				View view = LayoutInflater.from(AdsDebug.mContext).inflate(
+						AdsDebug.getResourceId("plugin_ads", "layout"), null);
+				AdsDebug.popupWindow = new PopupWindow(view, bitmap.getWidth(),
+						bitmap.getHeight());
+				AdsDebug.popupWindow.showAtLocation(view, 17, 0, 0);
 
-  public static void showDialog(String paramString1, String paramString2)
-  {
-    PluginWrapper.runOnMainThread(new AdsDebug.1(paramString1, paramString2));
-  }
+				ImageButton button = ((ImageButton) view.findViewById(AdsDebug
+						.getResourceId("image_close", "id")));
 
-  public static int getResourceId(String paramString1, String paramString2)
-  {
-    return mContext.getResources().getIdentifier(paramString1, paramString2, mContext.getPackageName());
-  }
+				button.setOnClickListener(new android.view.View.OnClickListener() {
+					public void onClick(View view1) {
+						if (AdsDebug.popupWindow != null) {
+							AdsDebug.popupWindow.dismiss();
+							AdsDebug.popupWindow = null;
+						}
+					}
+				});
+			}
+		});
+	}
 
-  public boolean isAdTypeSupported(int paramInt)
-  {
-    return true;
-  }
+	public void hideAds(JSONObject info) {
+		LogD("hideAds " + info.toString() + "invoked!");
+		PluginWrapper.runOnMainThread(new Runnable() {
+			public void run() {
+				if (AdsDebug.popupWindow != null) {
+					AdsDebug.popupWindow.dismiss();
+					AdsDebug.popupWindow = null;
+				}
+			}
+		});
+	}
 
-  public void showAds(JSONObject paramJSONObject)
-  {
-    LogD("showAds " + paramJSONObject.toString() + "invoked!");
-    PluginWrapper.runOnMainThread(new AdsDebug.2(this));
-  }
+	public void preloadAds(JSONObject info) {
+		LogD("debug not support preloadAds");
+	}
 
-  public void hideAds(JSONObject paramJSONObject)
-  {
-    LogD("hideAds " + paramJSONObject.toString() + "invoked!");
-    PluginWrapper.runOnMainThread(new AdsDebug.3(this));
-  }
+	public float queryPoints() {
+		LogD("debug not support query points");
+		return 0.0F;
+	}
 
-  public void preloadAds(JSONObject paramJSONObject)
-  {
-    LogD("debug not support preloadAds");
-  }
+	public void spendPoints(int paramInt) {
+		LogD("debug not support spend points");
+	}
+
+	public void setDebugMode(boolean paramBoolean) {
+		isDebug = paramBoolean;
+	}
+
+	public String getSDKVersion() {
+		return "2.0.3";
+	}
+
+	public String getPluginVersion() {
+		return "2.0.3";
+	}
+
+	public static void showDialog(String title, String msg) {
+		final String curTitle = title;
+		final String curMsg = msg;
+		PluginWrapper.runOnMainThread(new Runnable() {
+			@Override
+			public void run() {
+				Log.d("d", "d");
+				Builder dialogBuilder = new android.app.AlertDialog.Builder(
+						AdsDebug.mContext);
+
+				dialogBuilder.setTitle(AdsDebug.getResourceId(curTitle,
+						"string"));
+				dialogBuilder.setMessage(AdsDebug.getResourceId(curMsg,
+						"string"));
+				dialogBuilder.setPositiveButton("Ok", new OnClickListener() {
+					public void onClick(DialogInterface dialoginterface, int i) {
+
+					}
+				});
+
+				dialogBuilder.create();
+				dialogBuilder.show();
+
+			}
+		});
+	}
+
+	public static int getResourceId(String key, String type) {
+		return mContext.getResources().getIdentifier(key,
+				type, mContext.getPackageName());
+	}
+
+	public boolean isAdTypeSupported(int adType) {
+		return true;
+	}
+
 }
-
-/* Location:           /Users/duanhouhai/Develops/anysdk-src/framework/cpp/libPluginProtocol.jar
- * Qualified Name:     com.anysdk.framework.AdsDebug
- * JD-Core Version:    0.6.2
- */
