@@ -283,7 +283,7 @@ std::map<std::string, std::string> AgentManager::getPluginConfigure()
 
 	PluginJniMethodInfo t;
 
-	if(PluginJniHelper::getStaticMethodInfo(t, "com/opensdk/framework/PluginWrapper", "getPluginConfigure", "()Ljava/util/Hashtable;"))
+	if(PluginJniHelper::getStaticMethodInfo(t, "com/opensdk/framework/Wrapper", "getPluginConfigure", "()Ljava/util/Hashtable;"))
 	{
 		jobject jhashtable = t.env->CallStaticObjectMethod(t.classID, t.methodID);
 
@@ -301,12 +301,14 @@ std::map<std::string, std::string> AgentManager::getPluginConfigureFromFile(cons
 
 	PluginJniMethodInfo t;
 
-	if(PluginJniHelper::getStaticMethodInfo(t, "com/opensdk/framework/PluginWrapper", "getPluginConfigFromFile", "()Ljava/util/Hashtable;"))
+	if(PluginJniHelper::getStaticMethodInfo(t, "com/opensdk/framework/Wrapper", "getPluginConfigFromFile", "(Ljava/lang/String;)Ljava/util/Hashtable;"))
 	{
-		jobject jhashtable = t.env->CallStaticObjectMethod(t.classID, t.methodID);
+		jstring paramFile = t.env->NewStringUTF(file.c_str());
+		jobject jhashtable = t.env->CallStaticObjectMethod(t.classID, t.methodID,paramFile);
 
 		configure=PluginJniHelper::convertJavaHashTable2Map(jhashtable);
 	
+		t.env->DeleteLocalRef(paramFile);
 		t.env->DeleteLocalRef(jhashtable);
 	}
 	t.env->DeleteLocalRef(t.classID);
