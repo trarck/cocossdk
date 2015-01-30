@@ -27,54 +27,6 @@ public class Wrapper {
 		Log.d("Wrapper", msg);
 	}
 
-	public static String GetAssetsPath(String asset) {
-		StringBuilder pathBuilder = new StringBuilder();
-
-		Context context = PluginWrapper.getContext();
-		try {
-			InputStreamReader inStreamReader = new InputStreamReader(context
-					.getAssets().open(asset));
-			BufferedReader buffReader = new BufferedReader(inStreamReader);
-			StringBuilder data = new StringBuilder();
-
-			String str = null;
-
-			while ((str = buffReader.readLine()) != null) {
-				data.append(str);
-			}
-			
-//			inStreamReader.close();
-			buffReader.close();
-
-			str = data.toString();
-
-			XmlPullParser xmlParser = Xml.newPullParser();
-			xmlParser.setInput(new StringReader(str));
-			int eventType = xmlParser.getEventType();
-
-			while (eventType != XmlPullParser.END_DOCUMENT) {
-				switch (eventType) {
-					case XmlPullParser.START_DOCUMENT:
-						break;
-					case XmlPullParser.START_TAG:
-						break;
-					case XmlPullParser.END_TAG:
-						break;
-					case XmlPullParser.TEXT:
-						pathBuilder.append(xmlParser.getText());
-						break;
-				}
-				
-				eventType=xmlParser.next();
-			}
-
-			return pathBuilder.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	public static void analysisDeveloperInfo(Context context) {
 		mContext = context;
 		if (!bGetDeveloperInfo) {
@@ -204,5 +156,138 @@ public class Wrapper {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public static String getPluginConfigString(String asset) {
+		StringBuilder pathBuilder = new StringBuilder();
+
+		Context context = PluginWrapper.getContext();
+		try {
+			InputStreamReader inStreamReader = new InputStreamReader(context
+					.getAssets().open(asset));
+			BufferedReader buffReader = new BufferedReader(inStreamReader);
+			StringBuilder data = new StringBuilder();
+
+			String str = null;
+
+			while ((str = buffReader.readLine()) != null) {
+				data.append(str);
+			}
+			
+//			inStreamReader.close();
+			buffReader.close();
+
+			str = data.toString();
+
+			XmlPullParser xmlParser = Xml.newPullParser();
+			xmlParser.setInput(new StringReader(str));
+			int eventType = xmlParser.getEventType();
+
+			while (eventType != XmlPullParser.END_DOCUMENT) {
+				switch (eventType) {
+					case XmlPullParser.START_DOCUMENT:
+						break;
+					case XmlPullParser.START_TAG:
+						break;
+					case XmlPullParser.END_TAG:
+						break;
+					case XmlPullParser.TEXT:
+						pathBuilder.append(xmlParser.getText());
+						break;
+				}
+				
+				eventType=xmlParser.next();
+			}
+
+			return pathBuilder.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private static String[] arrPlugins = {"PluginUser", "PluginShare", "PluginSocial", "PluginAds", "PluginAnalytics", "PluginIAP","PluginPush"};
+    
+    public static Hashtable<String, String> getPluginConfigure()
+    {
+        Hashtable<String, String> ht = new Hashtable<String, String>();
+        Context context = PluginWrapper.getContext();
+        
+        try {
+            ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+            Bundle bundle = ai.metaData;
+            
+            for(int i = 0; i < arrPlugins.length; ++i)
+            {
+                String pluginName = bundle.getString(arrPlugins[i]);
+                if(null != pluginName && !"".equals(pluginName))
+                    ht.put(arrPlugins[i], pluginName);
+            }
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return ht;
+    }
+    
+    /**
+     * <support>
+     * 		<PluginTypeName>Real plugin name</PluginTypeName>//exmaple <PluginUser>UserNd91</PluginUser>
+     * 																   <PluginIAP>IAPNd91</PluginIAP>
+     * </support>
+     * 
+     * 
+     * @param pluginConfigureFile
+     * @return
+     */
+    public static Hashtable<String, String> getPluginConfigFromFile(String pluginConfigureFile) {
+    	Hashtable<String, String> ht = new Hashtable<String, String>();
+
+		Context context = PluginWrapper.getContext();
+		
+		try {
+			InputStreamReader inStreamReader = new InputStreamReader(context.getAssets().open(pluginConfigureFile));
+			BufferedReader buffReader = new BufferedReader(inStreamReader);
+			StringBuilder data = new StringBuilder();
+
+			String str = null;
+
+			while ((str = buffReader.readLine()) != null) {
+				data.append(str);
+			}
+			
+//			inStreamReader.close();
+			buffReader.close();
+
+			str = data.toString();
+
+			XmlPullParser xmlParser = Xml.newPullParser();
+			xmlParser.setInput(new StringReader(str));
+			int eventType = xmlParser.getEventType();
+			String pluginType="";
+			
+
+			while (eventType != XmlPullParser.END_DOCUMENT) {
+				switch (eventType) {
+//					case XmlPullParser.START_DOCUMENT:
+//						break;
+					case XmlPullParser.START_TAG:
+						pluginType=xmlParser.getName();
+						ht.put(pluginType, xmlParser.nextText());
+						break;
+//					case XmlPullParser.END_TAG:
+//						break;
+//					case XmlPullParser.TEXT:
+//						
+//						break;
+				}
+				
+				eventType=xmlParser.next();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ht;
 	}
 }
