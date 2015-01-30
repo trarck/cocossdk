@@ -82,3 +82,5 @@ Device-Release/
 /proj.win32/*.psess
 .settings
 /publish
+/opensdk/proj.android/.idea
+/opensdk/proj.android/libOpenSdk.iml

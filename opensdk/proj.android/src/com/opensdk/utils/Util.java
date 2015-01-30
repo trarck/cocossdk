@@ -120,8 +120,8 @@ public class Util
     	  bytes[i + 1] = tmp;
       }
       
-      byte binaryBytes[]=Base64.decode(bytes, 0);
-      return new String(binaryBytes);
+//      byte binaryBytes[]=Base64.decode(bytes, 0);
+      return new String(bytes);
   }
 
   public static String ckEncode(String str)
@@ -138,83 +138,77 @@ public class Util
           bytes[i] = bytes[i + 1];
           bytes[i + 1] = tmp;
       }
+
+      return URLEncoder.encode(new String(bytes));
   }
 
-  private static String convertToHex(byte[] paramArrayOfByte)
+  private static String convertToHex(byte[] bytes)
   {
-    StringBuffer localStringBuffer = new StringBuffer();
-    int i = 0;
-    if (i >= paramArrayOfByte.length)
-      return localStringBuffer.toString();
-    int j = 0xF & paramArrayOfByte[i] >>> 4;
-    int m;
-    label94: for (int k = 0; ; k = m)
-    {
-      if ((j >= 0) && (j <= 9))
-        localStringBuffer.append((char)(j + 48));
-      while (true)
-      {
-        j = 0xF & paramArrayOfByte[i];
-        m = k + 1;
-        if (k < 1)
-          break label94;
-        i++;
-        break;
-        localStringBuffer.append((char)(97 + (j - 10)));
-      }
+    StringBuffer stringBuffer = new StringBuffer();
+
+    int j=0;
+    for(int i=0;i<bytes.length;++i){
+
+        j=0xF & bytes[i] >>> 4;
+        if(j >= 0 && j <= 9)
+            stringBuffer.append((char)(j + 48));
+        else
+            stringBuffer.append((char)(97 + (j - 10)));
+
+        j=0xF & bytes[i];
+        if(j >= 0 && j <= 9)
+            stringBuffer.append((char)(j + 48));
+        else
+            stringBuffer.append((char)(97 + (j - 10)));
     }
+    return stringBuffer.toString();
   }
 
-  public static void getAccessToken(Context context, Hashtable<String, String> paramHashtable, SdkHttpListener paramSdkHttpListener)
+  public static void getAccessToken(Context context, Hashtable<String, String> param, final SdkHttpListener curListener)
   {
     try
     {
-      String str1 = (String)paramHashtable.get("server_url");
-      paramHashtable.remove("server_url");
-      paramHashtable.put("private_key", (String)Wrapper.getDeveloperInfo().get("private_key"));
-      paramHashtable.put("server_id", UserWrapper.getLoginServerId());
-      ArrayList localArrayList = new ArrayList();
-      Iterator localIterator = paramHashtable.keySet().iterator();
-      while (true)
-      {
-        if (!localIterator.hasNext())
-        {
-          sSdkHttpTask = new SdkHttpTask(context);
-          sSdkHttpTask.doPost(new SdkHttpListener()
-          {
-            public void onError()
-            {
-              Util.this.onError();
-              Util.sSdkHttpTask = null;
-            }
-
-            public void onResponse(String paramAnonymousString)
-            {
-              Util.this.onResponse(paramAnonymousString);
-              Util.sSdkHttpTask = null;
-            }
-          }
-          , localArrayList, str1, 60000);
-          return;
-        }
-        String str2 = (String)localIterator.next();
-        localArrayList.add(new BasicNameValuePair(str2, (String)paramHashtable.get(str2)));
+        String serverUrl = param.get("server_url");
+        param.remove("server_url");
+        param.put("private_key", Wrapper.getDeveloperInfo().get("private_key"));
+        param.put("server_id", UserWrapper.getLoginServerId());
+      ArrayList<NameValuePair> arrayList = new ArrayList<NameValuePair>();
+      Iterator<String> iterator = param.keySet().iterator();
+      while (iterator.hasNext()){
+            String str2 = iterator.next();
+            arrayList.add(new BasicNameValuePair(str2, param.get(str2)));
       }
+
+      sSdkHttpTask = new SdkHttpTask(context);
+      sSdkHttpTask.doPost(new SdkHttpListener(){
+          public void onError()
+          {
+              curListener.onError();
+              sSdkHttpTask = null;
+          }
+
+          public void onResponse(String responseText)
+          {
+              curListener.onResponse(responseText);
+              sSdkHttpTask = null;
+          }
+      } , arrayList, serverUrl, 60000);
+
     }
-    catch (Exception localException)
+    catch (Exception e)
     {
-      localException.printStackTrace();
-      paramSdkHttpListener.onError();
+        e.printStackTrace();
+        curListener.onError();
     }
   }
 
   public static String getAppv(Context context)
   {
-    PackageInfo localPackageInfo = getPackageInfo(context);
-    if (localPackageInfo == null)
+    PackageInfo packageInfo = getPackageInfo(context);
+    if (packageInfo == null)
       return "";
-    Log.d("test", localPackageInfo.versionName);
-    return localPackageInfo.versionName;
+    Log.d("test", packageInfo.versionName);
+    return packageInfo.versionName;
   }
 
   public static String getCc()
@@ -250,40 +244,28 @@ public class Util
 
   public static String getIMEI(Context context)
   {
-    String str2;
-    if (context == null)
-      str2 = null;
-    String str1;
-    while (true)
-    {
-      return str2;
-      str1 = "";
-      try
-      {
-        str1 = ((TelephonyManager)context.getSystemService("phone")).getDeviceId();
-        if (("".equals(str1)) || (str1 == null))
-        {
-          str2 = getODIN1(context);
-          boolean bool = "".equals(str2);
-          if ((!bool) && (str2 != null))
-            continue;
-          return "";
+    if(context==null)
+        return "";
+    try {
+        String deviceId = ((TelephonyManager) context.getSystemService("phone")).getDeviceId();
+
+        if (deviceId == null || "".equals(deviceId)) {
+            deviceId = getODIN1(context);
         }
-      }
-      catch (Exception localException)
-      {
-        localException.printStackTrace();
-      }
+        return deviceId==null?"":deviceId;
+    } catch (Exception e)
+    {
+        e.printStackTrace();
     }
-    return str1;
+      return null;
   }
 
   public static String getIMSI(Context context)
   {
     try
     {
-      String str = ((TelephonyManager)context.getSystemService("phone")).getSubscriberId();
-      return str;
+      String subscriberId = ((TelephonyManager)context.getSystemService("phone")).getSubscriberId();
+      return subscriberId;
     }
     catch (Exception localException)
     {
@@ -294,34 +276,24 @@ public class Util
 
   public static String getIP()
   {
-    try
-    {
-      String str;
-      boolean bool2;
-      do
-      {
-        InetAddress localInetAddress;
-        do
-        {
-          Iterator localIterator1 = Collections.list(NetworkInterface.getNetworkInterfaces()).iterator();
-          Iterator localIterator2;
-          while (!localIterator2.hasNext())
-          {
-            boolean bool1 = localIterator1.hasNext();
-            if (!bool1)
-              return "1.1.1.1";
-            localIterator2 = Collections.list(((NetworkInterface)localIterator1.next()).getInetAddresses()).iterator();
-          }
-          localInetAddress = (InetAddress)localIterator2.next();
+    try {
+        Iterator<NetworkInterface> iterator = Collections.list(NetworkInterface.getNetworkInterfaces()).iterator();
+        while(iterator.hasNext()){
+
+            InetAddress inetaddress;
+            String ip;
+            Iterator<InetAddress> iteratorAddress = Collections.list( iterator.next().getInetAddresses()).iterator();
+            while (iteratorAddress.hasNext()){
+                inetaddress=iteratorAddress.next();
+                if(!inetaddress.isLoopbackAddress()){
+                    ip=inetaddress.getHostAddress();
+                    if( InetAddressUtils.isIPv4Address(ip)){
+                        return ip;
+                    }
+                }
+            }
         }
-        while (localInetAddress.isLoopbackAddress());
-        str = localInetAddress.getHostAddress();
-        bool2 = InetAddressUtils.isIPv4Address(str);
-      }
-      while (!bool2);
-      return str;
-    }
-    catch (SocketException localSocketException)
+    }catch (SocketException localSocketException)
     {
     }
     return "1.1.1.1";
@@ -358,43 +330,43 @@ public class Util
     return str.replace(":", "");
   }
 
-  public static String getMd5(String paramString)
+  public static String getMd5(String str)
   {
-    try
+      byte[] bytes;
+      StringBuffer stringBuffer
+    try {
+        bytes = MessageDigest.getInstance("MD5").digest(str.getBytes("UTF-8"));
+        stringBuffer = new StringBuffer();
+    } catch (NoSuchAlgorithmException e)
     {
-      byte[] arrayOfByte = MessageDigest.getInstance("MD5").digest(paramString.getBytes("UTF-8"));
-      StringBuffer localStringBuffer = new StringBuffer();
-      for (int i = 0; ; i++)
+        e.printStackTrace();
+        return str;
+    }
+    catch (UnsupportedEncodingException e)
+    {
+        e.printStackTrace();
+        return str;
+    }
+
+      for (int i = 0;i<bytes.length ; i++)
       {
-        if (i >= arrayOfByte.length)
-          return localStringBuffer.toString();
-        int j = 0xFF & arrayOfByte[i];
+        int j = 0xFF & bytes[i];
         if (j < 16)
-          localStringBuffer.append("0");
-        localStringBuffer.append(Integer.toHexString(j));
+            stringBuffer.append("0");
+        stringBuffer.append(Integer.toHexString(j));
       }
-    }
-    catch (NoSuchAlgorithmException localNoSuchAlgorithmException)
-    {
-      localNoSuchAlgorithmException.printStackTrace();
-      return paramString;
-    }
-    catch (UnsupportedEncodingException localUnsupportedEncodingException)
-    {
-      localUnsupportedEncodingException.printStackTrace();
-    }
-    return paramString;
+      return stringBuffer.toString();
   }
 
   public static String getNet(Context context)
   {
     try
     {
-      NetworkInfo localNetworkInfo = ((ConnectivityManager)context.getSystemService("connectivity")).getActiveNetworkInfo();
-      int i = localNetworkInfo.getType();
+      NetworkInfo networkInfo = ((ConnectivityManager)context.getSystemService("connectivity")).getActiveNetworkInfo();
+      int i = networkInfo.getType();
       if (i == 0)
       {
-        boolean bool = localNetworkInfo.getExtraInfo().toLowerCase().equals("cmnet");
+        boolean bool = networkInfo.getExtraInfo().toLowerCase().equals("cmnet");
         if (bool)
           return "2";
         return "3";
@@ -453,61 +425,48 @@ public class Util
     return null;
   }
 
-  public static void getPayOrderId(Context context, Hashtable<String, String> paramHashtable, SdkHttpListener paramSdkHttpListener)
+  public static void getPayOrderId(Context context, Hashtable<String, String> params,final SdkHttpListener curListener)
   {
-    try
-    {
-      paramHashtable.remove("uapi_secret");
-      String str1 = Base64.encodeToString(new JSONObject(paramHashtable).toString().getBytes(), 2);
-      String[] arrayOfString = new String[paramHashtable.size()];
-      Object[] arrayOfObject = paramHashtable.keySet().toArray();
-      int i = 0;
-      StringBuffer localStringBuffer;
-      if (i >= arrayOfObject.length)
-      {
-        Arrays.sort(arrayOfString);
-        localStringBuffer = new StringBuffer();
-      }
-      for (int j = 0; ; j++)
-      {
-        if (j >= arrayOfString.length)
-        {
-          String str2 = getMd5(localStringBuffer.toString() + (String)Wrapper.getDeveloperInfo().get("private_key"));
-          ArrayList localArrayList = new ArrayList();
-          localArrayList.add(new BasicNameValuePair("token", str2));
-          localArrayList.add(new BasicNameValuePair("json_data", str1));
-          localArrayList.add(new BasicNameValuePair("flag", "custom"));
-          sSdkHttpTask = new SdkHttpTask(context);
-          if ((Wrapper.getDeveloperInfo().containsKey("order_url")) && (!((String)Wrapper.getDeveloperInfo().get("order_url")).isEmpty()))
-            Config.SERVER_URL_GET_ORDER = (String)Wrapper.getDeveloperInfo().get("order_url");
-          Log.d("SERVER_URL_GET_ORDER", Config.SERVER_URL_GET_ORDER);
-          sSdkHttpTask.doPost(new SdkHttpListener()
-          {
-            public void onError()
-            {
-              Util.this.onError();
-              Util.sSdkHttpTask = null;
+    try {
+        params.remove("uapi_secret");
+        String jsonValue = Base64.encodeToString(new JSONObject(params).toString().getBytes(), 2);
+        String[] sortKeys = new String[params.size()];
+        Object[] keys = params.keySet().toArray();
+
+        for (int i = 0; i < keys.length; ++i) {
+            sortKeys[i] = keys[i].toString();
+        }
+        Arrays.sort(sortKeys);
+        StringBuffer sortedValueStr = new StringBuffer();
+        for (int j = 0; j < sortKeys.length; ++j) {
+            sortedValueStr.append(params.get(sortKeys[j]));
+        }
+
+        String token = getMd5(sortedValueStr.toString() + (String) Wrapper.getDeveloperInfo().get("private_key"));
+        ArrayList postData = new ArrayList();
+        postData.add(new BasicNameValuePair("token", token));
+        postData.add(new BasicNameValuePair("json_data", jsonValue));
+        postData.add(new BasicNameValuePair("flag", "custom"));
+        sSdkHttpTask = new SdkHttpTask(context);
+        if ((Wrapper.getDeveloperInfo().containsKey("order_url")) && (!((String) Wrapper.getDeveloperInfo().get("order_url")).isEmpty()))
+            Config.SERVER_URL_GET_ORDER = (String) Wrapper.getDeveloperInfo().get("order_url");
+        Log.d("SERVER_URL_GET_ORDER", Config.SERVER_URL_GET_ORDER);
+        sSdkHttpTask.doPost(new SdkHttpListener() {
+            public void onError() {
+                curListener.onError();
+                sSdkHttpTask = null;
             }
 
-            public void onResponse(String paramAnonymousString)
-            {
-              Util.this.onResponse(paramAnonymousString);
-              Util.sSdkHttpTask = null;
+            public void onResponse(String responseText) {
+                curListener.onResponse(responseText);
+                sSdkHttpTask = null;
             }
-          }
-          , localArrayList, Config.SERVER_URL_GET_ORDER, 60000);
-          return;
-          arrayOfString[i] = arrayOfObject[i].toString();
-          i++;
-          break;
-        }
-        localStringBuffer.append((String)paramHashtable.get(arrayOfString[j]));
-      }
-    }
-    catch (Exception localException)
+        }, localArrayList, Config.SERVER_URL_GET_ORDER, 60000);
+
+    } catch (Exception e)
     {
-      localException.printStackTrace();
-      paramSdkHttpListener.onError();
+      e.printStackTrace();
+      curListener.onError();
     }
   }
 
@@ -537,70 +496,66 @@ public class Util
     return localDisplayMetrics.widthPixels + "," + localDisplayMetrics.heightPixels;
   }
 
-  private static String getToken(String paramString1, String paramString2)
+  private static String getToken(String str1, String str2)
   {
     long l = System.currentTimeMillis() / 1000L;
-    String str = getMd5(l + paramString1 + paramString2).substring(0, 16);
-    return Base64.encodeToString((paramString1 + "." + str + "." + l).trim().getBytes(), 2);
+    String str = getMd5(String.valueOf(l) + str1 + str2).substring(0, 16);
+    return Base64.encodeToString((str1 + "." + str + "." + l).trim().getBytes(), 2);
   }
 
-  public static String pluginDecode(String paramString)
+  public static String pluginDecode(String str)
   {
-    return new String(Base64.decode(ckDecode(paramString), 0));
+    return new String(Base64.decode(ckDecode(str), 0));
   }
 
-  public static void pluginHttp(Context context, Hashtable<String, String> paramHashtable, SdkHttpListener paramSdkHttpListener)
+    public static String pluginEncode(String str)
+    {
+        return new String(ckEnecode(Base64.encode(str, 0)));
+    }
+
+  public static void pluginHttp(Context context, Hashtable<String, String> params,final SdkHttpListener curListener)
   {
     try
     {
-      String str1 = (String)paramHashtable.get("server_url");
-      paramHashtable.remove("server_url");
-      ArrayList localArrayList = new ArrayList();
-      Iterator localIterator = paramHashtable.keySet().iterator();
-      while (true)
-      {
-        if (!localIterator.hasNext())
+      String serverUrl = (String)params.get("server_url");
+        params.remove("server_url");
+      ArrayList postData = new ArrayList();
+      Iterator<String> iterator = params.keySet().iterator();
+        String key;
+      while (iterator.hasNext()){
+          key = iterator.next();
+          postData.add(new BasicNameValuePair(key, params.get(key)));
+      }
+
+        sSdkHttpTask = new SdkHttpTask(context);
+        sSdkHttpTask.doPost(new SdkHttpListener()
         {
-          sSdkHttpTask = new SdkHttpTask(context);
-          sSdkHttpTask.doPost(new SdkHttpListener()
-          {
             public void onError()
             {
-              Util.this.onError();
-              Util.sSdkHttpTask = null;
+                curListener.onError();
+                sSdkHttpTask = null;
             }
 
-            public void onResponse(String paramAnonymousString)
+            public void onResponse(String responseText)
             {
-              Util.this.onResponse(paramAnonymousString);
-              Util.sSdkHttpTask = null;
+                curListener.onResponse(responseText);
+                sSdkHttpTask = null;
             }
-          }
-          , localArrayList, str1, 60000);
-          return;
-        }
-        String str2 = (String)localIterator.next();
-        localArrayList.add(new BasicNameValuePair(str2, (String)paramHashtable.get(str2)));
-      }
+        } , postData, serverUrl, 60000);
     }
-    catch (Exception localException)
+    catch (Exception e)
     {
-      localException.printStackTrace();
-      paramSdkHttpListener.onError();
+        e.printStackTrace();
+        curListener.onError();
     }
   }
 
-  public static void setPackage(String paramString)
+  public static void setPackage(String packageStr)
   {
-    if ((!Wrapper.getChannelId().equals("999999")) && (Wrapper.getDeveloperInfo().containsKey("privateKey")) && (!paramString.equals(Wrapper.getDeveloperInfo().get("privateKey"))))
+    if ((!Wrapper.getChannelId().equals("999999")) && (Wrapper.getDeveloperInfo().containsKey("privateKey")) && (!packageStr.equals(Wrapper.getDeveloperInfo().get("privateKey"))))
     {
-      Log.e("AnySDK", " the params(appKey、appSecret、privateKey) are wrong ");
+      Log.e("OpenSDK", " the params(appKey、appSecret、privateKey) are wrong ");
       System.exit(0);
     }
   }
 }
-
-/* Location:           /Users/duanhouhai/Develops/anysdk-src/sdk/cm_single/classes_dex2jar.jar
- * Qualified Name:     com.anysdk.Util.Util
- * JD-Core Version:    0.6.2
- */
