@@ -26,6 +26,9 @@ package com.trarck.opensdk;
 import org.cocos2dx.lib.Cocos2dxActivity;
 import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
 
+import com.opensdk.framework.PluginWrapper;
+
+import android.content.Intent;
 import android.os.Bundle;
 
 public class MainActivity extends Cocos2dxActivity{
@@ -37,10 +40,56 @@ public class MainActivity extends Cocos2dxActivity{
     public Cocos2dxGLSurfaceView onCreateView() {
     	Cocos2dxGLSurfaceView glSurfaceView = new Cocos2dxGLSurfaceView(this);
     	// opensdk should create stencil buffer
-    	glSurfaceView.setEGLConfigChooser(5, 6, 5, 0, 16, 8);
+    	glSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+
+    	PluginWrapper.init(this);
+    	PluginWrapper.setGLSurfaceView(glSurfaceView);
     	
     	return glSurfaceView;
     }
+    
+    @Override
+    protected void onDestroy() {
+        PluginWrapper.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        PluginWrapper.onPause();
+    	 super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        PluginWrapper.onResume();
+        super.onResume();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        PluginWrapper.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        PluginWrapper.onNewIntent(intent);
+        super.onNewIntent(intent);
+    }
+
+    @Override
+    protected void onStop() {
+        PluginWrapper.onStop();
+        super.onStop();
+    }
+
+    @Override
+    protected void onRestart() {
+        PluginWrapper.onRestart();
+        super.onRestart();
+     }
+
 
     static {
         System.loadLibrary("cocos2dcpp");

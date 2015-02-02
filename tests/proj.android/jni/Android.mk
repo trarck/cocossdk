@@ -8,9 +8,12 @@ LOCAL_MODULE_FILENAME := libcocos2dcpp
 
 LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../AppDelegate.cpp \
-                   ../../HelloWorldScene.cpp
+                   ../../HelloWorldScene.cpp \
+				   ../../TestOpenSdkScene.cpp
 
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../..
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../.. \
+					$(LOCAL_PATH)/../../../opensdk/include \
+					$(LOCAL_PATH)/../../../opensdk/android
 
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos2dx_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocosdenshion_static
