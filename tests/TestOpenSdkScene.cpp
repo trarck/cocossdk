@@ -71,6 +71,50 @@ bool TestOpenSdkScene::init()
 	
 	CCLOG("end load all plugin ");
 	
+	
+	
+	CCMenuItemLabel* pItemUser=CCMenuItemLabel::create(
+									CCLabelTTF::create("user", "Arial", 32),
+									this,
+									menu_selector(TestOpenSdkScene::testUser));
+									
+	CCMenuItemLabel* pItemIAP=CCMenuItemLabel::create(
+										CCLabelTTF::create("iap", "Arial", 32),
+										this,
+										menu_selector(TestOpenSdkScene::testIAP));
+										
+	CCMenuItemLabel* pItemAds=CCMenuItemLabel::create(
+									CCLabelTTF::create("ads", "Arial", 32),
+									this,
+									menu_selector(TestOpenSdkScene::testAds));
+
+	CCMenuItemLabel* pItemAnalytics=CCMenuItemLabel::create(
+										CCLabelTTF::create("analytics", "Arial", 32),
+										this,
+										menu_selector(TestOpenSdkScene::testAnalytics));
+										
+										
+	CCMenuItemLabel* pItemSocial=CCMenuItemLabel::create(
+									CCLabelTTF::create("social", "Arial", 32),
+									this,
+									menu_selector(TestOpenSdkScene::testSocial));
+
+	CCMenuItemLabel* pItemShare=CCMenuItemLabel::create(
+										CCLabelTTF::create("share", "Arial", 32),
+										this,
+										menu_selector(TestOpenSdkScene::testShare));
+										
+	CCMenuItemLabel* pItemPush=CCMenuItemLabel::create(
+									CCLabelTTF::create("push", "Arial", 32),
+									this,
+									menu_selector(TestOpenSdkScene::testPush));
+
+																					
+    CCMenu* pMenuAction = CCMenu::create(pItemUser,pItemIAP,pItemAds,pItemAnalytics, pItemSocial,pItemShare,pItemPush,NULL);
+    pMenuAction->setPosition(ccp(0,100));
+	pMenuAction->alignItemsHorizontallyWithPadding(8);
+    this->addChild(pMenu, 2);
+	
     return true;
 }
 
@@ -85,4 +129,39 @@ void TestOpenSdkScene::menuCloseCallback(CCObject* pSender)
     exit(0);
 #endif
 #endif
+}
+
+void TestOpenSdkScene::testUser(CCObject* pSender)
+{
+	
+}
+
+void TestOpenSdkScene::testIAP(CCObject* pSender)
+{
+	
+}
+
+void TestOpenSdkScene::testAds(CCObject* pSender)
+{
+	
+}
+
+void TestOpenSdkScene::testAnalytics(CCObject* pSender)
+{
+	
+}
+
+void TestOpenSdkScene::testSocial(CCObject* pSender)
+{
+	
+}
+
+void TestOpenSdkScene::testShare(CCObject* pSender)
+{
+	
+}
+
+void TestOpenSdkScene::testPush(CCObject* pSender)
+{
+	
 }

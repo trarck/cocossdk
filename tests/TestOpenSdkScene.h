@@ -15,6 +15,14 @@ public:
     
     // a selector callback
     void menuCloseCallback(CCObject* pSender);
+	
+	void testUser(CCObject* pSender);
+	void testIAP(CCObject* pSender);
+	void testAds(CCObject* pSender);
+	void testAnalytics(CCObject* pSender);
+	void testSocial(CCObject* pSender);
+	void testShare(CCObject* pSender);
+	void testPush(CCObject* pSender);
     
     // implement the "static node()" method manually
     CREATE_FUNC(TestOpenSdkScene);
