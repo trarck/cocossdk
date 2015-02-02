@@ -216,17 +216,18 @@ public class Wrapper {
         try {
             ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             Bundle bundle = ai.metaData;
-            
-            for(int i = 0; i < arrPlugins.length; ++i)
-            {
-                String pluginName = bundle.getString(arrPlugins[i]);
-                if(null != pluginName && !"".equals(pluginName))
-                    ht.put(arrPlugins[i], pluginName);
+            if(null!=bundle){
+            	for(int i = 0; i < arrPlugins.length; ++i)
+                {
+                    String pluginName = bundle.getString(arrPlugins[i]);
+                    if(null != pluginName && !"".equals(pluginName))
+                        ht.put(arrPlugins[i], pluginName);
+                }
             }
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
-
+        
         return ht;
     }
     

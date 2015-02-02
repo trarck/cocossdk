@@ -1,25 +1,14 @@
 package com.opensdk.framework;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.lang.reflect.Field;
-import java.util.Hashtable;
 import java.util.Vector;
-
-import org.xmlpull.v1.XmlPullParser;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.opengl.GLSurfaceView;
-import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.util.Xml;
 
 
 public class PluginWrapper {

@@ -4,6 +4,8 @@
 #include "PluginManager.h"
 #include "PluginFactory.h"
 #include "PluginJniHelper.h"
+#include "PluginUtils.h"
+#include <android/log.h>
 
 namespace opensdk {
 
@@ -190,6 +192,7 @@ void AgentManager::loadAllPlugin()
     if(!conf.empty()){
         loadPluginsFromConfig(conf);
     }else{
+		PluginUtils::outputLog("AgentManager", "no config use debug mode");
         setDebugMode(true);
     }
 }
