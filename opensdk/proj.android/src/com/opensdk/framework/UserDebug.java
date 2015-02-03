@@ -2,7 +2,11 @@ package com.opensdk.framework;
 
 import java.util.Hashtable;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.opensdk.utils.SdkHttpListener;
+import com.opensdk.utils.Util;
 
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -57,28 +61,17 @@ public class UserDebug implements InterfaceUser {
 
 			@Override
 			public void run() {
-				if (!UserDebug.isInited) {
+				if (!isInited) {
 					(new Handler()).postDelayed(new Runnable() {
 						public void run() {
-							UserDebug.isInited = true;
-							UserDebug.mServerUrl = (String) Wrapper
-									.getDeveloperInfo().get("oauthLoginServer");
-							UserDebug.mUApiKey = (String) Wrapper
-									.getDeveloperInfo().get("uApiKey");
-							UserDebug.mUApiSecret = (String) Wrapper
-									.getDeveloperInfo().get("uApiSecret");
-							if (UserDebug.mServerUrl == null
-									&& UserDebug.mUApiKey == null
-									&& UserDebug.mUApiSecret == null
-									&& Wrapper.getDeveloperInfo().get(
-											"private_key") == null) {
-								UserWrapper.onActionResult(UserDebug.mAdapter,
-										UserWrapper.ACTION_RET_INIT_FAIL,
-										"fail to  call init of AgentManager");
+							isInited = true;
+							mServerUrl = Wrapper.getDeveloperInfo().get("oauthLoginServer");
+							mUApiKey = Wrapper.getDeveloperInfo().get("uApiKey");
+							mUApiSecret = Wrapper.getDeveloperInfo().get("uApiSecret");
+							if (mServerUrl == null && mUApiKey == null && mUApiSecret == null && Wrapper.getDeveloperInfo().get( "private_key") == null) {
+								UserWrapper.onActionResult(mAdapter, UserWrapper.ACTION_RET_INIT_FAIL, "fail to  call init of AgentManager");
 							} else {
-								UserWrapper.onActionResult(UserDebug.mAdapter,
-										UserWrapper.ACTION_RET_INIT_SUCCESS,
-										null);
+								UserWrapper.onActionResult(mAdapter, UserWrapper.ACTION_RET_INIT_SUCCESS, null);
 							}
 						}
 					}, 1000L);
@@ -92,48 +85,34 @@ public class UserDebug implements InterfaceUser {
 
 			@Override
 			public void run() {
-				if (!UserDebug.isInited) {
-					UserWrapper.onActionResult(UserDebug.mAdapter,
+				if (!isInited) {
+					UserWrapper.onActionResult(mAdapter,
 							UserWrapper.ACTION_RET_LOGIN_FAIL, "not init");
 				}
 				if (!networkReachable()) {
-					UserWrapper.onActionResult(UserDebug.mAdapter,
+					UserWrapper.onActionResult(mAdapter,
 							UserWrapper.ACTION_RET_LOGIN_TIMEOUT,
 							"network is unreachable");
 				} else {
-					android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(
-							UserDebug.mContext);
-					builder.setTitle(UserDebug.getResourceId(
-							"plugin_login_title", "string"));
-					final View view = LayoutInflater.from(UserDebug.mContext)
-							.inflate(
-									UserDebug.getResourceId("plugin_login",
-											"layout"), null);
+					android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mContext);
+					builder.setTitle(getResourceId("plugin_login_title", "string"));
+					final View view = LayoutInflater.from(mContext).inflate(getResourceId("plugin_login","layout"), null);
 					builder.setView(view);
 
 					OnClickListener listener = new OnClickListener() {
-						public void onClick(DialogInterface dialoginterface,
-								int i) {
+						public void onClick(DialogInterface dialoginterface,int i) {
 							switch (i) {
 							case -2:
-								UserDebug.mLogined = false;
-								UserWrapper.onActionResult(UserDebug.mAdapter,
-										UserWrapper.ACTION_RET_LOGIN_CANCEL,
-										"the login has been canceled");
+								mLogined = false;
+								UserWrapper.onActionResult(mAdapter,UserWrapper.ACTION_RET_LOGIN_CANCEL,"the login has been canceled");
 								return;
 
 							case -1:
-								EditText username = (EditText) view
-										.findViewById(UserDebug.getResourceId(
-												"txt_username", "id"));
-								EditText password = (EditText) view
-										.findViewById(UserDebug.getResourceId(
-												"txt_password", "id"));
-								if (username.getText().toString().length() == 0
-										|| password.getText().toString()
-												.length() == 0) {
+								EditText username = (EditText) view.findViewById(getResourceId("txt_username", "id"));
+								EditText password = (EditText) view.findViewById(getResourceId("txt_password", "id"));
+								if (username.getText().toString().length() == 0|| password.getText().toString().length() == 0) {
 									UserWrapper.onActionResult(
-											UserDebug.mAdapter,
+											mAdapter,
 											UserWrapper.ACTION_RET_LOGIN_FAIL,
 											"username or password is empty");
 									return;
@@ -142,19 +121,14 @@ public class UserDebug implements InterfaceUser {
 								userLogin(username.getText().toString(),
 										password.getText().toString(),
 										new ILoginCallback() {
-											public void onSuccessed(int j,
-													String s) {
-												UserDebug.mLogined = true;
-												UserWrapper.onActionResult(
-														UserDebug.mAdapter, 2,
-														s);
+											public void onSuccessed(int j,String s) {
+												mLogined = true;
+												UserWrapper.onActionResult(mAdapter, UserWrapper.ACTION_RET_LOGIN_SUCCESS,s);
 											}
 
 											public void onFailed(int j, String s) {
-												UserDebug.mLogined = false;
-												UserWrapper.onActionResult(
-														UserDebug.mAdapter, 5,
-														s);
+												mLogined = false;
+												UserWrapper.onActionResult(mAdapter, UserWrapper.ACTION_RET_LOGIN_FAIL,s);
 											}
 										});
 								break;
@@ -163,11 +137,9 @@ public class UserDebug implements InterfaceUser {
 					};
 
 					builder.setPositiveButton(
-							UserDebug.getResourceId("plugin_login", "string"),
-							listener);
+							getResourceId("plugin_login", "string"),listener);
 					builder.setNegativeButton(
-							UserDebug.getResourceId("plugin_cancel", "string"),
-							listener).create();
+							getResourceId("plugin_cancel", "string"),listener).create();
 					builder.setCancelable(false);
 					builder.show();
 					return;
@@ -183,44 +155,71 @@ public class UserDebug implements InterfaceUser {
 		param.put("password", password);
 		param.put("server_url", SIMSDK_LOGIN_URL);
 
-		/*
-		 * g.c(mContext, param, new SdkHttpListener(){ public void
-		 * onResponse(String response) { Log.d("onResponse", response); String
-		 * msg; try { JSONObject json = new JSONObject(response);
-		 * msg=json.getString("errMsg");
-		 * 
-		 * if(msg != null && msg.equals("success")) { JSONObject data =
-		 * json.getJSONObject("data"); Log.d("data", data.toString());
-		 * UserDebug.mUserId = data.getString("user_id"); UserDebug.mSessionId =
-		 * data.getString("session_id"); Log.d("user_id", UserDebug.mUserId);
-		 * Log.d("session_id", UserDebug.mSessionId);
-		 * 
-		 * Hashtable<String,String> param=new Hashtable<String, String>();
-		 * 
-		 * param.put("channel", "simsdk"); param.put("server_url",
-		 * UserDebug.mServerUrl); param.put("session_id", UserDebug.mSessionId);
-		 * param.put("user_id", UserDebug.mUserId); param.put("uapi_key",
-		 * UserDebug.mUApiKey); param.put("uapi_secret", UserDebug.mUApiSecret);
-		 * 
-		 * 
-		 * 
-		 * UserWrapper.getAccessToken(UserDebug.mContext, param, new
-		 * SdkHttpListener(){
-		 * 
-		 * public void onResponse(String response2) { Log.d("onResponse",
-		 * response2); String status; try { JSONObject json2 = new
-		 * JSONObject(response2); status=json2.getString("status"); if(status !=
-		 * null && status.equals("ok")) { String ext=json2.optString("ext");
-		 * callback.onSuccessed(2, ext !=null?ext:""); } else {
-		 * callback.onFailed(5, ""); } } catch(JSONException _ex) {
-		 * callback.onFailed(5, ""); } }
-		 * 
-		 * public void onError() { callback.onFailed(5, ""); } }); return; }
-		 * else { callback.onFailed(5, ""); return; } } catch(JSONException _ex)
-		 * { callback.onFailed(5, ""); } }
-		 * 
-		 * public void onError() { callback.onFailed(5, ""); } });
-		 */
+		
+		Util.pluginHttp(mContext, param, new SdkHttpListener() {
+			public void onResponse(String response) {
+				Log.d("onResponse", response);
+				String msg;
+				try {
+					JSONObject json = new JSONObject(response);
+					msg = json.getString("errMsg");
+
+					if (msg != null && msg.equals("success")) {
+						JSONObject data = json.getJSONObject("data");
+						Log.d("data", data.toString());
+						mUserId = data.getString("user_id");
+						mSessionId = data.getString("session_id");
+						Log.d("user_id", mUserId);
+						Log.d("session_id", mSessionId);
+
+						Hashtable<String, String> param = new Hashtable<String, String>();
+
+						param.put("channel", "simsdk");
+						param.put("server_url", mServerUrl);
+						param.put("session_id", mSessionId);
+						param.put("user_id", mUserId);
+						param.put("uapi_key", mUApiKey);
+						param.put("uapi_secret", mUApiSecret);
+
+						UserWrapper.getAccessToken(mContext, param,
+								new SdkHttpListener() {
+
+									public void onResponse(String response2) {
+										Log.d("onResponse", response2);
+										String status;
+										try {
+											JSONObject json2 = new JSONObject(response2);
+											status = json2.getString("status");
+											if (status != null&& status.equals("ok")) {
+												String ext = json2.optString("ext");
+												callback.onSuccessed(UserWrapper.ACTION_RET_LOGIN_SUCCESS,ext != null ? ext : "");
+											} else {
+												callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
+											}
+										} catch (JSONException e) {
+											callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
+										}
+									}
+
+									public void onError() {
+										callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
+									}
+								});
+						return;
+					} else {
+						callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
+						return;
+					}
+				} catch (JSONException e) {
+					callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
+				}
+			}
+
+			public void onError() {
+				callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
+			}
+		});
+		
 	}
 
 	public void logout() {
@@ -229,9 +228,8 @@ public class UserDebug implements InterfaceUser {
 			@Override
 			public void run() {
 				if (!isLogined()) {
-					UserWrapper.onActionResult(UserDebug.mAdapter, 8,
-							"not need logout");
-					UserDebug.LogD("User not logined!");
+					UserWrapper.onActionResult(mAdapter, 8,"not need logout");
+					LogD("User not logined!");
 					return;
 				} else {
 					userLogout();
@@ -247,25 +245,36 @@ public class UserDebug implements InterfaceUser {
 		param.put("user_id", mUserId);
 		param.put("session_id", mSessionId);
 		param.put("server_url", SIMSDK_LOGOUT_URL);
-		/*
-		 * g.c(mContext, param, new SdkHttpListener(){
-		 * 
-		 * public void onResponse(String response) { Log.d("onResponse",
-		 * response); try { JSONObject json = new JSONObject(response); String
-		 * msg=json.getString("errMsg"); if(msg != null &&
-		 * msg.equals("success")) { UserDebug.mLogined = false;
-		 * UserWrapper.onActionResult(UserDebug.mAdapter,
-		 * UserWrapper.ACTION_RET_LOGOUT_SUCCESS, ""); return; } else {
-		 * UserWrapper.onActionResult(UserDebug.mAdapter,
-		 * UserWrapper.ACTION_RET_LOGOUT_FAIL, ""); return; } }
-		 * catch(JSONException _ex) {
-		 * UserWrapper.onActionResult(UserDebug.mAdapter,
-		 * UserWrapper.ACTION_RET_LOGOUT_FAIL, ""); } }
-		 * 
-		 * public void onError() {
-		 * UserWrapper.onActionResult(UserDebug.mAdapter,
-		 * UserWrapper.ACTION_RET_LOGOUT_FAIL, ""); } });
-		 */
+		
+		Util.pluginHttp(mContext, param, new SdkHttpListener() {
+
+			public void onResponse(String response) {
+				Log.d("onResponse", response);
+				try {
+					JSONObject json = new JSONObject(response);
+					String msg = json.getString("errMsg");
+					if (msg != null && msg.equals("success")) {
+						mLogined = false;
+						UserWrapper.onActionResult(mAdapter,
+								UserWrapper.ACTION_RET_LOGOUT_SUCCESS, "");
+						return;
+					} else {
+						UserWrapper.onActionResult(mAdapter,
+								UserWrapper.ACTION_RET_LOGOUT_FAIL, "");
+						return;
+					}
+				} catch (JSONException _ex) {
+					UserWrapper.onActionResult(mAdapter,
+							UserWrapper.ACTION_RET_LOGOUT_FAIL, "");
+				}
+			}
+
+			public void onError() {
+				UserWrapper.onActionResult(mAdapter,
+						UserWrapper.ACTION_RET_LOGOUT_FAIL, "");
+			}
+		});
+		
 	}
 
 	public boolean isLogined() {
@@ -285,13 +294,13 @@ public class UserDebug implements InterfaceUser {
 
 			@Override
 			public void run() {
-				Builder builder = new Builder(UserDebug.mContext);
-				builder.setTitle(UserDebug.mContext.getResources()
+				Builder builder = new Builder(mContext);
+				builder.setTitle(mContext.getResources()
 						.getIdentifier("plugin_exit", "string",
-								UserDebug.mContext.getPackageName()));
-				builder.setMessage(UserDebug.mContext.getResources()
+								mContext.getPackageName()));
+				builder.setMessage(mContext.getResources()
 						.getIdentifier("plugin_exit", "string",
-								UserDebug.mContext.getPackageName()));
+								mContext.getPackageName()));
 
 				OnClickListener listener = new OnClickListener() {
 					public void onClick(DialogInterface dialoginterface, int i) {
@@ -300,7 +309,7 @@ public class UserDebug implements InterfaceUser {
 							return;
 
 						case -1:
-							UserWrapper.onActionResult(UserDebug.mAdapter, 12,
+							UserWrapper.onActionResult(mAdapter, 12,
 									"exit");
 							break;
 						}
@@ -308,13 +317,13 @@ public class UserDebug implements InterfaceUser {
 				};
 
 				builder.setPositiveButton(
-						UserDebug.mContext.getResources().getIdentifier(
+						mContext.getResources().getIdentifier(
 								"plugin_sure", "string",
-								UserDebug.mContext.getPackageName()), listener);
+								mContext.getPackageName()), listener);
 				builder.setNegativeButton(
-						UserDebug.mContext.getResources().getIdentifier(
+						mContext.getResources().getIdentifier(
 								"plugin_cancel", "string",
-								UserDebug.mContext.getPackageName()), listener)
+								mContext.getPackageName()), listener)
 						.create();
 				builder.show();
 			}
@@ -391,10 +400,10 @@ public class UserDebug implements InterfaceUser {
 			@Override
 			public void run() {
 
-				Builder builder = new Builder(UserDebug.mContext);
+				Builder builder = new Builder(mContext);
 
-				builder.setTitle(UserDebug.getResourceId(curTitle, "string"));
-				builder.setMessage(UserDebug.getResourceId(curMsg, "string"));
+				builder.setTitle(getResourceId(curTitle, "string"));
+				builder.setMessage(getResourceId(curMsg, "string"));
 				builder.setPositiveButton("Ok", new OnClickListener() {
 					public void onClick(DialogInterface dialoginterface, int i) {
 
@@ -409,8 +418,7 @@ public class UserDebug implements InterfaceUser {
 	}
 
 	public static int getResourceId(String key, String type) {
-		return mContext.getResources().getIdentifier(key, type,
-				mContext.getPackageName());
+		return mContext.getResources().getIdentifier(key, type,mContext.getPackageName());
 	}
 
 	public boolean isSupportFunction(String functionName) {

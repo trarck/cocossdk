@@ -3,6 +3,7 @@ package com.opensdk.framework;
 import java.util.Hashtable;
 
 import com.opensdk.utils.SdkHttpListener;
+import com.opensdk.utils.Util;
 
 import android.content.Context;
 
@@ -41,8 +42,8 @@ public class UserWrapper {
 	}
 
 	public static void getAccessToken(Context context,
-			Hashtable<String, String> info,SdkHttpListener listener) {
-			//TODO getAccessToken
+			Hashtable<String, String> params,SdkHttpListener curListener) {
+			Util.getAccessToken(context, params, curListener);
 	}
 
 	private static native void nativeOnActionResult(String className, int ret,
