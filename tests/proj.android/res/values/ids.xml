@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="ads">false</item>
+    <item type="id" name="show">false</item>
+    <item type="id" name="hide">false</item>
+    <item type="id" name="iap">false</item>
+    <item type="id" name="pay">false</item>
+    <item type="id" name="main">false</item>
+    <item type="id" name="userSystem">false</item>
+    <item type="id" name="iapSystem">false</item>
+    <item type="id" name="shareSystem">false</item>
+    <item type="id" name="adsSystem">false</item>
+    <item type="id" name="socialSystem">false</item>
+    <item type="id" name="pushSystem">false</item>
+    <item type="id" name="push">false</item>
+    <item type="id" name="closePush">false</item>
+    <item type="id" name="setAlias">false</item>
+    <item type="id" name="delAlias">false</item>
+    <item type="id" name="setTags">false</item>
+    <item type="id" name="delTags">false</item>
+    <item type="id" name="sharelayout">false</item>
+    <item type="id" name="share">false</item>
+    <item type="id" name="socail">false</item>
+    <item type="id" name="submitScore">false</item>
+    <item type="id" name="showLeaderboard">false</item>
+    <item type="id" name="unlockAchievement">false</item>
+    <item type="id" name="showAchievements">false</item>
+    <item type="id" name="user">false</item>
+    <item type="id" name="login">false</item>
+    <item type="id" name="image_close">false</item>
+    <item type="id" name="image_ad">false</item>
+    <item type="id" name="username">false</item>
+    <item type="id" name="txt_username">false</item>
+    <item type="id" name="password">false</item>
+    <item type="id" name="txt_password">false</item>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:orientation="vertical" android:id="@id/push" android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <Button android:id="@id/closePush" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="closePush" />
+        <Button android:id="@id/setAlias" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="setAlias" />
+        <Button android:id="@id/delAlias" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="delAlias" />
+        <Button android:id="@id/setTags" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="setTags" />
+        <Button android:id="@id/delTags" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="delTags" />
+    </LinearLayout>
+</RelativeLayout>

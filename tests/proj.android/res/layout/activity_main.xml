@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:orientation="vertical" android:id="@id/main" android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <Button android:id="@id/userSystem" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="User system" />
+        <Button android:id="@id/iapSystem" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="IAP system" />
+        <Button android:id="@id/shareSystem" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Share system" />
+        <Button android:id="@id/adsSystem" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Ads system" />
+        <Button android:id="@id/socialSystem" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Social system" />
+        <Button android:id="@id/pushSystem" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Push system" />
+    </LinearLayout>
+</RelativeLayout>

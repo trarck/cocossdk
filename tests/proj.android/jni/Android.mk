@@ -7,11 +7,13 @@ LOCAL_MODULE := cocos2dcpp_shared
 LOCAL_MODULE_FILENAME := libcocos2dcpp
 
 LOCAL_SRC_FILES := hellocpp/main.cpp \
-                   ../../AppDelegate.cpp \
-                   ../../HelloWorldScene.cpp \
-				   ../../TestOpenSdkScene.cpp
+                   ../../Classes/AppDelegate.cpp \
+                   ../../Classes/HelloWorldScene.cpp \
+				   ../../Classes/TestUserScene.cpp \
+				   ../../Classes/TestOpenSdkScene.cpp
+				   
 
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../.. \
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes \
 					$(LOCAL_PATH)/../../../opensdk/include \
 					$(LOCAL_PATH)/../../../opensdk/android
 
