@@ -188,6 +188,8 @@ void AgentManager::loadPluginsFromConfigAutoType(const std::map<std::string, std
     
 void AgentManager::loadAllPlugin()
 {
+	unloadAllPlugin();
+	
     std::map<std::string,std::string> conf = getPluginConfigure();
     if(!conf.empty()){
         loadPluginsFromConfig(conf);
@@ -232,7 +234,6 @@ void AgentManager::unloadAllPlugin()
 	}
 	
 	for(std::map<std::string , ProtocolIAP*>::iterator iter=_pluginsIAPMap.begin();iter!=_pluginsIAPMap.end();++iter){
-		
 		pluginManager->unloadPlugin(iter->second->getPluginName());
 	}
 	
