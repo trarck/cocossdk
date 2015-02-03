@@ -1,12 +1,10 @@
 #include "TestOpenSdkScene.h"
-#include "AgentManager.h"
+#include "TestUserScene.h"
 
 USING_NS_CC;
-using namespace opensdk;
 
 TestOpenSdkScene::~TestOpenSdkScene()
 {
-	AgentManager::getInstance()->destroyInstance();
 	
 }
 
@@ -63,15 +61,6 @@ bool TestOpenSdkScene::init()
     // add a label shows "Hello World"
     // create and initialize a label
     
-	CCLOG("begin init plugin ");
-    AgentManager::getInstance()->init("1111-1111-1111-1111","acdbcedba32442dcbfe","384defa7b09c893d4e","");
-	CCLOG("end init plugin ");
-	CCLOG("begin load all plugin");
-    AgentManager::getInstance()->loadAllPlugin();
-	
-	CCLOG("end load all plugin ");
-	
-	
 	
 	CCMenuItemLabel* pItemUser=CCMenuItemLabel::create(
 									CCLabelTTF::create("user", "Arial", 32),
@@ -111,9 +100,9 @@ bool TestOpenSdkScene::init()
 
 																					
     CCMenu* pMenuAction = CCMenu::create(pItemUser,pItemIAP,pItemAds,pItemAnalytics, pItemSocial,pItemShare,pItemPush,NULL);
-    pMenuAction->setPosition(ccp(0,100));
+    pMenuAction->setPosition(ccp(origin.x + visibleSize.width/2,100));
 	pMenuAction->alignItemsHorizontallyWithPadding(8);
-    this->addChild(pMenu, 2);
+    this->addChild(pMenuAction, 2);
 	
     return true;
 }
@@ -133,7 +122,9 @@ void TestOpenSdkScene::menuCloseCallback(CCObject* pSender)
 
 void TestOpenSdkScene::testUser(CCObject* pSender)
 {
-	
+    CCScene *pScene = TestUserScene::scene();
+
+    CCDirector::sharedDirector()->replaceScene(pScene);
 }
 
 void TestOpenSdkScene::testIAP(CCObject* pSender)

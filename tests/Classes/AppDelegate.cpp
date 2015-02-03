@@ -1,7 +1,9 @@
 #include "AppDelegate.h"
 #include "TestOpenSdkScene.h"
+#include "AgentManager.h"
 
 USING_NS_CC;
+using namespace opensdk;
 
 AppDelegate::AppDelegate() {
 
@@ -9,6 +11,8 @@ AppDelegate::AppDelegate() {
 
 AppDelegate::~AppDelegate() 
 {
+	CCLOG("destroy AgentManager instance");
+	AgentManager::getInstance()->destroyInstance();
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
@@ -24,6 +28,15 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);
 
+
+	CCLOG("begin init plugin ");
+    AgentManager::getInstance()->init("1111-1111-1111-1111","acdbcedba32442dcbfe","384defa7b09c893d4e","");
+	CCLOG("end init plugin ");
+	CCLOG("begin load all plugin");
+    AgentManager::getInstance()->loadAllPlugin();
+	
+	CCLOG("end load all plugin ");
+	
     // create a scene. it's an autorelease object
     CCScene *pScene = TestOpenSdkScene::scene();
 
