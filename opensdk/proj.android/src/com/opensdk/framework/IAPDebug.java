@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.opensdk.utils.SdkHttpListener;
+import com.opensdk.utils.Util;
 
 public class IAPDebug
     implements InterfaceIAP
@@ -63,18 +64,18 @@ public class IAPDebug
 			@Override
 			public void run()
 	        {
-	            if(IAPDebug.isInited)
+	            if(isInited)
 	                return;
-	            IAPDebug.isInited = true;
-	            IAPDebug.mServerUrl = cpInfo.get("oauthLoginServer");
-	            IAPDebug.mUApiKey = cpInfo.get("uApiKey");
-	            IAPDebug.mUApiSecret = cpInfo.get("uApiSecret");
-	            if(IAPDebug.mServerUrl == null && IAPDebug.mUApiKey == null && IAPDebug.mUApiSecret == null && cpInfo.get("private_key") == null)
+	            isInited = true;
+	            mServerUrl = cpInfo.get("oauthLoginServer");
+	            mUApiKey = cpInfo.get("uApiKey");
+	            mUApiSecret = cpInfo.get("uApiSecret");
+	            if(mServerUrl == null && mUApiKey == null && mUApiSecret == null && cpInfo.get("private_key") == null)
 	            {
-	                IAPDebug.payResult(IAPWrapper.PAYRESULT_INIT_FAIL, "fail to  call init of AgentManager");
+	                payResult(IAPWrapper.PAYRESULT_INIT_FAIL, "fail to  call init of AgentManager");
 	            } else
 	            {
-	                IAPDebug.payResult(IAPWrapper.PAYRESULT_INIT_SUCCESS, null);
+	                payResult(IAPWrapper.PAYRESULT_INIT_SUCCESS, null);
 	            }
 	        }
 		});
@@ -92,81 +93,81 @@ public class IAPDebug
     	param.put("password", password);
     	param.put("server_url", SIMSDK_LOGIN_URL);
     	
-//        g.c(mContext, param, new SdkHttpListener() {
-//			
-//        	public void onResponse(String response)
-//            {
-//                Log.d("onResponse", response);
-//                String msg;
-//                try
-//                {
-//                	JSONObject json = new JSONObject(response);
-//                	msg=json.getString("errMsg");
-//                    if(msg!= null && msg.equals("success"))
-//                    {
-//                    	JSONObject data = json.getJSONObject("data");
-//                        Log.d("data", data.toString());
-//                        UserDebug.setSimUserInfo(data.getString("user_id"), data.getString("session_id"));
-//                        Hashtable<String,String> paramAuth = new Hashtable<String,String>();
-//                        paramAuth.put("channel", "simsdk");
-//                        
-//                        paramAuth.put("server_url", IAPDebug.mServerUrl);
-//                        paramAuth.put("session_id", UserDebug.getSimSessionId());
-//                        paramAuth.put("user_id", UserDebug.getSimUserId());
-//                        paramAuth.put("uapi_key", IAPDebug.mUApiKey);
-//                        paramAuth.put("uapi_secret", IAPDebug.mUApiSecret);
-//
-//                        UserWrapper.getAccessToken(IAPDebug.mContext, paramAuth, new SdkHttpListener() {
-//							
-//                        	public void onResponse(String response2)
-//                            {
-//                                Log.d("onResponse", response2);
-//                                String status;
-//                                try
-//                                {
-//                                	JSONObject json2 = new JSONObject(response2);
-//                                	status=json2.getString("status");
-//                                    if(status != null && status.equals("ok"))
-//                                    {
-//                                    	String ext=json2.optString("ext");
-//                                        callback.onSuccessed(UserWrapper.ACTION_RET_LOGIN_SUCCESS, ext != null ? ext : "");
-//                                        return;
-//                                    } else
-//                                    {
-//                                        callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
-//                                        return;
-//                                    }
-//                                }
-//                                catch(JSONException ex)
-//                                {
-//                                    callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
-//                                }
-//                            }
-//
-//                            public void onError()
-//                            {
-//                                callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
-//                            }
-//						});
-//                        return;
-//                    } else
-//                    {
-//                        callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
-//                        return;
-//                    }
-//                }
-//                catch(JSONException ex)
-//                {
-//                    callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
-//                }
-//            }
-//
-//            public void onError()
-//            {
-//                callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
-//            }
-//
-//		});
+        Util.pluginHttp(mContext, param, new SdkHttpListener() {
+			
+        	public void onResponse(String response)
+            {
+                Log.d("onResponse", response);
+                String msg;
+                try
+                {
+                	JSONObject json = new JSONObject(response);
+                	msg=json.getString("errMsg");
+                    if(msg!= null && msg.equals("success"))
+                    {
+                    	JSONObject data = json.getJSONObject("data");
+                        Log.d("data", data.toString());
+                        UserDebug.setSimUserInfo(data.getString("user_id"), data.getString("session_id"));
+                        Hashtable<String,String> paramAuth = new Hashtable<String,String>();
+                        paramAuth.put("channel", "simsdk");
+                        
+                        paramAuth.put("server_url", mServerUrl);
+                        paramAuth.put("session_id", UserDebug.getSimSessionId());
+                        paramAuth.put("user_id", UserDebug.getSimUserId());
+                        paramAuth.put("uapi_key", mUApiKey);
+                        paramAuth.put("uapi_secret", mUApiSecret);
+
+                        UserWrapper.getAccessToken(mContext, paramAuth, new SdkHttpListener() {
+							
+                        	public void onResponse(String response2)
+                            {
+                                Log.d("onResponse", response2);
+                                String status;
+                                try
+                                {
+                                	JSONObject json2 = new JSONObject(response2);
+                                	status=json2.getString("status");
+                                    if(status != null && status.equals("ok"))
+                                    {
+                                    	String ext=json2.optString("ext");
+                                        callback.onSuccessed(UserWrapper.ACTION_RET_LOGIN_SUCCESS, ext != null ? ext : "");
+                                        return;
+                                    } else
+                                    {
+                                        callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
+                                        return;
+                                    }
+                                }
+                                catch(JSONException ex)
+                                {
+                                    callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
+                                }
+                            }
+
+                            public void onError()
+                            {
+                                callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
+                            }
+						});
+                        return;
+                    } else
+                    {
+                        callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
+                        return;
+                    }
+                }
+                catch(JSONException ex)
+                {
+                    callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
+                }
+            }
+
+            public void onError()
+            {
+                callback.onFailed(UserWrapper.ACTION_RET_LOGIN_FAIL, "");
+            }
+
+		});
     }
 
     private boolean networkReachable()
@@ -196,13 +197,13 @@ public class IAPDebug
 	        {
 	            if(!networkReachable())
 	            {
-	                IAPDebug.payResult(IAPWrapper.PAYRESULT_NETWORK_ERROR, "Network error!");
+	                payResult(IAPWrapper.PAYRESULT_NETWORK_ERROR, "Network error!");
 	                return;
 	            }
 	            
-	            if(IAPDebug.mGoodsInfo == null)
+	            if(mGoodsInfo == null)
 	            {
-	                IAPDebug.payResult(IAPWrapper.PAYRESULT_FAIL, "info is null");
+	                payResult(IAPWrapper.PAYRESULT_FAIL, "info is null");
 	                return;
 	            }
 	            
@@ -212,7 +213,7 @@ public class IAPDebug
 	                return;
 	            } else
 	            {
-	                IAPDebug.getOrderId(IAPDebug.mGoodsInfo);
+	                getOrderId(mGoodsInfo);
 	                return;
 	            }
 	        }
@@ -255,7 +256,7 @@ public class IAPDebug
 			
         	public final void onResponse(String response)
             {
-                IAPDebug.LogD(response);
+                LogD(response);
                 try
                 {
 	                String status;
@@ -264,23 +265,23 @@ public class IAPDebug
 	                
 	                if(status != null && status.equals("ok"))
 	                {
-	                    IAPDebug.mOrderId = json.getJSONObject("data").getString("order_id");
-	                    IAPDebug.addPayment(IAPDebug.mOrderId, money);
+	                    mOrderId = json.getJSONObject("data").getString("order_id");
+	                    addPayment(mOrderId, money);
 	                } else
 	                {
-	                    IAPDebug.payResult(IAPWrapper.PAYRESULT_FAIL, null);
+	                    payResult(IAPWrapper.PAYRESULT_FAIL, null);
 	                }
                 }catch (JSONException e)
                 {
                   e.printStackTrace();
-                  IAPDebug.payResult(IAPWrapper.PAYRESULT_FAIL, null);
+                  payResult(IAPWrapper.PAYRESULT_FAIL, null);
                 }
 
             }
 
             public final void onError()
             {
-                IAPDebug.payResult(IAPWrapper.PAYRESULT_NETWORK_ERROR, null);
+                payResult(IAPWrapper.PAYRESULT_NETWORK_ERROR, null);
             }
 		});
     }
@@ -294,9 +295,9 @@ public class IAPDebug
 	        {
 	            try
 	            {
-	                Builder builder=new Builder(IAPDebug.mContext);
-	                builder.setTitle(IAPDebug.mContext.getResources().getIdentifier("plugin_pay", "string", IAPDebug.mContext.getPackageName()));
-	                builder.setMessage(IAPDebug.mContext.getResources().getIdentifier("plugin_pay_content", "string", IAPDebug.mContext.getPackageName()));
+	                Builder builder=new Builder(mContext);
+	                builder.setTitle(mContext.getResources().getIdentifier("plugin_pay", "string", mContext.getPackageName()));
+	                builder.setMessage(mContext.getResources().getIdentifier("plugin_pay_content", "string", mContext.getPackageName()));
 	     
 	                OnClickListener listener = new OnClickListener(){
 	                	public void onClick(DialogInterface dialoginterface, int which)
@@ -304,24 +305,24 @@ public class IAPDebug
 	                        switch(which)
 	                        {
 	                        case -2: 
-	                            IAPDebug.payResult(IAPWrapper.PAYRESULT_CANCEL, "the pay has been canceled");
+	                            payResult(IAPWrapper.PAYRESULT_CANCEL, "the pay has been canceled");
 	                            return;
 
 	                        case -1: 
-	                            IAPDebug.pay(orderId, money);
+	                            pay(orderId, money);
 	                            break;
 	                        }
 	                    }
 
 	                };
-	                builder.setPositiveButton(IAPDebug.mContext.getResources().getIdentifier("plugin_pay", "string", IAPDebug.mContext.getPackageName()), listener);
-	                builder.setNegativeButton(IAPDebug.mContext.getResources().getIdentifier("plugin_cancel", "string", IAPDebug.mContext.getPackageName()), listener).create();
+	                builder.setPositiveButton(mContext.getResources().getIdentifier("plugin_pay", "string", mContext.getPackageName()), listener);
+	                builder.setNegativeButton(mContext.getResources().getIdentifier("plugin_cancel", "string", mContext.getPackageName()), listener).create();
 	                builder.show();
 	            }
 	            catch(Exception exception)
 	            {
-	                IAPDebug.LogE("Error during payment", exception);
-	                IAPDebug.payResult(IAPWrapper.PAYRESULT_FAIL, "Pay failed");
+	                LogE("Error during payment", exception);
+	                payResult(IAPWrapper.PAYRESULT_FAIL, "Pay failed");
 	            }
 	        }
 		});
@@ -340,15 +341,15 @@ public class IAPDebug
                 {
                 case -2: 
                     UserDebug.setLoginState(false);
-                    IAPDebug.payResult(IAPWrapper.PAYRESULT_CANCEL, "");
+                    payResult(IAPWrapper.PAYRESULT_CANCEL, "");
                     return;
 
                 case -1: 
-                	EditText username = (EditText)view.findViewById(IAPDebug.getResourceId("txt_username", "id"));
-                	EditText password = (EditText)view.findViewById(IAPDebug.getResourceId("txt_password", "id"));
+                	EditText username = (EditText)view.findViewById(getResourceId("txt_username", "id"));
+                	EditText password = (EditText)view.findViewById(getResourceId("txt_password", "id"));
                     if(username.getText().toString().length()==0 || password.getText().toString().length()==0)
                     {
-                        IAPDebug.payResult(IAPWrapper.PAYRESULT_FAIL, "username or password is empty");
+                        payResult(IAPWrapper.PAYRESULT_FAIL, "username or password is empty");
                         return;
                     }
 
@@ -356,13 +357,13 @@ public class IAPDebug
                     	 public void onSuccessed(int code, String msg)
                          {
                              UserDebug.setLoginState(true);
-                             IAPDebug.getOrderId(IAPDebug.mGoodsInfo);
+                             getOrderId(mGoodsInfo);
                          }
 
                          public void onFailed(int code, String msg)
                          {
                              UserDebug.setLoginState(false);
-                             IAPDebug.payResult(IAPWrapper.PAYRESULT_FAIL, msg);
+                             payResult(IAPWrapper.PAYRESULT_FAIL, msg);
                          }
 
                     });
@@ -388,36 +389,36 @@ public class IAPDebug
         param.put("server_url", SIMSDK_PAY_URL);
         
         
-//        g.c(mContext, param, new SdkHttpListener() {
-//			
-//        	public final void onResponse(String response)
-//            {
-//                Log.d("onResponse", response);
-//                try
-//                {
-//	                JSONObject json=new JSONObject(response);
-//	                String msg=json.getString("errMsg");
-//                    if(msg != null && msg.equals("success"))
-//                    {
-//                        IAPDebug.payResult(IAPWrapper.PAYRESULT_SUCCESS, "");
-//                        return;
-//                    } else
-//                    {
-//                        IAPDebug.payResult(IAPWrapper.PAYRESULT_FAIL, "");
-//                        return;
-//                    }
-//                }
-//                catch(JSONException e)
-//                {
-//                    IAPDebug.payResult(IAPWrapper.PAYRESULT_FAIL, "");
-//                }
-//            }
-//
-//            public final void onError()
-//            {
-//                IAPDebug.payResult(IAPWrapper.PAYRESULT_NETWORK_ERROR, "");
-//            }
-//		});
+        Util.pluginHttp(mContext, param, new SdkHttpListener() {
+			
+        	public final void onResponse(String response)
+            {
+                Log.d("onResponse", response);
+                try
+                {
+	                JSONObject json=new JSONObject(response);
+	                String msg=json.getString("errMsg");
+                    if(msg != null && msg.equals("success"))
+                    {
+                        payResult(IAPWrapper.PAYRESULT_SUCCESS, "");
+                        return;
+                    } else
+                    {
+                        payResult(IAPWrapper.PAYRESULT_FAIL, "");
+                        return;
+                    }
+                }
+                catch(JSONException e)
+                {
+                    payResult(IAPWrapper.PAYRESULT_FAIL, "");
+                }
+            }
+
+            public final void onError()
+            {
+                payResult(IAPWrapper.PAYRESULT_NETWORK_ERROR, "");
+            }
+		});
     }
 
     private static void payResult(int result, String msg)
@@ -447,10 +448,10 @@ public class IAPDebug
 			
         	public final void run()
             {
-                Builder builder= new Builder(IAPDebug.mContext);
+                Builder builder= new Builder(mContext);
                 
-                builder.setTitle(IAPDebug.getResourceId(curTitle, "string"));
-                builder.setMessage(IAPDebug.getResourceId(curMsg, "string"));
+                builder.setTitle(getResourceId(curTitle, "string"));
+                builder.setMessage(getResourceId(curMsg, "string"));
                 builder.setPositiveButton("Ok", new OnClickListener(){
                 	public void onClick(DialogInterface dialoginterface, int which)
                     {

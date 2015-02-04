@@ -44,8 +44,7 @@ public class ShareDebug implements InterfaceShare {
 				public void run() {
 					Toast.makeText(ShareDebug.mContext, "success to share",
 							Toast.LENGTH_SHORT).show();
-					ShareDebug.shareResult(ShareWrapper.SHARERESULT_SUCCESS,
-							(String) cpInfo.get("SharedText"));
+					ShareDebug.shareResult(ShareWrapper.SHARERESULT_SUCCESS,cpInfo.get("SharedText"));
 				}
 			});
 			return;

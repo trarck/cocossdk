@@ -3,6 +3,7 @@ package com.opensdk.framework;
 import java.util.Hashtable;
 
 import com.opensdk.utils.SdkHttpListener;
+import com.opensdk.utils.Util;
 
 import android.content.Context;
 
@@ -31,10 +32,10 @@ public class IAPWrapper {
 		});
 	}
 
-	public static void getPayOrderId(Context content,
-			Hashtable<String, String> info , SdkHttpListener listener)
+	public static void getPayOrderId(Context context,
+			Hashtable<String, String> params , SdkHttpListener curListener)
 	{
-		//TODO for test
+		Util.getPayOrderId(context, params, curListener);
 	}
 
 	private static native void nativeOnPayResult(String className, int ret,

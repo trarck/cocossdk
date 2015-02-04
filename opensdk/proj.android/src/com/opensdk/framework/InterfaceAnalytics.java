@@ -29,4 +29,6 @@ public interface InterfaceAnalytics {
 	public String getSDKVersion();
 
 	public String getPluginVersion();
+	
+	public boolean isFunctionSupported(String functionName);
 }

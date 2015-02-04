@@ -106,7 +106,7 @@ public class Util {
 		try {
 			String serverUrl = param.get("server_url");
 			param.remove("server_url");
-			param.put("private_key",Wrapper.getDeveloperInfo().get("private_key"));
+			param.put("private_key",Wrapper.getDeveloperInfo().get("privateKey"));
 			param.put("server_id", UserWrapper.getLoginServerID());
 			ArrayList<NameValuePair> arrayList = new ArrayList<NameValuePair>();
 			Iterator<String> iterator = param.keySet().iterator();
@@ -150,7 +150,7 @@ public class Util {
 				sortedValueStr.append(params.get(sortKeys[j]));
 			}
 
-			String token = getMd5(sortedValueStr.toString() + Wrapper.getDeveloperInfo().get("private_key"));
+			String token = getMd5(sortedValueStr.toString() + Wrapper.getDeveloperInfo().get("privateKey"));
 			ArrayList<NameValuePair> postData = new ArrayList<NameValuePair>();
 			postData.add(new BasicNameValuePair("token", token));
 			postData.add(new BasicNameValuePair("json_data", jsonValue));

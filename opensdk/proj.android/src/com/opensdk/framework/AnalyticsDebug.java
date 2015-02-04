@@ -83,7 +83,7 @@ public class AnalyticsDebug implements InterfaceAnalytics
         LogD("logEvent(String eventId, Hashtable<String, String> paramMap) invoked!");
     }
 
-    public void logTimedEventBegin(String s)
+    public void logTimedEventBegin(String eventId)
     {
         LogD("logTimedEventBegin(String eventId) invoked!");
     }

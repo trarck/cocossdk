@@ -82,27 +82,27 @@ public class AdsDebug implements InterfaceAds {
 		PluginWrapper.runOnMainThread(new Runnable() {
 			@Override
 			public void run() {
-				if (AdsDebug.popupWindow != null) {
-					AdsDebug.popupWindow.dismiss();
-					AdsDebug.popupWindow = null;
+				if (popupWindow != null) {
+					popupWindow.dismiss();
+					popupWindow = null;
 				}
 				Bitmap bitmap = BitmapFactory.decodeResource(
-						AdsDebug.mContext.getResources(),
-						AdsDebug.getResourceId("ui_ad", "drawable"));
-				View view = LayoutInflater.from(AdsDebug.mContext).inflate(
-						AdsDebug.getResourceId("plugin_ads", "layout"), null);
-				AdsDebug.popupWindow = new PopupWindow(view, bitmap.getWidth(),
+						mContext.getResources(),
+						getResourceId("ui_ad", "drawable"));
+				View view = LayoutInflater.from(mContext).inflate(
+						getResourceId("plugin_ads", "layout"), null);
+				popupWindow = new PopupWindow(view, bitmap.getWidth(),
 						bitmap.getHeight());
-				AdsDebug.popupWindow.showAtLocation(view, 17, 0, 0);
+				popupWindow.showAtLocation(view, 17, 0, 0);
 
 				ImageButton button = ((ImageButton) view.findViewById(AdsDebug
 						.getResourceId("image_close", "id")));
 
 				button.setOnClickListener(new android.view.View.OnClickListener() {
 					public void onClick(View view1) {
-						if (AdsDebug.popupWindow != null) {
-							AdsDebug.popupWindow.dismiss();
-							AdsDebug.popupWindow = null;
+						if (popupWindow != null) {
+							popupWindow.dismiss();
+							popupWindow = null;
 						}
 					}
 				});
@@ -114,9 +114,9 @@ public class AdsDebug implements InterfaceAds {
 		LogD("hideAds " + info.toString() + "invoked!");
 		PluginWrapper.runOnMainThread(new Runnable() {
 			public void run() {
-				if (AdsDebug.popupWindow != null) {
-					AdsDebug.popupWindow.dismiss();
-					AdsDebug.popupWindow = null;
+				if (popupWindow != null) {
+					popupWindow.dismiss();
+					popupWindow = null;
 				}
 			}
 		});
@@ -155,11 +155,11 @@ public class AdsDebug implements InterfaceAds {
 			public void run() {
 				Log.d("d", "d");
 				Builder dialogBuilder = new android.app.AlertDialog.Builder(
-						AdsDebug.mContext);
+						mContext);
 
-				dialogBuilder.setTitle(AdsDebug.getResourceId(curTitle,
+				dialogBuilder.setTitle(getResourceId(curTitle,
 						"string"));
-				dialogBuilder.setMessage(AdsDebug.getResourceId(curMsg,
+				dialogBuilder.setMessage(getResourceId(curMsg,
 						"string"));
 				dialogBuilder.setPositiveButton("Ok", new OnClickListener() {
 					public void onClick(DialogInterface dialoginterface, int i) {

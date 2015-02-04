@@ -104,16 +104,17 @@ public class Wrapper {
 	public static void setAppParam(String apiKey, String apiSecret,String privateKey, String authLoginServer) {
 		if ( (null!=apiKey && apiKey.equals(""))
 			&& (null!=apiSecret && apiSecret.equals(""))
-			&& (null!=privateKey && privateKey.equals(""))
-			&& (null!=authLoginServer && authLoginServer.equals("")))
+			&& (null!=privateKey && privateKey.equals("")))
 			
 			return;
 	
 		if (getChannelId().equals("999999")) {
 			mInfo.put("uApiKey", apiKey);
 			mInfo.put("uApiSecret", apiSecret);
-			mInfo.put("oauthLoginServer", authLoginServer);
+			if(authLoginServer!=null && authLoginServer.length()>0)
+				mInfo.put("oauthLoginServer", authLoginServer);
 		}
+		
 		mInfo.put("private_key", privateKey);
 	}
 
