@@ -1,9 +1,8 @@
-import java.net.URLDecoder;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 public class Util {
 
@@ -125,7 +124,7 @@ public class Util {
 
 	public static void main(String args[]) {
 		System.out.println("hello world");
-		String file = args[0];
+		String file =args.length>0? args[0]:null;
 		
 		if(null!=file){
 			try {
@@ -151,7 +150,6 @@ public class Util {
 				
 				System.out.print(str);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

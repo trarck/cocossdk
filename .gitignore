@@ -84,3 +84,4 @@ Device-Release/
 /publish
 /opensdk/proj.android/.idea
 /opensdk/proj.android/libOpenSdk.iml
+tools/DecodePlugin/src/*.class
