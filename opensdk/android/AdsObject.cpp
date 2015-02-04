@@ -91,9 +91,9 @@ void AdsObject::preloadAds(AdsType adsType, int idx)
 	callFuncWithParam("preloadAds",&paramAdsType,&paramIdx,NULL);
 }
 
-void AdsObject::queryPoints()
+float AdsObject::queryPoints()
 {
-    PluginUtils::callJavaFunctionWithName(this, "queryPoints");
+    return PluginUtils::callJavaFloatFuncWithName(this, "queryPoints");
 }
 
 void AdsObject::spendPoints(int points)

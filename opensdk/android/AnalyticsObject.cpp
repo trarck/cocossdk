@@ -31,12 +31,12 @@ int AnalyticsObject::getPluginType()
     
 void AnalyticsObject::startSession()
 {
-	 PluginUtils::callJavaBoolFuncWithName(this, "startSession");
+	 PluginUtils::callJavaFunctionWithName(this, "startSession");
 }
 
 void AnalyticsObject::stopSession()
 {
-    PluginUtils::callJavaBoolFuncWithName(this, "stopSession");
+    PluginUtils::callJavaFunctionWithName(this, "stopSession");
 }
 
 void AnalyticsObject::setSessionContinueMillis(long millis)

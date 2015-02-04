@@ -112,7 +112,7 @@ public:
     /**
     @brief Query the points of player
     */
-    virtual void queryPoints() =0;
+    virtual float queryPoints() =0;
 
     /**
     @brief Spend the points.

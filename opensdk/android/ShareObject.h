@@ -16,7 +16,7 @@ typedef struct
 } ShareActionResult;
 
     
-class ShareObject : public PluginProtocol
+class ShareObject : public ProtocolShare
 {
 public:
 	ShareObject();
