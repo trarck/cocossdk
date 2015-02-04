@@ -9,8 +9,14 @@ LOCAL_MODULE_FILENAME := libcocos2dcpp
 LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/AppDelegate.cpp \
                    ../../Classes/HelloWorldScene.cpp \
+				   ../../Classes/TestOpenSdkScene.cpp \
 				   ../../Classes/TestUserScene.cpp \
-				   ../../Classes/TestOpenSdkScene.cpp
+				   ../../Classes/TestIAPScene.cpp \
+				   ../../Classes/TestAdsScene.cpp \
+				   ../../Classes/TestAnalyticsScene.cpp \
+				   ../../Classes/TestPushScene.cpp \
+				   ../../Classes/TestShareScene.cpp \
+				   ../../Classes/TestSocialScene.cpp 
 				   
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes \

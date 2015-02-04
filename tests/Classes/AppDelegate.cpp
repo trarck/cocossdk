@@ -30,7 +30,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 
 	CCLOG("begin init plugin ");
-    AgentManager::getInstance()->init("1111-1111-1111-1111","acdbcedba32442dcbfe","384defa7b09c893d4e","");
+    AgentManager::getInstance()->init("E366F9F3-570E-4F9E-0B42-57A868DC4EC7","69ab62a83a3edf48ac85ee5977ee1656","9BE2243B53F070D00AA4B40B3F4CE558","http://oauth.anysdk.com/api/OauthLoginDemo/Login.php");
 	CCLOG("end init plugin ");
 	CCLOG("begin load all plugin");
     AgentManager::getInstance()->loadAllPlugin();

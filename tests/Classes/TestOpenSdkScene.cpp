@@ -1,5 +1,11 @@
 #include "TestOpenSdkScene.h"
 #include "TestUserScene.h"
+#include "TestIAPScene.h"
+#include "TestAdsScene.h"
+#include "TestShareScene.h"
+#include "TestPushScene.h"
+#include "TestAnalyticsScene.h"
+#include "TestSocialScene.h"
 
 USING_NS_CC;
 
@@ -129,30 +135,42 @@ void TestOpenSdkScene::testUser(CCObject* pSender)
 
 void TestOpenSdkScene::testIAP(CCObject* pSender)
 {
-	
+    CCScene *pScene = TestIAPScene::scene();
+
+    CCDirector::sharedDirector()->replaceScene(pScene);
 }
 
 void TestOpenSdkScene::testAds(CCObject* pSender)
 {
-	
+    CCScene *pScene = TestAdsScene::scene();
+
+    CCDirector::sharedDirector()->replaceScene(pScene);
 }
 
 void TestOpenSdkScene::testAnalytics(CCObject* pSender)
 {
-	
+    CCScene *pScene = TestAnalyticsScene::scene();
+
+    CCDirector::sharedDirector()->replaceScene(pScene);
 }
 
 void TestOpenSdkScene::testSocial(CCObject* pSender)
 {
-	
+    CCScene *pScene = TestSocialScene::scene();
+
+    CCDirector::sharedDirector()->replaceScene(pScene);
 }
 
 void TestOpenSdkScene::testShare(CCObject* pSender)
 {
-	
+    CCScene *pScene = TestShareScene::scene();
+
+    CCDirector::sharedDirector()->replaceScene(pScene);
 }
 
 void TestOpenSdkScene::testPush(CCObject* pSender)
 {
-	
+    CCScene *pScene = TestPushScene::scene();
+
+    CCDirector::sharedDirector()->replaceScene(pScene);
 }

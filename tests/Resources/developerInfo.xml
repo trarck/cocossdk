@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?> 
 <developer>
 	<channel PlatformType="0"
-			AppId="E366F9F3-570E-4F9E-0B42-57A868DC4EC7" 
-			AppKey="9BE2243B53F070D00AA4B40B3F4CE558"
+			AppId="1001" 
+			AppKey="aaaabbbbccccddddeeeeffff"
 			Orientation="landscape" 			
 			notify_url="http://pay.anysdk.com/v5/BdYouxiPayNotice/payNotice/"
 			extChannel="" idChannel="000007" 
-			oauthLoginServer="http://baidu.com" 
+			oauthLoginServer="http://oauth.anysdk.com/api/OauthLoginDemo/Login.php" 
 			order_url="http://pay.anysdk.com/v5/Order/getOrderId/"
 			privateKey="9BE2243B53F070D00AA4B40B3F4CE558" 
 			standby_domain_name="pay.anysdk.com"
-			uApiKey="223CF388-B93E-620B-E54D-CC71FADD8D3E" uApiSecret="4cc093376c7f1ef695f78a7f027d68c8" />
+			uApiKey="E366F9F3-570E-4F9E-0B42-57A868DC4EC7" uApiSecret="69ab62a83a3edf48ac85ee5977ee1656" />
 
 </developer>
